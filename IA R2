@@ -1,0 +1,202 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './index.css';
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Signin from './pages/Signin';
+import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
+import Dashboard from './pages/Dashboard';
+import BookReader from './pages/BookReader';
+import Settings from './pages/Settings';
+import Feedback from './pages/Feedback';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot" element={<ForgotPassword />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/book/:id" element={<BookReader />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/feedback/:id" element={<Feedback />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+export default function Signup() {
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await axios.post(`${import.meta.env.VITE_API_URL}/auth/signup`, form);
+    alert('Welcome to InsightAtlas... The place where every thought, word and actions matters. Discover perspective that transform.');
+    navigate('/dashboard');
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input placeholder="Username" onChange={(e) => setForm({ ...form, username: e.target.value })} />
+      <input type="email" placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} />
+      <input type="password" placeholder="Password" onChange={(e) => setForm({ ...form, password: e.target.value })} />
+      <button type="submit">Sign Up</button>
+    </form>
+  );
+}
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
+
+export default function Signin() {
+  const [form, setForm] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/signin`, form);
+    localStorage.setItem('token', res.data.token);
+    navigate('/dashboard');
+  };
+
+  return (
+    <form onSubmit={handleLogin}>
+      <input type="email" placeholder="Email" onChange={(e) => setForm({ ...form, email: e.target.value })} />
+      <input type="password" placeholder="Password" onChange={(e) => setForm({ ...form, password: e.target.value })} />
+      <button type="submit">Sign In</button>
+      <Link to="/forgot">Forgot Password?</Link>
+    </form>
+  );
+}
+import { useState } from 'react';
+import axios from 'axios';
+
+export default function ForgotPassword() {
+  const [email, setEmail] = useState('');
+
+  const handleRequest = async (e) => {
+    e.preventDefault();
+    await axios.post(`${import.meta.env.VITE_API_URL}/auth/forgot-password`, { email });
+    alert('Request sent to admin for approval.');
+  };
+
+  return (
+    <form onSubmit={handleRequest}>
+      <input type="email" placeholder="Enter your email" onChange={(e) => setEmail(e.target.value)} />
+      <button type="submit">Send Request</button>
+    </form>
+  );
+}
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
+export default function Dashboard() {
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/books`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      setBooks(res.data);
+    };
+    fetchBooks();
+  }, []);
+
+  return (
+    <div>
+      <h2>Available Books</h2>
+      {books.map((b) => (
+        <div key={b._id}>
+          <p>{b.title}</p>
+          <Link to={`/book/${b._id}`}>Read Now</Link>
+        </div>
+      ))}
+    </div>
+  );
+}
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+export default function BookReader() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [book, setBook] = useState({});
+  const [authorized, setAuthorized] = useState(false);
+
+  useEffect(() => {
+    axios.get(`${import.meta.env.VITE_API_URL}/books/${id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    }).then((res) => {
+      setBook(res.data.book);
+      setAuthorized(res.data.authorized);
+    });
+  }, [id]);
+
+  return (
+    <div>
+      <h2>{book.title}</h2>
+      <div dangerouslySetInnerHTML={{ __html: authorized ? book.fullContent : book.previewContent }} />
+      {!authorized && (
+        <div>
+          <p>Purchase to continue reading.</p>
+          <p>GTBank 0863542562 – Alake Samuel</p>
+          <p>PayPal/Paystack: dolayinka884@gmail.com</p>
+        </div>
+      )}
+      {authorized && (
+        <button onClick={() => navigate(`/feedback/${id}`)}>Finished Reading</button>
+      )}
+    </div>
+  );
+}
+export default function Settings() {
+  return (
+    <div>
+      <h2>Settings</h2>
+      <p>Change password, toggle theme, and reset password options would be here.</p>
+    </div>
+  );
+}
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+
+export default function Feedback() {
+  const { id } = useParams();
+  const [text, setText] = useState('');
+
+  const handleSubmit = async () => {
+    await axios.post(`${import.meta.env.VITE_API_URL}/feedback/${id}`, {
+      content: text,
+    }, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+    alert('Thanks for your feedback!');
+  };
+
+  return (
+    <div>
+      <h3>Leave Feedback</h3>
+      <textarea value={text} onChange={(e) => setText(e.target.value)} rows={10} cols={50} />
+      <button onClick={handleSubmit}>Submit</button>
+    </div>
+  );
+}
+
