@@ -1,0 +1,715 @@
+# Insi<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsightAtlas - Your Personal Library</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #adb5bd;
+            --border: #dee2e6;
+            --card-bg: #ffffff;
+            --text: #212529;
+        }
+
+        [data-theme="dark"] {
+            --primary: #4895ef;
+            --secondary: #3a0ca3;
+            --success: #4361ee;
+            --dark: #f8f9fa;
+            --light: #121212;
+            --gray: #6c757d;
+            --border: #495057;
+            --card-bg: #1e1e1e;
+            --text: #f8f9fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: var(--secondary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            max-width: 800px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: var(--text);
+        }
+
+        .quote {
+            font-style: italic;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+            margin: 2rem auto;
+            max-width: 600px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .book-container {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .book-header {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .book-header {
+                flex-direction: row;
+                text-align: left;
+                align-items: flex-start;
+            }
+        }
+
+        .book-cover {
+            width: 150px;
+            height: 220px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .book-meta h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-meta h3 {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .book-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .chapter {
+            margin-bottom: 2rem;
+        }
+
+        .chapter h4 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .watermarked {
+            position: relative;
+        }
+
+        .watermarked::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 200 200'%3E%3Ctext fill='rgba(0,0,0,0.03)' font-family='Arial' font-size='12' transform='rotate(-35 100 100)'%3EInsightAtlas • Unauthorized Copy Prohibited%3C/text%3E%3C/svg%3E");
+            opacity: 0.6;
+            pointer-events: none;
+            user-select: none;
+            z-index: 1;
+        }
+
+        .payment-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+        }
+
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .modal-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .payment-btn {
+            padding: 1rem;
+            background-color: var(--light);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .payment-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .payment-btn i {
+            font-size: 1.5rem;
+        }
+
+        .feedback-container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .feedback-container h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background-color: var(--light);
+            color: var(--text);
+            min-height: 150px;
+            font-family: inherit;
+        }
+
+        .copyright {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--gray);
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Video modal */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .video-container {
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .video-container video {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .close-video {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero {
+                padding: 2rem 1rem;
+            }
+            
+            .book-header {
+                text-align: center;
+            }
+            
+            .payment-float {
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Video Intro Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <span class="close-video" id="closeVideo">&times;</span>
+            <video id="introVideo" controls>
+                <source src="#" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <span>InsightAtlas</span>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn btn-outline" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero" id="heroSection">
+                <h1>Welcome to InsightAtlas</h1>
+                <p>A place where we get to look at things from a different perspective and make every word, thought, and action matter.</p>
+                
+                <div class="quote">
+                    "The only way to make sense out of change is to plunge into it, move with it, and join the dance." - Alan Watts
+                </div>
+                
+                <button class="btn" id="readBookBtn">
+                    <i class="fas fa-book-reader"></i> Read Sample Book
+                </button>
+            </section>
+            
+            <div class="book-container" id="bookContainer" style="display:none;">
+                <div class="book-header">
+                    <div class="book-cover">
+                        The Journey Within
+                    </div>
+                    <div class="book-meta">
+                        <h2>The Journey Within</h2>
+                        <h3>Discovering Your Authentic Self</h3>
+                        <p>By Dolayinka</p>
+                    </div>
+                </div>
+                
+                <div class="book-content watermarked" id="bookContent">
+                    <div class="chapter">
+                        <h4>Introduction</h4>
+                        <p>In the beginning, there was thought. Thought became word, and word became action. We often find ourselves trapped in cycles of expectation, constantly chasing after promises that seem just out of reach.</p>
+                    </div>
+                    
+                    <div class="chapter">
+                        <h4>Chapter 1: The Illusion of External Validation</h4>
+                        <p>Society conditions us to seek approval through visible achievements - the job title, the salary, the possessions. Yet these markers prove hollow when examined closely. The executive climbing the corporate ladder finds the view from the top unsatisfying. The entrepreneur building a financial empire discovers wealth alone cannot nourish the soul.</p>
+                        
+                        <p>What we fail to realize is that these pursuits often lead to disappointment not because we lack capability, but because the promises weren't real to begin with. True fulfillment comes when we align our actions with authentic purpose rather than external validation.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feedback-container" id="feedbackContainer" style="display:none;">
+                <h3><i class="fas fa-comment-alt"></i> Share Your Thoughts</h3>
+                <div class="form-group">
+                    <label for="feedback">What did you think about the book?</label>
+                    <textarea id="feedback" placeholder="Your feedback is valuable to us..."></textarea>
+                </div>
+                <button class="btn" id="submitFeedback">
+                    <i class="fas fa-paper-plane"></i> Submit Feedback
+                </button>
+            </div>
+        </main>
+        
+        <div class="payment-float" id="paymentFloat" style="display:none;">
+            <button class="btn">
+                <i class="fas fa-shopping-cart"></i> Buy Full Book
+            </button>
+        </div>
+        
+        <div class="spinner" id="loadingSpinner"></div>
+        
+        <div class="payment-modal" id="paymentModal" style="display:none;">
+            <div class="modal-content">
+                <h2><i class="fas fa-lock"></i> Continue Reading?</h2>
+                <p>You've reached the end of the preview. Purchase the full book to continue your journey of self-discovery.</p>
+                
+                <div class="payment-options">
+                    <button class="payment-btn" id="paystackBtn">
+                        <i class="fas fa-credit-card"></i>
+                        Pay with Paystack (₦10,000)
+                    </button>
+                    <button class="payment-btn" id="paypalBtn">
+                        <i class="fab fa-paypal"></i>
+                        Pay with PayPal ($6.55)
+                    </button>
+                </div>
+                
+                <button class="btn btn-outline" id="cancelBtn">
+                    <i class="fas fa-times"></i> Continue Preview
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="copyright">
+        © 2023 InsightAtlas. All rights reserved. Unauthorized copying or distribution is prohibited.
+    </div>
+
+    <script>
+        // App functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const themeToggle = document.getElementById('themeToggle');
+            const readBookBtn = document.getElementById('readBookBtn');
+            const bookContainer = document.getElementById('bookContainer');
+            const bookContent = document.getElementById('bookContent');
+            const paymentModal = document.getElementById('paymentModal');
+            const paymentFloat = document.getElementById('paymentFloat');
+            const paystackBtn = document.getElementById('paystackBtn');
+            const paypalBtn = document.getElementById('paypalBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const feedbackContainer = document.getElementById('feedbackContainer');
+            const submitFeedback = document.getElementById('submitFeedback');
+            const videoModal = document.getElementById('videoModal');
+            const closeVideo = document.getElementById('closeVideo');
+            const introVideo = document.getElementById('introVideo');
+            const heroSection = document.getElementById('heroSection');
+            const loginBtn = document.getElementById('loginBtn');
+            const spinner = document.getElementById('loadingSpinner');
+            
+            // Theme toggle
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                document.body.setAttribute('data-theme', savedTheme);
+                themeToggle.innerHTML = savedTheme === 'dark' 
+                    ? '<i class="fas fa-sun"></i>' 
+                    : '<i class="fas fa-moon"></i>';
+            }
+            
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                themeToggle.innerHTML = newTheme === 'dark' 
+                    ? '<i class="fas fa-sun"></i>' 
+                    : '<i class="fas fa-moon"></i>';
+            });
+            
+            // Show intro video on first visit
+            function checkFirstVisit() {
+                if (!localStorage.getItem('firstVisit')) {
+                    setTimeout(() => {
+                        videoModal.style.display = 'flex';
+                        // In a real app, this would be your actual video URL
+                        // introVideo.src = "intro-video.mp4";
+                        // introVideo.play();
+                        localStorage.setItem('firstVisit', 'true');
+                    }, 2000);
+                }
+            }
+            
+            // Read book button
+            readBookBtn.addEventListener('click', () => {
+                heroSection.style.display = 'none';
+                bookContainer.style.display = 'block';
+                paymentFloat.style.display = 'block';
+                
+                // Show payment modal after reading for a while
+                setTimeout(() => {
+                    paymentModal.style.display = 'flex';
+                }, 10000);
+            });
+            
+            // Payment buttons
+            paystackBtn.addEventListener('click', () => {
+                spinner.style.display = 'block';
+                paymentModal.style.display = 'none';
+                
+                setTimeout(() => {
+                    spinner.style.display = 'none';
+                    bookContent.classList.remove('watermarked');
+                    alert('Payment successful! Full book unlocked.');
+                    
+                    // Show feedback after reading
+                    setTimeout(() => {
+                        feedbackContainer.style.display = 'block';
+                    }, 15000);
+                }, 2000);
+            });
+            
+            paypalBtn.addEventListener('click', () => {
+                spinner.style.display = 'block';
+                paymentModal.style.display = 'none';
+                
+                setTimeout(() => {
+                    spinner.style.display = 'none';
+                    bookContent.classList.remove('watermarked');
+                    alert('Payment successful! Full book unlocked.');
+                    
+                    // Show feedback after reading
+                    setTimeout(() => {
+                        feedbackContainer.style.display = 'block';
+                    }, 15000);
+                }, 2000);
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                paymentModal.style.display = 'none';
+            });
+            
+            // Close video
+            closeVideo.addEventListener('click', () => {
+                videoModal.style.display = 'none';
+                introVideo.pause();
+            });
+            
+            // Submit feedback
+            submitFeedback.addEventListener('click', () => {
+                const feedback = document.getElementById('feedback').value;
+                if (feedback.trim() === '') {
+                    alert('Please enter your feedback before submitting.');
+                    return;
+                }
+                
+                spinner.style.display = 'block';
+                
+                setTimeout(() => {
+                    spinner.style.display = 'none';
+                    feedbackContainer.style.display = 'none';
+                    alert('Thank you for your feedback! Your thoughts have been recorded.');
+                }, 1500);
+            });
+            
+            // Security features
+            document.addEventListener('contextmenu', function(e) {
+                if (e.target.closest('.book-content')) {
+                    e.preventDefault();
+                    alert('Content protection: Right-click disabled to protect author rights.');
+                }
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && (e.key === 'c' || e.key === 'C') && document.querySelector('.book-content:hover')) {
+                    alert('Content protection: Copying disabled to protect author rights.');
+                    e.preventDefault();
+                }
+            });
+            
+            // Initialize
+            initTheme();
+            checkFirstVisit();
+        });
+    </script>
+</body>
+  </html>ghtAtlas
