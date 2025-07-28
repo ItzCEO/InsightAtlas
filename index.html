@@ -41,6 +41,18 @@
             padding-bottom: 80px;
         }
         
+        body.light-mode {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+        
+        body.light-mode .book-card,
+        body.light-mode header,
+        body.light-mode .bottom-nav,
+        body.light-mode .section-content {
+            background-color: var(--light-card);
+        }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -54,6 +66,10 @@
             top: 0;
             z-index: 100;
             box-shadow: var(--shadow);
+        }
+        
+        .light-mode header {
+            background-color: var(--light-card);
         }
         
         .header-content {
@@ -87,6 +103,10 @@
             font-size: 20px;
             font-weight: bold;
             color: white;
+        }
+        
+        .light-mode .logo-text {
+            color: var(--light-text);
         }
         
         .header-buttons {
@@ -146,6 +166,10 @@
             margin-bottom: 30px;
         }
         
+        .light-mode .hero-section {
+            background: linear-gradient(135deg, #e0e7ff, #dbeafe);
+        }
+        
         .hero-title {
             font-size: 28px;
             margin-bottom: 15px;
@@ -180,6 +204,10 @@
             margin: 0 auto;
         }
         
+        .light-mode .book-card {
+            background-color: var(--light-card);
+        }
+        
         .book-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
@@ -199,6 +227,12 @@
             padding: 20px;
             font-weight: bold;
             line-height: 1.4;
+        }
+        
+        .book-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .book-badge {
@@ -306,6 +340,13 @@
             box-shadow: var(--shadow);
         }
         
+        .reader-book-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        
         .reader-title {
             font-size: 32px;
             font-weight: 800;
@@ -322,6 +363,7 @@
             line-height: 1.8;
             font-size: 18px;
             padding: 20px 0;
+            font-family: 'Merriweather', Georgia, serif;
         }
         
         .reader-content h1, 
@@ -329,10 +371,12 @@
         .reader-content h3 {
             margin: 32px 0 16px;
             color: var(--accent);
+            font-family: 'Montserrat', sans-serif;
         }
         
         .reader-content p {
             margin-bottom: 24px;
+            letter-spacing: 0.3px;
         }
         
         .free-access {
@@ -348,6 +392,10 @@
             height: 100px;
             background: linear-gradient(to bottom, rgba(30, 41, 59, 0.1), var(--dark-bg));
             pointer-events: none;
+        }
+        
+        .light-mode .free-access::after {
+            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.1), var(--light-bg));
         }
         
         .upgrade-box {
@@ -404,6 +452,10 @@
             z-index: 100;
         }
         
+        .light-mode .bottom-nav {
+            background-color: var(--light-card);
+        }
+        
         .nav-item {
             display: flex;
             flex-direction: column;
@@ -427,6 +479,305 @@
             display: none;
         }
         
+        /* Settings View */
+        .settings-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .settings-section {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .light-mode .settings-section {
+            background-color: var(--light-card);
+        }
+        
+        .settings-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray);
+            color: var(--accent);
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .light-mode .setting-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .setting-label {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .setting-label i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background-color: var(--dark-card);
+            color: var(--dark-text);
+            border: 1px solid var(--gray);
+        }
+        
+        .light-mode select {
+            background-color: var(--light-card);
+            color: var(--light-text);
+        }
+        
+        .btn-logout {
+            background-color: var(--danger);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn-logout:hover {
+            background-color: #d0345c;
+            transform: translateY(-2px);
+        }
+        
+        /* Payment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .light-mode .modal-content {
+            background-color: var(--light-card);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        
+        .account-details {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+        
+        .light-mode .account-details {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .account-details p {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .payment-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .payment-form input, 
+        .payment-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--gray);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
+        }
+        
+        .light-mode .payment-form input, 
+        .light-mode .payment-form textarea {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--light-text);
+        }
+        
+        .payment-form button {
+            background-color: var(--success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .payment-form button:hover {
+            background-color: #05b388;
+        }
+        
+        /* Chat interface */
+        .chat-container {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .light-mode .chat-container {
+            background-color: var(--light-card);
+        }
+        
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: var(--border-radius);
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+        
+        .user-message {
+            background-color: var(--primary);
+            margin-left: auto;
+        }
+        
+        .ai-message {
+            background-color: var(--dark-bg);
+            margin-right: auto;
+        }
+        
+        .light-mode .ai-message {
+            background-color: #e2e8f0;
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--gray);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
+        }
+        
+        .light-mode .chat-input input {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--light-text);
+        }
+        
+        .chat-input button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        
         @media (min-width: 768px) {
             .book-cover {
                 height: 400px;
@@ -438,6 +789,7 @@
             }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
@@ -472,7 +824,7 @@
             
             <div class="book-card">
                 <div class="book-cover">
-                    THE MAIN<br>REALITY<br>OF LIFE<br>SAMUEL A.O
+                    <img src="1000502195.png" alt="Book Cover" class="book-cover-img">
                 </div>
                 <div class="book-info">
                     <div class="book-title">The Main Reality Of Life</div>
@@ -509,7 +861,7 @@
         <div class="reader-container" id="reader-view">
             <div class="reader-header">
                 <div class="reader-book-cover">
-                    THE MAIN<br>REALITY<br>OF LIFE
+                    <img src="1000502195.png" alt="Book Cover" class="reader-book-cover-img">
                 </div>
                 <h1 class="reader-title">The Main Reality Of Life</h1>
                 <div class="reader-author">By Samuel A.O.</div>
@@ -644,6 +996,160 @@
                 <!-- More content would continue here in the full version -->
             </div>
         </div>
+
+        <!-- Settings View -->
+        <div class="settings-container" id="settings-view">
+            <div class="settings-section">
+                <h2 class="settings-title">Appearance</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-moon"></i>
+                        <span>Dark Mode</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-font"></i>
+                        <span>Text Size</span>
+                    </div>
+                    <select id="text-size">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="large">Large</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h2 class="settings-title">Notifications</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-bell"></i>
+                        <span>Enable Notifications</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="notifications-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-book"></i>
+                        <span>New Book Alerts</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="book-alerts-toggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h2 class="settings-title">Language</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-globe"></i>
+                        <span>App Language</span>
+                    </div>
+                    <select id="app-language">
+                        <option value="en">English</option>
+                        <option value="fr">French</option>
+                        <option value="es">Spanish</option>
+                        <option value="de">German</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ru">Russian</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ar">Arabic</option>
+                        <option value="ja">Japanese</option>
+                        <option value="hi">Hindi</option>
+                        <option value="yo">Yoruba</option>
+                        <option value="ig">Igbo</option>
+                        <option value="ha">Hausa</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h2 class="settings-title">Help & Support</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help Center</span>
+                    </div>
+                    <button class="btn-read" id="help-center-btn">
+                        <i class="fas fa-external-link-alt"></i> Open
+                    </button>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-robot"></i>
+                        <span>AI Assistant</span>
+                    </div>
+                    <button class="btn-read" id="ai-assistant-btn">
+                        <i class="fas fa-comments"></i> Chat
+                    </button>
+                </div>
+                
+                <div class="chat-container" id="chat-container" style="display: none;">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message ai-message">
+                            Hello! I'm your AI assistant. How can I help you today?
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chat-input" placeholder="Type your question...">
+                        <button id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-logout" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Log Out
+            </button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2 class="modal-title">Complete Your Purchase</h2>
+            
+            <div class="account-details">
+                <p><strong>Account Name:</strong> Samuel A.O. Publishing</p>
+                <p><strong>Bank Name:</strong> Zenith Bank</p>
+                <p><strong>Account Number:</strong> 1234567890</p>
+                <p><strong>Payment Amount:</strong> ₦10,000</p>
+            </div>
+            
+            <p style="margin-bottom: 15px;">After payment, upload proof below. Your access will be activated after verification.</p>
+            
+            <form class="payment-form" id="payment-form">
+                <label for="transaction-ref">Transaction Reference:</label>
+                <input type="text" id="transaction-ref" required>
+                
+                <label for="payment-proof">Upload Payment Proof:</label>
+                <input type="file" id="payment-proof" accept="image/*" required>
+                
+                <label for="payment-note">Additional Notes:</label>
+                <textarea id="payment-note" rows="3"></textarea>
+                
+                <button type="submit">
+                    <i class="fas fa-check-circle"></i> Submit Payment
+                </button>
+            </form>
+        </div>
     </div>
 
     <nav class="bottom-nav">
@@ -655,10 +1161,6 @@
             <i class="fas fa-book nav-icon"></i>
             <span>Library</span>
         </a>
-        <a href="#" class="nav-item" id="nav-profile">
-            <i class="fas fa-user nav-icon"></i>
-            <span>Profile</span>
-        </a>
         <a href="#" class="nav-item" id="nav-settings">
             <i class="fas fa-cog nav-icon"></i>
             <span>Settings</span>
@@ -669,6 +1171,7 @@
         // DOM Elements
         const homeView = document.getElementById('home-view');
         const readerView = document.getElementById('reader-view');
+        const settingsView = document.getElementById('settings-view');
         const readNowBtn = document.getElementById('read-now-btn');
         const buyBookBtn = document.getElementById('buy-book-btn');
         const unlockBtn = document.getElementById('unlock-btn');
@@ -676,10 +1179,25 @@
         const lockedContent = document.querySelector('.locked-content');
         const unlockBox = document.querySelector('.upgrade-box');
         const navItems = document.querySelectorAll('.nav-item');
-        
+        const paymentModal = document.getElementById('payment-modal');
+        const closeModal = document.getElementById('close-modal');
+        const paymentForm = document.getElementById('payment-form');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const notificationsToggle = document.getElementById('notifications-toggle');
+        const bookAlertsToggle = document.getElementById('book-alerts-toggle');
+        const textSizeSelect = document.getElementById('text-size');
+        const appLanguageSelect = document.getElementById('app-language');
+        const logoutBtn = document.getElementById('logout-btn');
+        const aiAssistantBtn = document.getElementById('ai-assistant-btn');
+        const chatContainer = document.getElementById('chat-container');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendMessageBtn = document.getElementById('send-message-btn');
+
         // Navigation functions
         function showReader() {
             homeView.style.display = 'none';
+            settingsView.style.display = 'none';
             readerView.style.display = 'block';
             updateActiveNav('nav-library');
         }
@@ -687,7 +1205,15 @@
         function showHome() {
             homeView.style.display = 'block';
             readerView.style.display = 'none';
+            settingsView.style.display = 'none';
             updateActiveNav('nav-home');
+        }
+        
+        function showSettings() {
+            homeView.style.display = 'none';
+            readerView.style.display = 'none';
+            settingsView.style.display = 'block';
+            updateActiveNav('nav-settings');
         }
         
         function updateActiveNav(activeId) {
@@ -701,20 +1227,89 @@
         }
         
         function unlockBook() {
-            lockedContent.style.display = 'block';
-            unlockBox.style.display = 'none';
-            document.querySelector('.free-access::after').style.display = 'none';
-            alert('Full access granted! Enjoy the entire book.');
+            paymentModal.style.display = 'flex';
         }
         
+        function closePaymentModal() {
+            paymentModal.style.display = 'none';
+        }
+        
+        function submitPayment(e) {
+            e.preventDefault();
+            alert('Payment details submitted! Your access will be activated after verification.');
+            closePaymentModal();
+        }
+        
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('darkMode', darkModeToggle.checked ? 'off' : 'on');
+        }
+        
+        function changeTextSize() {
+            const size = textSizeSelect.value;
+            const readerContent = document.querySelector('.reader-content');
+            
+            if (size === 'small') {
+                readerContent.style.fontSize = '16px';
+            } else if (size === 'medium') {
+                readerContent.style.fontSize = '18px';
+            } else if (size === 'large') {
+                readerContent.style.fontSize = '20px';
+            }
+        }
+        
+        function toggleChat() {
+            chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('message', 'user-message');
+            userMessage.textContent = message;
+            chatMessages.appendChild(userMessage);
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Simulate AI response
+            setTimeout(() => {
+                const aiMessage = document.createElement('div');
+                aiMessage.classList.add('message', 'ai-message');
+                aiMessage.textContent = "Thank you for your message. I'm an AI assistant here to help with your questions about the book or app. How can I assist you today?";
+                chatMessages.appendChild(aiMessage);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
+        }
+
         // Event Listeners
         readNowBtn.addEventListener('click', showReader);
-        buyBookBtn.addEventListener('click', () => {
-            alert('Redirecting to payment page...');
-            showReader();
-        });
+        buyBookBtn.addEventListener('click', unlockBook);
         unlockBtn.addEventListener('click', unlockBook);
         logo.addEventListener('click', showHome);
+        closeModal.addEventListener('click', closePaymentModal);
+        paymentForm.addEventListener('submit', submitPayment);
+        darkModeToggle.addEventListener('change', toggleDarkMode);
+        textSizeSelect.addEventListener('change', changeTextSize);
+        aiAssistantBtn.addEventListener('click', toggleChat);
+        sendMessageBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to log out?')) {
+                alert('You have been logged out successfully.');
+                showHome();
+            }
+        });
         
         // Nav item click handlers
         document.getElementById('nav-home').addEventListener('click', (e) => {
@@ -727,16 +1322,9 @@
             showReader();
         });
         
-        document.getElementById('nav-profile').addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Profile page would open here');
-            updateActiveNav('nav-profile');
-        });
-        
         document.getElementById('nav-settings').addEventListener('click', (e) => {
             e.preventDefault();
-            alert('Settings page would open here');
-            updateActiveNav('nav-settings');
+            showSettings();
         });
         
         // Update time display
@@ -750,6 +1338,18 @@
         // Update time every minute
         updateTime();
         setInterval(updateTime, 60000);
+        
+        // Initialize settings
+        function initSettings() {
+            // Dark mode preference
+            if (localStorage.getItem('darkMode') === 'off') {
+                document.body.classList.add('light-mode');
+                darkModeToggle.checked = true;
+            }
+        }
+        
+        // Initialize app
+        initSettings();
     </script>
 </body>
-    </html>
+</html>
