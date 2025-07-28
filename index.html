@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InsightAtlas - Reader App</title>
+    <title>InsightAtlas - Premium Reader</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -17,42 +17,39 @@
             --primary: #4361ee;
             --primary-dark: #3a56d4;
             --secondary: #ffd166;
-            --dark-bg: #1e293b;
-            --dark-card: #334155;
+            --dark-bg: #121212;
+            --dark-card: #1e1e1e;
             --dark-text: #f1f5f9;
             --light-bg: #f8fafc;
             --light-card: #ffffff;
             --light-text: #1e293b;
+            --accent: #ff6b6b;
+            --premium: #ffb700;
+            --gray: #94a3b8;
             --success: #06d6a0;
             --warning: #ffd166;
             --danger: #ef476f;
-            --gray: #94a3b8;
             --gold: #ffb700;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             --border-radius: 12px;
         }
         
         body {
-            background-color: var(--light-bg);
-            color: var(--light-text);
-            transition: background-color 0.3s ease;
-        }
-        
-        body.dark-mode {
             background-color: var(--dark-bg);
             color: var(--dark-text);
+            transition: background-color 0.3s ease;
+            padding-bottom: 80px;
         }
         
         .container {
-            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 15px;
         }
         
         header {
-            background-color: var(--primary);
-            padding: 16px 0;
+            background-color: var(--dark-card);
+            padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -72,946 +69,435 @@
         }
         
         .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #ffd166, #ffb700);
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            color: #1e293b;
-            font-size: 24px;
+            color: white;
+            font-size: 20px;
             box-shadow: var(--shadow);
         }
         
         .logo-text {
-            margin-left: 12px;
-            font-size: 24px;
+            margin-left: 10px;
+            font-size: 20px;
             font-weight: bold;
             color: white;
         }
         
         .header-buttons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
         }
         
         .btn {
-            padding: 10px 18px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
             border: none;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 16px;
+            font-size: 14px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         
-        .btn-primary {
-            background-color: white;
-            color: var(--primary);
+        .btn-premium {
+            background: linear-gradient(135deg, var(--premium), #ff8c00);
+            color: #1e293b;
+            font-weight: 700;
         }
         
-        .btn-primary:hover {
-            background-color: #f0f7ff;
+        .btn-premium:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 140, 0, 0.3);
         }
         
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: white;
-            width: 40px;
-            height: 40px;
+        .user-avatar {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
         }
         
-        .theme-toggle:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .search-bar {
-            margin: 24px 0;
-            position: relative;
-        }
-        
-        .search-bar input {
-            width: 100%;
-            padding: 16px 24px;
-            border-radius: var(--border-radius);
-            border: 1px solid #cbd5e1;
-            font-size: 16px;
-            background-color: white;
-            color: var(--light-text);
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .search-bar input {
-            background-color: var(--dark-card);
-            border-color: #475569;
-            color: var(--dark-text);
-        }
-        
-        .search-icon {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
+        .time-display {
             color: var(--gray);
+            font-size: 14px;
+            margin-right: 10px;
         }
         
-        .book-grid {
+        .hero-section {
+            padding: 30px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 30px;
+        }
+        
+        .hero-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            color: var(--gray);
+            margin-bottom: 25px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            margin: 25px 0 15px;
+            padding-left: 10px;
+            border-left: 4px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .view-all {
+            font-size: 14px;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .books-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
         
         .book-card {
-            background-color: var(--light-card);
+            background-color: var(--dark-card);
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .dark-mode .book-card {
-            background-color: var(--dark-card);
+            cursor: pointer;
         }
         
         .book-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
-        }
-        
-        .book-card-content {
-            display: flex;
-            padding: 20px;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
         
         .book-cover {
-            width: 100px;
-            height: 140px;
-            background: linear-gradient(135deg, #3a56d4, #4361ee);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 14px;
-            text-align: center;
-            padding: 16px;
-            box-shadow: var(--shadow);
+            height: 200px;
+            position: relative;
+            overflow: hidden;
         }
         
-        .dark-mode .book-cover {
-            background: linear-gradient(135deg, #2d46b3, #3a56d4);
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
         }
         
-        .book-info {
-            flex: 1;
-            padding-left: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        
-        .book-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-        
-        .book-author {
-            font-size: 14px;
-            color: var(--gray);
-            margin-bottom: 12px;
-        }
-        
-        .book-price {
-            font-weight: 700;
-            color: var(--gold);
-            font-size: 18px;
-            margin-bottom: 12px;
+        .book-card:hover .book-cover img {
+            transform: scale(1.05);
         }
         
         .book-badge {
-            display: inline-block;
-            padding: 6px 14px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--premium);
+            color: #1e293b;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 8px;
             border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-        
-        .badge-free {
-            background-color: var(--success);
-            color: white;
-        }
-        
-        .badge-premium {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .book-actions {
-            margin-top: 16px;
-        }
-        
-        .btn-read {
-            background-color: var(--primary);
-            color: white;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-read:hover {
-            background-color: var(--primary-dark);
-        }
-        
-        .reader-container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-        
-        .reader-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        
-        .reader-book-cover {
-            width: 180px;
-            height: 240px;
-            background: linear-gradient(135deg, #3a56d4, #4361ee);
-            border-radius: 12px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 16px;
-            text-align: center;
-            padding: 20px;
             box-shadow: var(--shadow);
         }
         
-        .dark-mode .reader-book-cover {
-            background: linear-gradient(135deg, #2d46b3, #3a56d4);
+        .book-info {
+            padding: 15px;
         }
         
-        .reader-title {
-            font-size: 32px;
-            font-weight: 800;
+        .book-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .book-author {
+            font-size: 13px;
+            color: var(--gray);
             margin-bottom: 8px;
         }
         
-        .reader-author {
-            font-size: 18px;
-            color: var(--gray);
-            margin-bottom: 24px;
+        .book-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
         }
         
-        .reader-content {
-            line-height: 1.8;
-            font-size: 18px;
-            padding: 20px 0;
-        }
-        
-        .reader-content h1, 
-        .reader-content h2, 
-        .reader-content h3 {
-            margin: 32px 0 16px;
+        .book-tag {
+            background-color: rgba(67, 97, 238, 0.2);
             color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
         }
         
-        .dark-mode .reader-content h1,
-        .dark-mode .reader-content h2,
-        .dark-mode .reader-content h3 {
-            color: #ffd166;
+        .book-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray);
         }
         
-        .reader-content p {
-            margin-bottom: 24px;
+        .trending-book {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
         }
         
-        .free-access {
-            position: relative;
+        .trending-cover {
+            width: 120px;
+            height: 180px;
+            overflow: hidden;
         }
         
-        .free-access::after {
-            content: "";
-            position: absolute;
+        .trending-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .trending-info {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .trending-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .trending-desc {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .trending-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .trending-stats div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .tags-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .tag-card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .tag-card:hover {
+            transform: translateY(-5px);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .tag-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .tag-name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .continue-reading {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .continue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .continue-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .continue-progress {
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 65%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            border-radius: 10px;
+        }
+        
+        .continue-book {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .continue-cover {
+            width: 80px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .continue-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .continue-info {
+            flex: 1;
+        }
+        
+        .continue-book-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .continue-book-author {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .continue-chapter {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .btn-continue {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-continue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .bottom-nav {
+            position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 100px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), var(--light-bg));
-            pointer-events: none;
-        }
-        
-        .dark-mode .free-access::after {
-            background: linear-gradient(to bottom, rgba(30, 41, 59, 0.1), var(--dark-bg));
-        }
-        
-        .upgrade-box {
-            background: linear-gradient(135deg, #ffb700, #ffd166);
-            border-radius: var(--border-radius);
-            padding: 32px;
-            text-align: center;
-            margin: 48px 0;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .upgrade-box {
-            background: linear-gradient(135deg, #e6a100, #ffc44d);
-        }
-        
-        .upgrade-title {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            color: #1e293b;
-        }
-        
-        .upgrade-price {
-            font-size: 36px;
-            font-weight: 800;
-            color: #1e293b;
-            margin-bottom: 24px;
-        }
-        
-        .btn-upgrade {
-            background-color: #1e293b;
-            color: white;
-            padding: 16px 40px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 700;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
-        }
-        
-        .btn-upgrade:hover {
-            background-color: #0f172a;
-            transform: translateY(-3px);
-        }
-        
-        .dashboard-container {
-            display: flex;
-            gap: 24px;
-            margin-top: 20px;
-        }
-        
-        .sidebar {
-            width: 280px;
-            background-color: var(--light-card);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            height: fit-content;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .sidebar {
             background-color: var(--dark-card);
-        }
-        
-        .sidebar-header {
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .dark-mode .sidebar-header {
-            border-color: #475569;
-        }
-        
-        .sidebar-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-        
-        .sidebar-subtitle {
-            font-size: 14px;
-            color: var(--gray);
-        }
-        
-        .menu-item {
             display: flex;
-            align-items: center;
-            padding: 14px 16px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            font-weight: 500;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
         }
         
-        .menu-item:hover, .menu-item.active {
-            background-color: rgba(67, 97, 238, 0.1);
-            color: var(--primary);
-        }
-        
-        .dark-mode .menu-item:hover, 
-        .dark-mode .menu-item.active {
-            background-color: rgba(67, 97, 238, 0.2);
-        }
-        
-        .menu-icon {
-            margin-right: 12px;
-            font-size: 20px;
-            width: 24px;
-            text-align: center;
-        }
-        
-        .main-content {
-            flex: 1;
-        }
-        
-        .dashboard-card {
-            background-color: var(--light-card);
-            border-radius: var(--border-radius);
-            padding: 32px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .dashboard-card {
-            background-color: var(--dark-card);
-        }
-        
-        .card-title {
-            font-size: 26px;
-            font-weight: 800;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .dark-mode .card-title {
-            border-color: #475569;
-        }
-        
-        .profile-container {
-            display: flex;
-            gap: 32px;
-        }
-        
-        .profile-picture {
-            width: 180px;
-            height: 180px;
-            background: linear-gradient(135deg, #3a56d4, #4361ee);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 16px;
-            text-align: center;
-            padding: 20px;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .profile-picture {
-            background: linear-gradient(135deg, #2d46b3, #3a56d4);
-        }
-        
-        .profile-form {
-            flex: 1;
-        }
-        
-        .form-group {
-            margin-bottom: 24px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            font-size: 16px;
-        }
-        
-        .form-input {
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            font-size: 16px;
-            background-color: var(--light-card);
-            color: var(--light-text);
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .form-input {
-            background-color: var(--dark-card);
-            border-color: #475569;
-            color: var(--dark-text);
-        }
-        
-        .btn-save {
-            background-color: var(--primary);
-            color: white;
-            padding: 14px 32px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow);
-        }
-        
-        .btn-save:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-        
-        .chat-container {
-            height: 500px;
+        .nav-item {
             display: flex;
             flex-direction: column;
-            border: 1px solid #cbd5e1;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .chat-container {
-            border-color: #475569;
-        }
-        
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .dark-mode .chat-messages {
-            background-color: #0f172a;
-        }
-        
-        .message {
-            display: flex;
-            max-width: 80%;
-        }
-        
-        .message-ai {
-            align-self: flex-start;
-        }
-        
-        .message-user {
-            align-self: flex-end;
-        }
-        
-        .message-bubble {
-            padding: 14px 18px;
-            border-radius: 18px;
-            display: inline-block;
-            box-shadow: var(--shadow);
-        }
-        
-        .message-ai .message-bubble {
-            background-color: white;
-            border-bottom-left-radius: 4px;
-        }
-        
-        .dark-mode .message-ai .message-bubble {
-            background-color: var(--dark-card);
-        }
-        
-        .message-user .message-bubble {
-            background-color: var(--primary);
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-        
-        .chat-input-area {
-            border-top: 1px solid #cbd5e1;
-            padding: 20px;
-            background-color: white;
-        }
-        
-        .dark-mode .chat-input-area {
-            border-color: #475569;
-            background-color: var(--dark-card);
-        }
-        
-        .chat-form {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .chat-input {
-            flex: 1;
-            padding: 14px 18px;
-            border-radius: 24px;
-            border: 1px solid #cbd5e1;
-            font-size: 16px;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .chat-input {
-            background-color: var(--dark-card);
-            border-color: #475569;
-            color: var(--dark-text);
-        }
-        
-        .btn-send {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 18px;
-            box-shadow: var(--shadow);
-            transition: all 0.2s ease;
-        }
-        
-        .btn-send:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-        
-        .common-questions {
-            margin-top: 20px;
-        }
-        
-        .questions-title {
-            font-size: 14px;
             color: var(--gray);
-            margin-bottom: 12px;
-        }
-        
-        .question-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .question-tag {
-            background-color: #e2e8f0;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .dark-mode .question-tag {
-            background-color: #475569;
-        }
-        
-        .question-tag:hover {
-            background-color: #cbd5e1;
-            transform: translateY(-2px);
-        }
-        
-        .dark-mode .question-tag:hover {
-            background-color: #334155;
-        }
-        
-        .payment-container {
-            max-width: 800px;
-            margin: 20px auto;
-        }
-        
-        .payment-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        
-        .payment-steps {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 32px;
-            position: relative;
-        }
-        
-        .payment-step {
-            text-align: center;
-            z-index: 2;
-            position: relative;
-            flex: 1;
-        }
-        
-        .step-number {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            font-weight: 600;
-            box-shadow: var(--shadow);
-        }
-        
-        .step-active .step-number {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .step-title {
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        .payment-card {
-            background-color: var(--light-card);
-            border-radius: var(--border-radius);
-            padding: 32px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .payment-card {
-            background-color: var(--dark-card);
-        }
-        
-        .payment-instructions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-        
-        @media (max-width: 768px) {
-            .payment-instructions {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .instruction-card {
-            border: 1px solid #cbd5e1;
-            border-radius: var(--border-radius);
-            padding: 24px;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .instruction-card {
-            border-color: #475569;
-        }
-        
-        .card-section-title {
-            font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 16px;
-            color: var(--primary);
-        }
-        
-        .dark-mode .card-section-title {
-            color: #ffd166;
-        }
-        
-        .bank-details {
-            margin-top: 16px;
-        }
-        
-        .detail-item {
-            margin-bottom: 12px;
-            display: flex;
-        }
-        
-        .detail-label {
-            font-weight: 600;
-            width: 140px;
-            color: var(--gray);
-        }
-        
-        .detail-value {
-            font-weight: 600;
-            flex: 1;
-        }
-        
-        .upload-area {
-            border: 2px dashed #cbd5e1;
-            border-radius: var(--border-radius);
-            padding: 40px 20px;
-            text-align: center;
-            margin-bottom: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .upload-area:hover {
-            border-color: var(--primary);
-            background-color: rgba(67, 97, 238, 0.05);
-        }
-        
-        .dark-mode .upload-area:hover {
-            background-color: rgba(67, 97, 238, 0.1);
-        }
-        
-        .upload-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: var(--gray);
-        }
-        
-        .upload-text {
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        .upload-hint {
-            color: var(--gray);
-            font-size: 14px;
-        }
-        
-        .btn-submit {
-            background-color: var(--success);
-            color: white;
-            padding: 16px 28px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            font-size: 18px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow);
-        }
-        
-        .btn-submit:hover {
-            background-color: #05b388;
-            transform: translateY(-2px);
-        }
-        
-        .notification {
-            background: linear-gradient(135deg, #ffb700, #ffd166);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .notification {
-            background: linear-gradient(135deg, #e6a100, #ffc44d);
-        }
-        
-        .notification-title {
-            font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: #1e293b;
-        }
-        
-        .notification p {
-            color: #1e293b;
-        }
-        
-        .footer {
-            background-color: var(--primary);
-            color: white;
-            padding: 40px 0;
-            margin-top: 60px;
-        }
-        
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 40px;
-        }
-        
-        .footer-section {
-            flex: 1;
-            min-width: 250px;
-        }
-        
-        .footer-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-        
-        .footer-links {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .footer-link {
-            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
+            font-size: 12px;
             transition: all 0.2s ease;
         }
         
-        .footer-link:hover {
-            color: white;
+        .nav-item.active {
+            color: var(--accent);
         }
         
-        .footer-contact {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
         }
         
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 40px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-        }
-        
-        @media (max-width: 768px) {
-            .book-grid {
-                grid-template-columns: 1fr;
+        @media (min-width: 768px) {
+            .books-container {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
             
-            .dashboard-container {
-                flex-direction: column;
+            .tags-container {
+                grid-template-columns: repeat(4, 1fr);
             }
             
-            .sidebar {
-                width: 100%;
+            .trending-book {
+                height: 200px;
             }
             
-            .profile-container {
-                flex-direction: column;
-            }
-            
-            .header-buttons .btn {
-                padding: 8px 12px;
-                font-size: 14px;
+            .trending-cover {
+                width: 150px;
+                height: 100%;
             }
         }
     </style>
@@ -1026,468 +512,240 @@
                 </div>
                 
                 <div class="header-buttons">
-                    <button class="btn btn-primary">
-                        <i class="fas fa-user"></i> Samuel
+                    <div class="time-display">08:34</div>
+                    <button class="btn btn-premium">
+                        <i class="fas fa-crown"></i> Try Premium
                     </button>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                    <button class="theme-toggle">
-                        <i class="fas fa-moon"></i>
-                    </button>
+                    <div class="user-avatar">S</div>
                 </div>
             </div>
         </div>
     </header>
 
     <div class="container">
-        <div class="search-bar">
-            <input type="text" placeholder="Search books by title or author...">
-            <div class="search-icon"><i class="fas fa-search"></i></div>
+        <div class="hero-section">
+            <h1 class="hero-title">Top Picks For You</h1>
+            <p class="hero-subtitle">Discover stories handpicked just for your reading preferences</p>
+        </div>
+
+        <div class="section-title">
+            <span>Featured Stories</span>
+            <a href="#" class="view-all">View All</a>
         </div>
         
-        <div class="book-grid">
+        <div class="books-container">
             <div class="book-card">
-                <div class="book-card-content">
-                    <div class="book-cover">
-                        The Main Reality Of Life
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1000" alt="The Lucky One">
+                    <div class="book-badge">NEW</div>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">THE LUCKY ONE</div>
+                    <div class="book-author">By Author Name</div>
+                    <div class="book-tags">
+                        <span class="book-tag">Romance</span>
+                        <span class="book-tag">Drama</span>
                     </div>
-                    <div class="book-info">
-                        <div>
-                            <div class="book-title">The Main Reality Of Life</div>
-                            <div class="book-author">By Samuel A.O.</div>
-                            <div class="book-price">₦10,000</div>
-                            <span class="book-badge badge-premium">Premium</span>
-                        </div>
-                        <div class="book-actions">
-                            <button class="btn-read">
-                                <i class="fas fa-book-open"></i> Read Now
-                            </button>
-                        </div>
+                    <div class="book-stats">
+                        <span>4.8★</span>
+                        <span>82%</span>
                     </div>
+                </div>
+            </div>
+            
+            <div class="book-card">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1629992101753-56d196c8aabb?q=80&w=1000" alt="Up!">
+                    <div class="book-badge">POPULAR</div>
+                </div>
+                <div class="book-info">
+                    <div class="book-title">UP!</div>
+                    <div class="book-author">By Vee Lozada</div>
+                    <div class="book-tags">
+                        <span class="book-tag">Action</span>
+                        <span class="book-tag">Androids</span>
+                    </div>
+                    <div class="book-stats">
+                        <span>4.6★</span>
+                        <span>75%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="book-card">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1000" alt="Conduit">
+                </div>
+                <div class="book-info">
+                    <div class="book-title">CONDUIT</div>
+                    <div class="book-author">By Author Name</div>
+                    <div class="book-tags">
+                        <span class="book-tag">Fanfiction</span>
+                        <span class="book-tag">Drama</span>
+                    </div>
+                    <div class="book-stats">
+                        <span>4.7★</span>
+                        <span>68%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="book-card">
+                <div class="book-cover">
+                    <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?q=80&w=1000" alt="Marvel">
+                </div>
+                <div class="book-info">
+                    <div class="book-title">MARVEL</div>
+                    <div class="book-author">By Author Name</div>
+                    <div class="book-tags">
+                        <span class="book-tag">Fanfiction</span>
+                        <span class="book-tag">Action</span>
+                    </div>
+                    <div class="book-stats">
+                        <span>4.9★</span>
+                        <span>92%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <span>Trending Now</span>
+            <a href="#" class="view-all">View All</a>
+        </div>
+        
+        <div class="trending-book">
+            <div class="trending-cover">
+                <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=1000" alt="Dead If You Do">
+            </div>
+            <div class="trending-info">
+                <div class="trending-title">Dead If You Do</div>
+                <div class="trending-desc">When Haley Bell is offered a scholarship to study at the exclusive Woodcreek College, famous for molding the world's brightest thinkers, she jumps at the opportunity. Except when she arrives, the murders start.</div>
+                <div class="trending-stats">
+                    <div><i class="fas fa-book"></i> 94K reads</div>
+                    <div><i class="fas fa-list"></i> 52 parts</div>
+                    <div><i class="fas fa-heart"></i> 92% liked</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <span>Browse Your Favorite Tags</span>
+            <a href="#" class="view-all">View All</a>
+        </div>
+        
+        <div class="tags-container">
+            <div class="tag-card">
+                <div class="tag-icon"><i class="fas fa-search"></i></div>
+                <div class="tag-name">Mystery</div>
+            </div>
+            <div class="tag-card">
+                <div class="tag-icon"><i class="fas fa-flask"></i></div>
+                <div class="tag-name">Science</div>
+            </div>
+            <div class="tag-card">
+                <div class="tag-icon"><i class="fas fa-pen"></i></div>
+                <div class="tag-name">Poetry</div>
+            </div>
+            <div class="tag-card">
+                <div class="tag-icon"><i class="fas fa-book-open"></i></div>
+                <div class="tag-name">Fiction</div>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <span>Completed Stories</span>
+            <a href="#" class="view-all">View All</a>
+        </div>
+        
+        <div class="continue-reading">
+            <div class="continue-header">
+                <div class="continue-title">HE NEVER NOTICED</div>
+                <div class="continue-percent">65%</div>
+            </div>
+            <div class="continue-progress">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="continue-book">
+                <div class="continue-cover">
+                    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1000" alt="He Never Noticed">
+                </div>
+                <div class="continue-info">
+                    <div class="continue-book-title">HE NEVER NOTICED</div>
+                    <div class="continue-book-author">By Genetia</div>
+                    <div class="continue-chapter">Chapter 12: The Revelation</div>
+                    <button class="btn-continue">Continue reading</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="reader-container">
-        <div class="reader-header">
-            <div class="reader-book-cover">
-                The Main Reality Of Life
-            </div>
-            <h1 class="reader-title">The Main Reality Of Life</h1>
-            <div class="reader-author">By Samuel A.O.</div>
-        </div>
-        
-        <div class="reader-content">
-            <h1>THE MAIN REALITY OF LIFE</h1>
-            <h2>SAMUEL A.O</h2>
-            
-            <h3>APPRECIATION</h3>
-            <p>Primarily, my endless thanks to God Almighty for seeing me through this journey and to my mother who gave me her full support in ways she could and I'm grateful to her.</p>
-            
-            <p>Immense gratitude to my incredible beta reader, my one and only sister. Your insightful feedback, sharp eyes, and willingness to wade through early drafts were invaluable. A huge thank you to my editor and cover designer for the stunning cover that perfectly captures the spirit of the book.</p>
-            
-            <p>To my dear friends, Oluwaseyifunmitan and Oluwashindara, thank you for the pep talks, and listening ears.</p>
-            
-            <p>Finally, to you the reader, for picking up this book and stepping into this world. I hope it brings you as much joy as writing it brought me. I love you all and enjoy and be impacted as you read.</p>
-            
-            <h3>INDEX</h3>
-            <p>Chapter 1: The Illusion Vs The Reality</p>
-            <p>Chapter 2: Pain Has A Purpose</p>
-            <p>Chapter 3: Your Choices, Your Life</p>
-            <p>Chapter 4: The people In Your Boat</p>
-            <p>Chapter 5: The Truth About Failure</p>
-            <p>Chapter 6: The Decision That Defines You</p>
-            <p>Chapter 7: The Silent battles We Fight</p>
-            <p>Chapter 8: The Power Of Belief - What Shapes Your Reality</p>
-            <p>Chapter 9: Taking The Leap - From Belief To Action</p>
-            <p>Chapter 10: The Journey Ahead - Living Your Main Reality</p>
-            
-            <h3>INTRODUCTION</h3>
-            <p><strong>Stepping Into Your Main Reality.</strong></p>
-            
-            <p>Life is a complex journey filled with moments of clarity and confusion, joy and pain, certainty, and doubt. We all navigate a world layered with illusions, stories we tell ourselves and narratives shaped by others. But beneath those layers lies a deeper truth: a main reality that defines who we are and how we experience the world. This book is an invitation to uncover that main reality.</p>
-            
-            <p>It's about stripping away illusions to see life clearly.</p>
-            
-            <p>It's about embracing pain as a teacher, not an enemy.</p>
-            
-            <p>It's about understanding that your choices shape your destiny.</p>
-            
-            <p>It's about surrounding yourself with the right people who support your journey.</p>
-            
-            <p>It's about redefining failure as a stepping stone to growth.</p>
-            
-            <p>It's about recognizing the power of belief and then moving beyond belief into courageous action.</p>
-            
-            <p>Each chapter in this book peels back a layer of the human experience and offers insights to help you live more intentionally, authentically, and fully. The reality of life is not something that simply happens to you, it's something you create moment by moment.</p>
-            
-            <p>By the time you finish this book, my hope is that you'll feel empowered to make conscious decisions that align with your truest self and step boldly into the life you are meant to live.</p>
-            
-            <p>This is your journey. This is your main reality. Let's begin.</p>
-            
-            <h3>MONOLOGUE</h3>
-            <p>I want you to stop for a moment. Just pause and breathe. Look around you. Look inside you.</p>
-            
-            <p>How often do you feel truly seen? Utterly understood? Truly alive?</p>
-            
-            <p>Life isn't always what it seems, is it?</p>
-            
-            <p>So much of what we chase—success, approval, comfort—feels just out of reach.</p>
-            
-            <p>We get lost in stories we tell ourselves, in masks we wear, in voices that aren't really ours.</p>
-            
-            <p>But beneath all that noise, beneath all that struggle, there is something real. Something steady. Something waiting for you to discover it.</p>
-            
-            <p>Your main reality.</p>
-            
-            <p>It's not about perfection. It's not about never falling. It's about standing up, repeatedly, with clarity and courage.</p>
-            
-            <p>It's about knowing that your pain, your failures, your choices—they matter. They shape the life only you can live.</p>
-            
-            <p>This book isn't about giving you answers. It's about inviting you to ask better questions. To see more clearly. To live more fully.</p>
-            
-            <p>Because the truth is, the power to create your reality is in your hands.</p>
-            
-            <p>And I'm here to walk beside you, through the illusions, the pain, and the fears toward the life you were meant to live.</p>
-            
-            <p>Are you ready?</p>
-            
-            <div class="free-access">
-                <h1>Chapter 1: The Illusion vs. The Reality</h1>
-                <p>"Everyone is chasing something — success, love, validation, peace. But few stop to ask: What am I really chasing, and why?"</p>
-                
-                <p>From the moment we're born, we're introduced to a script, not handed to us directly but absorbed through the voices and expectations of those around us. Our parents, our teachers, our culture, even the movies and music we consume, all play a part in painting a picture of how life should be. We're told: "Do this, and you'll be happy. Avoid that, and you'll be safe. Achieve these things, and your life will be meaningful."</p>
-                
-                <p>It's not all bad. These ideals often come from a place of care, from people who want the best for us. But over time, many of us come to realize something unsettling: the life we were taught to expect doesn't always match the one we experience.</p>
-                
-                <p>Some people realize this early perhaps in childhood, when their family struggled financially, or when they saw loved ones fighting battles no one talked about. Others experience it much later, perhaps after achieving the very things they thought would bring joy, only to feel emptier than before.</p>
-                
-                <p>The truth? Life doesn't always deliver what it promises.</p>
-                
-                <p>And that's not because life is cruel… it's because the promises weren't real to begin with.</p>
-                
-                <h2>The Dream We're Sold</h2>
-                <p>It starts with a narrative — simple, idealistic, and appealing.</p>
-            </div>
-        </div>
-        
-        <div class="upgrade-box">
-            <h2 class="upgrade-title">Want to read the full book?</h2>
-            <div class="upgrade-price">₦10,000</div>
-            <button class="btn-upgrade">
-                <i class="fas fa-lock"></i> Unlock Full Access
-            </button>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="dashboard-container">
-            <div class="sidebar">
-                <div class="sidebar-header">
-                    <div class="sidebar-title">Dashboard</div>
-                    <div class="sidebar-subtitle">Welcome, Samuel</div>
-                </div>
-                
-                <div class="menu-item active">
-                    <div class="menu-icon"><i class="fas fa-user"></i></div>
-                    <div>My Profile</div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-inbox"></i></div>
-                    <div>Inbox</div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-bell"></i></div>
-                    <div>Notification</div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-book"></i></div>
-                    <div>Library</div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-globe"></i></div>
-                    <div>Language</div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-credit-card"></i></div>
-                    <div>Payments</div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-crown"></i></div>
-                    <div>Premium</div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-cog"></i></div>
-                    <div>Settings</div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-question-circle"></i></div>
-                    <div>Help</div>
-                </div>
-                <div class="menu-item">
-                    <div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div>
-                    <div>Logout</div>
-                </div>
-            </div>
-            
-            <div class="main-content">
-                <div class="dashboard-card">
-                    <h2 class="card-title">My Profile</h2>
-                    
-                    <div class="profile-container">
-                        <div>
-                            <div class="profile-picture">
-                                Profile Picture
-                            </div>
-                            <button class="btn-upgrade" style="margin-top: 20px; width: 100%;">
-                                <i class="fas fa-upload"></i> Change Picture
-                            </button>
-                        </div>
-                        
-                        <div class="profile-form">
-                            <div class="form-group">
-                                <label class="form-label">Full Name</label>
-                                <input type="text" class="form-input" value="Samuel Alake">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Username</label>
-                                <input type="text" class="form-input" value="samcreation">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-input" value="samcreation804@gmail.com">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label class="form-label">Bio</label>
-                                <textarea class="form-input" rows="4">Book lover and knowledge seeker</textarea>
-                            </div>
-                            
-                            <button class="btn-save">
-                                <i class="fas fa-save"></i> Save Changes
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="dashboard-card">
-                    <h2 class="card-title">Help Assistant</h2>
-                    
-                    <div class="chat-container">
-                        <div class="chat-messages">
-                            <div class="message message-ai">
-                                <div class="message-bubble">
-                                    Hello! I'm your InsightAtlas assistant. How can I help you today?
-                                </div>
-                            </div>
-                            
-                            <div class="message message-user">
-                                <div class="message-bubble">
-                                    How do I purchase a book?
-                                </div>
-                            </div>
-                            
-                            <div class="message message-ai">
-                                <div class="message-bubble">
-                                    To purchase a book, click the "Buy Full Access" button on the book page. You'll be guided through the payment process where you'll transfer to our GTBank account. After payment, send the proof to samcreation804@gmail.com with the book name as narration.
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="chat-input-area">
-                            <form class="chat-form">
-                                <input type="text" class="chat-input" placeholder="Ask a question...">
-                                <button type="submit" class="btn-send">
-                                    <i class="fas fa-paper-plane"></i>
-                                </button>
-                            </form>
-                            
-                            <div class="common-questions">
-                                <div class="questions-title">Common questions:</div>
-                                <div class="question-tags">
-                                    <div class="question-tag">How do I read offline?</div>
-                                    <div class="question-tag">How do I change my password?</div>
-                                    <div class="question-tag">I have a payment issue</div>
-                                    <div class="question-tag">Contact support</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="payment-container">
-        <div class="payment-header">
-            <h1 class="reader-title">Complete Your Purchase</h1>
-            <div class="reader-author">The Main Reality Of Life - ₦10,000</div>
-        </div>
-        
-        <div class="payment-steps">
-            <div class="payment-step step-active">
-                <div class="step-number">1</div>
-                <div class="step-title">Payment Details</div>
-            </div>
-            <div class="payment-step">
-                <div class="step-number">2</div>
-                <div class="step-title">Confirmation</div>
-            </div>
-            <div class="payment-step">
-                <div class="step-number">3</div>
-                <div class="step-title">Access Granted</div>
-            </div>
-        </div>
-        
-        <div class="payment-card">
-            <div class="payment-instructions">
-                <div class="instruction-card">
-                    <h3 class="card-section-title">Bank Transfer Details</h3>
-                    <div class="bank-details">
-                        <div class="detail-item">
-                            <div class="detail-label">Bank:</div>
-                            <div class="detail-value">GTBank</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Account Name:</div>
-                            <div class="detail-value">Alake Samuel</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Account Number:</div>
-                            <div class="detail-value">0863542562</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Amount:</div>
-                            <div class="detail-value">₦10,000</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="instruction-card">
-                    <h3 class="card-section-title">Book Information</h3>
-                    <div class="detail-item">
-                        <div class="detail-label">Title:</div>
-                        <div class="detail-value">The Main Reality Of Life</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Author:</div>
-                        <div class="detail-value">Samuel A.O.</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Price:</div>
-                        <div class="detail-value">₦10,000</div>
-                    </div>
-                    <p style="margin-top: 20px; font-size: 14px;">
-                        After payment, please send proof to samcreation804@gmail.com with the book name as narration.
-                    </p>
-                </div>
-            </div>
-            
-            <div class="upload-area">
-                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                <div class="upload-text">Upload Payment Proof</div>
-                <div class="upload-hint">Click to upload screenshot or PDF of transaction</div>
-                <input type="file" style="display: none;">
-            </div>
-            
-            <button class="btn-submit">
-                <i class="fas fa-check-circle"></i> Submit Payment Proof
-            </button>
-        </div>
-        
-        <div class="notification">
-            <h3 class="notification-title">Important Notice</h3>
-            <p>Your book access will be activated after manual verification of your payment proof. This usually takes less than 24 hours.</p>
-        </div>
-    </div>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-title">InsightAtlas</div>
-                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 20px;">
-                        InsightAtlas is a platform where online books are published and readers have full access to read them. Discover transformative literature that changes perspectives.
-                    </p>
-                </div>
-                
-                <div class="footer-section">
-                    <div class="footer-title">Quick Links</div>
-                    <div class="footer-links">
-                        <a href="#" class="footer-link">Home</a>
-                        <a href="#" class="footer-link">Books</a>
-                        <a href="#" class="footer-link">Dashboard</a>
-                        <a href="#" class="footer-link">Premium</a>
-                        <a href="#" class="footer-link">Contact</a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <div class="footer-title">Contact Us</div>
-                    <div class="footer-contact">
-                        <div class="contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>samcreation804@gmail.com</span>
-                        </div>
-                        <div class="contact-item">
-                            <i class="fas fa-phone"></i>
-                            <span>07034969325</span>
-                        </div>
-                        <div class="contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Ekiti State, Nigeria</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                © 2023 InsightAtlas. All rights reserved. Created by Samuel A.O.
-            </div>
-        </div>
-    </footer>
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <i class="fas fa-home nav-icon"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-search nav-icon"></i>
+            <span>Search</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-pen nav-icon"></i>
+            <span>Write</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-book nav-icon"></i>
+            <span>Library</span>
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-user nav-icon"></i>
+            <span>My Profile</span>
+        </a>
+    </nav>
 
     <script>
-        // Toggle dark mode
-        document.querySelector('.theme-toggle').addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            
-            const icon = this.querySelector('i');
-            if (document.body.classList.contains('dark-mode')) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            }
-        });
-        
-        // Simulate page navigation
-        document.querySelectorAll('.btn-read, .logo, .menu-item, .btn-upgrade').forEach(btn => {
-            btn.addEventListener('click', function(e) {
+        // Simulate active navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                if (this.classList.contains('btn-upgrade')) {
-                    document.querySelector('.payment-container').scrollIntoView({ behavior: 'smooth' });
-                } else if (this.classList.contains('menu-item')) {
-                    // Dashboard navigation
-                    const target = this.textContent.trim();
-                    alert(`Navigating to ${target} section in dashboard`);
-                } else {
-                    // Scroll to book reader
-                    document.querySelector('.reader-container').scrollIntoView({ behavior: 'smooth' });
-                }
+                document.querySelectorAll('.nav-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
             });
         });
         
-        // File upload simulation
-        document.querySelector('.upload-area').addEventListener('click', function() {
-            alert('Payment proof upload dialog would appear here');
+        // Simulate book selection
+        document.querySelectorAll('.book-card, .trending-book, .continue-book').forEach(book => {
+            book.addEventListener('click', function() {
+                alert('Book page would open here');
+            });
         });
+        
+        // Simulate tag selection
+        document.querySelectorAll('.tag-card').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const tagName = this.querySelector('.tag-name').textContent;
+                alert(`Filtering by ${tagName} tag`);
+            });
+        });
+        
+        // Simulate premium button
+        document.querySelector('.btn-premium').addEventListener('click', function() {
+            alert('Premium subscription screen would appear');
+        });
+        
+        // Update time display
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            document.querySelector('.time-display').textContent = `${hours}:${minutes}`;
+        }
+        
+        // Update time every minute
+        updateTime();
+        setInterval(updateTime, 60000);
     </script>
 </body>
 </html>
