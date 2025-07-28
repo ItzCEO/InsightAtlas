@@ -1,1296 +1,1493 @@
-// src/App.js
-import React, { useState, useEffect, createContext, useContext } from 'react';
-import ReactDOM from 'react-dom/client';
-
-// ======================
-// Contexts and Providers
-// ======================
-
-// Auth Context
-const AuthContext = createContext();
-
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
-  }, []);
-
-  const login = (username) => {
-    const userData = { username, id: Date.now().toString() };
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-    return userData;
-  };
-
-  const signup = (username, password) => {
-    const userData = { username, id: Date.now().toString() };
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-    return userData;
-  };
-
-  const logout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => useContext(AuthContext);
-
-// Theme Context
-const ThemeContext = createContext();
-
-export const ThemeProvider = ({ children }) => {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      setDarkMode(savedTheme === 'dark');
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = !darkMode ? 'dark' : 'light';
-    setDarkMode(!darkMode);
-    localStorage.setItem('theme', newTheme);
-  };
-
-  return (
-    <ThemeContext.Provider value={{ darkMode, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
-
-export const useTheme = () => useContext(ThemeContext);
-
-// ======================
-// Custom Hooks
-// ======================
-
-// Session Management Hook
-export const useSession = () => {
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-  let logoutTimer;
-
-  const resetTimer = () => {
-    clearTimeout(logoutTimer);
-    logoutTimer = setTimeout(() => {
-      logout();
-      navigate('/login');
-    }, 30 * 60 * 1000); // 30 minutes
-  };
-
-  useEffect(() => {
-    const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
-    events.forEach(event => {
-      window.addEventListener(event, resetTimer);
-    });
-
-    resetTimer();
-
-    return () => {
-      clearTimeout(logoutTimer);
-      events.forEach(event => {
-        window.removeEventListener(event, resetTimer);
-      });
-    };
-  }, []);
-};
-
-// Security Hook
-export const useSecurity = () => {
-  useEffect(() => {
-    const handleContextMenu = (e) => {
-      if (process.env.NODE_ENV === 'production') {
-        e.preventDefault();
-      }
-    };
-
-    const handleCopy = (e) => {
-      if (process.env.NODE_ENV === 'production') {
-        e.preventDefault();
-      }
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        console.warn('Screen recording might be in progress');
-      }
-    };
-
-    document.addEventListener('contextmenu', handleContextMenu);
-    document.addEventListener('copy', handleCopy);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-      document.removeEventListener('copy', handleCopy);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, []);
-};
-
-// ======================
-// Components
-// ======================
-
-// Header Component
-const Header = () => {
-  const { darkMode, toggleTheme } = useTheme();
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
-
-  return (
-    <header className={`py-4 ${darkMode ? 'bg-gray-800' : 'bg-blue-600'}`}>
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
-          <h1 className={`ml-4 text-2xl font-bold ${darkMode ? 'text-white' : 'text-white'}`}>
-            InsightAtlas
-          </h1>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsightAtlas - Reader App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
         
-        <div className="flex items-center space-x-4">
-          {user ? (
-            <>
-              <button 
-                onClick={() => navigate('/dashboard')}
-                className={`px-4 py-2 rounded-lg ${
-                  darkMode ? 'bg-gray-700 text-white' : 'bg-white text-blue-600'
-                }`}
-              >
-                Dashboard
-              </button>
-              <button 
-                onClick={logout}
-                className={`px-4 py-2 rounded-lg ${
-                  darkMode ? 'bg-gray-700 text-white' : 'bg-white text-blue-600'
-                }`}
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <button 
-                onClick={() => navigate('/login')}
-                className={`px-4 py-2 rounded-lg ${
-                  darkMode ? 'bg-gray-700 text-white' : 'bg-white text-blue-600'
-                }`}
-              >
-                Login
-              </button>
-              <button 
-                onClick={() => navigate('/signup')}
-                className={`px-4 py-2 rounded-lg ${
-                  darkMode ? 'bg-gray-700 text-white' : 'bg-white text-blue-600'
-                }`}
-              >
-                Sign Up
-              </button>
-            </>
-          )}
-          <button 
-            onClick={toggleTheme}
-            className={`p-2 rounded-full ${
-              darkMode ? 'bg-gray-700 text-yellow-400' : 'bg-gray-200 text-gray-700'
-            }`}
-          >
-            {darkMode ? '☀️' : '🌙'}
-          </button>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #ffd166;
+            --dark-bg: #1e293b;
+            --dark-card: #334155;
+            --dark-text: #f1f5f9;
+            --light-bg: #f8fafc;
+            --light-card: #ffffff;
+            --light-text: #1e293b;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --gray: #94a3b8;
+            --gold: #ffb700;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            transition: background-color 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffd166, #ffb700);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1e293b;
+            font-size: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .logo-text {
+            margin-left: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: #f0f7ff;
+            transform: translateY(-2px);
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .search-bar {
+            margin: 24px 0;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: var(--border-radius);
+            border: 1px solid #cbd5e1;
+            font-size: 16px;
+            background-color: white;
+            color: var(--light-text);
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .search-bar input {
+            background-color: var(--dark-card);
+            border-color: #475569;
+            color: var(--dark-text);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .book-card {
+            background-color: var(--light-card);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .dark-mode .book-card {
+            background-color: var(--dark-card);
+        }
+        
+        .book-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .book-card-content {
+            display: flex;
+            padding: 20px;
+        }
+        
+        .book-cover {
+            width: 100px;
+            height: 140px;
+            background: linear-gradient(135deg, #3a56d4, #4361ee);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .book-cover {
+            background: linear-gradient(135deg, #2d46b3, #3a56d4);
+        }
+        
+        .book-info {
+            flex: 1;
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .book-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .book-author {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 12px;
+        }
+        
+        .book-price {
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .book-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .badge-free {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .badge-premium {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .book-actions {
+            margin-top: 16px;
+        }
+        
+        .btn-read {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-read:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .reader-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .reader-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .reader-book-cover {
+            width: 180px;
+            height: 240px;
+            background: linear-gradient(135deg, #3a56d4, #4361ee);
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .reader-book-cover {
+            background: linear-gradient(135deg, #2d46b3, #3a56d4);
+        }
+        
+        .reader-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .reader-author {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 24px;
+        }
+        
+        .reader-content {
+            line-height: 1.8;
+            font-size: 18px;
+            padding: 20px 0;
+        }
+        
+        .reader-content h1, 
+        .reader-content h2, 
+        .reader-content h3 {
+            margin: 32px 0 16px;
+            color: var(--primary);
+        }
+        
+        .dark-mode .reader-content h1,
+        .dark-mode .reader-content h2,
+        .dark-mode .reader-content h3 {
+            color: #ffd166;
+        }
+        
+        .reader-content p {
+            margin-bottom: 24px;
+        }
+        
+        .free-access {
+            position: relative;
+        }
+        
+        .free-access::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), var(--light-bg));
+            pointer-events: none;
+        }
+        
+        .dark-mode .free-access::after {
+            background: linear-gradient(to bottom, rgba(30, 41, 59, 0.1), var(--dark-bg));
+        }
+        
+        .upgrade-box {
+            background: linear-gradient(135deg, #ffb700, #ffd166);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            text-align: center;
+            margin: 48px 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .upgrade-box {
+            background: linear-gradient(135deg, #e6a100, #ffc44d);
+        }
+        
+        .upgrade-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #1e293b;
+        }
+        
+        .upgrade-price {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 24px;
+        }
+        
+        .btn-upgrade {
+            background-color: #1e293b;
+            color: white;
+            padding: 16px 40px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-upgrade:hover {
+            background-color: #0f172a;
+            transform: translateY(-3px);
+        }
+        
+        .dashboard-container {
+            display: flex;
+            gap: 24px;
+            margin-top: 20px;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: var(--light-card);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            height: fit-content;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .sidebar {
+            background-color: var(--dark-card);
+        }
+        
+        .sidebar-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .dark-mode .sidebar-header {
+            border-color: #475569;
+        }
+        
+        .sidebar-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-weight: 500;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+        
+        .dark-mode .menu-item:hover, 
+        .dark-mode .menu-item.active {
+            background-color: rgba(67, 97, 238, 0.2);
+        }
+        
+        .menu-icon {
+            margin-right: 12px;
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+        
+        .dashboard-card {
+            background-color: var(--light-card);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .dashboard-card {
+            background-color: var(--dark-card);
+        }
+        
+        .card-title {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .dark-mode .card-title {
+            border-color: #475569;
+        }
+        
+        .profile-container {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .profile-picture {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #3a56d4, #4361ee);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .profile-picture {
+            background: linear-gradient(135deg, #2d46b3, #3a56d4);
+        }
+        
+        .profile-form {
+            flex: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            font-size: 16px;
+            background-color: var(--light-card);
+            color: var(--light-text);
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .form-input {
+            background-color: var(--dark-card);
+            border-color: #475569;
+            color: var(--dark-text);
+        }
+        
+        .btn-save {
+            background-color: var(--primary);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-save:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .chat-container {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .chat-container {
+            border-color: #475569;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .dark-mode .chat-messages {
+            background-color: #0f172a;
+        }
+        
+        .message {
+            display: flex;
+            max-width: 80%;
+        }
+        
+        .message-ai {
+            align-self: flex-start;
+        }
+        
+        .message-user {
+            align-self: flex-end;
+        }
+        
+        .message-bubble {
+            padding: 14px 18px;
+            border-radius: 18px;
+            display: inline-block;
+            box-shadow: var(--shadow);
+        }
+        
+        .message-ai .message-bubble {
+            background-color: white;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .dark-mode .message-ai .message-bubble {
+            background-color: var(--dark-card);
+        }
+        
+        .message-user .message-bubble {
+            background-color: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .chat-input-area {
+            border-top: 1px solid #cbd5e1;
+            padding: 20px;
+            background-color: white;
+        }
+        
+        .dark-mode .chat-input-area {
+            border-color: #475569;
+            background-color: var(--dark-card);
+        }
+        
+        .chat-form {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 14px 18px;
+            border-radius: 24px;
+            border: 1px solid #cbd5e1;
+            font-size: 16px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .chat-input {
+            background-color: var(--dark-card);
+            border-color: #475569;
+            color: var(--dark-text);
+        }
+        
+        .btn-send {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-send:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .common-questions {
+            margin-top: 20px;
+        }
+        
+        .questions-title {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 12px;
+        }
+        
+        .question-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .question-tag {
+            background-color: #e2e8f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .dark-mode .question-tag {
+            background-color: #475569;
+        }
+        
+        .question-tag:hover {
+            background-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+        
+        .dark-mode .question-tag:hover {
+            background-color: #334155;
+        }
+        
+        .payment-container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+        
+        .payment-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .payment-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        
+        .payment-step {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+        }
+        
+        .step-active .step-number {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .step-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .payment-card {
+            background-color: var(--light-card);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .payment-card {
+            background-color: var(--dark-card);
+        }
+        
+        .payment-instructions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        @media (max-width: 768px) {
+            .payment-instructions {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .instruction-card {
+            border: 1px solid #cbd5e1;
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .instruction-card {
+            border-color: #475569;
+        }
+        
+        .card-section-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+        
+        .dark-mode .card-section-title {
+            color: #ffd166;
+        }
+        
+        .bank-details {
+            margin-top: 16px;
+        }
+        
+        .detail-item {
+            margin-bottom: 12px;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            width: 140px;
+            color: var(--gray);
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            flex: 1;
+        }
+        
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: var(--border-radius);
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+        
+        .dark-mode .upload-area:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: var(--gray);
+        }
+        
+        .upload-text {
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .upload-hint {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .btn-submit {
+            background-color: var(--success);
+            color: white;
+            padding: 16px 28px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-submit:hover {
+            background-color: #05b388;
+            transform: translateY(-2px);
+        }
+        
+        .notification {
+            background: linear-gradient(135deg, #ffb700, #ffd166);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .notification {
+            background: linear-gradient(135deg, #e6a100, #ffc44d);
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+        
+        .notification p {
+            color: #1e293b;
+        }
+        
+        .footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .footer-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .footer-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .footer-link:hover {
+            color: white;
+        }
+        
+        .footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .book-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .profile-container {
+                flex-direction: column;
+            }
+            
+            .header-buttons .btn {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">IA</div>
+                    <div class="logo-text">InsightAtlas</div>
+                </div>
+                
+                <div class="header-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-user"></i> Samuel
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                    <button class="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
     </header>
-  );
-};
 
-// Book Card Component
-const BookCard = ({ book }) => {
-  const { darkMode } = useTheme();
-  const navigate = useNavigate();
-
-  return (
-    <div className={`rounded-xl shadow-md overflow-hidden transition-transform hover:scale-105 ${
-      darkMode ? 'bg-gray-800' : 'bg-white'
-    }`}>
-      <div className="flex">
-        <div className="w-1/3">
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-48" />
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" placeholder="Search books by title or author...">
+            <div class="search-icon"><i class="fas fa-search"></i></div>
         </div>
         
-        <div className="w-2/3 p-4">
-          <h3 className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-black'}`}>
-            {book.title}
-          </h3>
-          <p className={`text-sm mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            By {book.author}
-          </p>
-          
-          <div className="mt-4">
-            {book.isFree ? (
-              <span className="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                Free Access
-              </span>
-            ) : (
-              <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                Premium
-              </span>
-            )}
-          </div>
-          
-          <div className="mt-4">
-            <button
-              onClick={() => navigate(`/book/${book.id}`)}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-            >
-              Read Now
-            </button>
-          </div>
+        <div class="book-grid">
+            <div class="book-card">
+                <div class="book-card-content">
+                    <div class="book-cover">
+                        The Main Reality Of Life
+                    </div>
+                    <div class="book-info">
+                        <div>
+                            <div class="book-title">The Main Reality Of Life</div>
+                            <div class="book-author">By Samuel A.O.</div>
+                            <div class="book-price">₦10,000</div>
+                            <span class="book-badge badge-premium">Premium</span>
+                        </div>
+                        <div class="book-actions">
+                            <button class="btn-read">
+                                <i class="fas fa-book-open"></i> Read Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  );
-};
 
-// Book List Component
-const BookList = ({ books }) => {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {books.map(book => (
-        <BookCard key={book.id} book={book} />
-      ))}
-    </div>
-  );
-};
-
-// Help Assistant Component
-const HelpAssistant = () => {
-  const { darkMode } = useTheme();
-  const [messages, setMessages] = useState([
-    { text: "Hello! I'm your InsightAtlas assistant. How can I help you today?", sender: 'ai' }
-  ]);
-  const [input, setInput] = useState('');
-  const messagesEndRef = useRef(null);
-  
-  const commonQuestions = [
-    "How do I purchase a book?",
-    "How do I read offline?",
-    "How do I change my password?",
-    "I have a payment issue",
-    "Contact support"
-  ];
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-    
-    // Add user message
-    const userMessage = { text: input, sender: 'user' };
-    setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    
-    // Simulate AI response after a delay
-    setTimeout(() => {
-      let response = "I'm here to help. Could you please provide more details?";
-      
-      if (input.toLowerCase().includes('payment') || input.toLowerCase().includes('purchase')) {
-        response = "To purchase a book, click the 'Buy Full Access' button on the book page. You'll be guided through the payment process where you'll transfer to our GTBank account. After payment, send the proof to samcreation804@gmail.com with the book name as narration.";
-      } 
-      else if (input.toLowerCase().includes('offline')) {
-        response = "To read offline, go to your Library and click the Download button next to any book you've purchased. Once downloaded, you can read it anytime without an internet connection.";
-      }
-      else if (input.toLowerCase().includes('password')) {
-        response = "You can change your password in Settings > Account Security. If you've forgotten your password, please contact support at samcreation804@gmail.com.";
-      }
-      else if (input.toLowerCase().includes('contact') || input.toLowerCase().includes('support')) {
-        response = "You can contact our support team via email at samcreation804@gmail.com or WhatsApp at 07034969325. We typically respond within 24 hours.";
-      }
-      
-      setMessages(prev => [...prev, { text: response, sender: 'ai' }]);
-    }, 1000);
-  };
-
-  return (
-    <div className={`rounded-xl shadow-md p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-      <h2 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-black'}`}>
-        Help Assistant
-      </h2>
-      
-      <div className={`border rounded-lg overflow-hidden h-[500px] flex flex-col ${
-        darkMode ? 'border-gray-700' : 'border-gray-300'
-      }`}>
-        <div className={`flex-1 overflow-y-auto p-4 ${
-          darkMode ? 'bg-gray-900' : 'bg-gray-50'
-        }`}>
-          {messages.map((msg, i) => (
-            <div 
-              key={i} 
-              className={`mb-4 ${msg.sender === 'user' ? 'text-right' : ''}`}
-            >
-              <div 
-                className={`inline-block p-3 rounded-lg max-w-[80%] ${
-                  msg.sender === 'user' 
-                    ? 'bg-blue-600 text-white rounded-br-none' 
-                    : `${darkMode ? 'bg-gray-700' : 'bg-gray-200'} rounded-bl-none`
-                }`}
-              >
-                {msg.text}
-              </div>
+    <div class="reader-container">
+        <div class="reader-header">
+            <div class="reader-book-cover">
+                The Main Reality Of Life
             </div>
-          ))}
-          <div ref={messagesEndRef} />
+            <h1 class="reader-title">The Main Reality Of Life</h1>
+            <div class="reader-author">By Samuel A.O.</div>
         </div>
         
-        <div className={`border-t p-4 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <form onSubmit={handleSubmit} className="flex">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask a question..."
-              className={`flex-1 border ${
-                darkMode ? 'border-gray-600 bg-gray-700 text-white' : 'border-gray-300'
-              } rounded-l-lg p-3 focus:outline-none`}
-            />
-            <button 
-              type="submit" 
-              className="bg-blue-600 text-white px-6 rounded-r-lg font-medium"
-            >
-              Send
-            </button>
-          </form>
-          
-          <div className="mt-3">
-            <p className={`text-sm mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              Common questions:
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {commonQuestions.map((q, i) => (
-                <button
-                  key={i}
-                  onClick={() => setInput(q)}
-                  className={`text-sm px-3 py-1 rounded-lg ${
-                    darkMode 
-                      ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' 
-                      : 'bg-gray-200 hover:bg-gray-300'
-                  }`}
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ======================
-// Pages
-// ======================
-
-// Home Page
-const HomePage = () => {
-  const { user } = useAuth();
-  const { darkMode } = useTheme();
-  const [searchTerm, setSearchTerm] = useState('');
-
-  // Mock book data
-  const books = [
-    {
-      id: '1',
-      title: 'The Main Reality Of Life',
-      author: 'Samuel A.O.',
-      coverImage: '/book-covers/main-reality.jpg',
-      isFree: false,
-      price: 2500,
-      description: 'A profound exploration of life\'s deepest truths and illusions',
-      freeContent: 'First few chapters...'
-    }
-  ];
-
-  const filteredBooks = books.filter(book => 
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    book.author.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <Header />
-      
-      <div className="mt-8 mb-6">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search books by title or author..."
-            className={`w-full p-4 rounded-lg border ${
-              darkMode ? 'border-gray-700 bg-gray-800 text-white' : 'border-gray-300 bg-white text-black'
-            }`}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <svg 
-            className={`absolute right-4 top-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} 
-            xmlns="http://www.w3.org/2000/svg" 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24"
-          >
-            <path fill="currentColor" d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3l-1.4 1.4ZM9.5 14q1.875 0 3.188-1.313T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14Z"/>
-          </svg>
-        </div>
-      </div>
-
-      <BookList books={filteredBooks} />
-    </div>
-  );
-};
-
-// Login Page
-const LoginPage = () => {
-  const { login } = useAuth();
-  const { darkMode } = useTheme();
-  const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!username || !password) {
-      setError('Please enter both username and password');
-      return;
-    }
-    
-    login(username);
-    navigate('/');
-  };
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <Header />
-      
-      <div className="max-w-md mx-auto mt-16">
-        <div className={`rounded-xl shadow-lg p-8 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h1 className={`text-3xl font-bold mb-8 text-center ${darkMode ? 'text-white' : 'text-black'}`}>
-            Sign In to InsightAtlas
-          </h1>
-          
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
-            </div>
-          )}
-          
-          <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Username
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className={`w-full p-3 rounded-lg border ${
-                  darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                }`}
-                placeholder="Enter your username"
-              />
-            </div>
+        <div class="reader-content">
+            <h1>THE MAIN REALITY OF LIFE</h1>
+            <h2>SAMUEL A.O</h2>
             
-            <div className="mb-6">
-              <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`w-full p-3 rounded-lg border ${
-                  darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                }`}
-                placeholder="Enter your password"
-              />
-            </div>
+            <h3>APPRECIATION</h3>
+            <p>Primarily, my endless thanks to God Almighty for seeing me through this journey and to my mother who gave me her full support in ways she could and I'm grateful to her.</p>
             
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
-            >
-              Sign In
-            </button>
+            <p>Immense gratitude to my incredible beta reader, my one and only sister. Your insightful feedback, sharp eyes, and willingness to wade through early drafts were invaluable. A huge thank you to my editor and cover designer for the stunning cover that perfectly captures the spirit of the book.</p>
             
-            <div className="mt-6 text-center">
-              <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                Don't have an account?{' '}
-                <button 
-                  onClick={() => navigate('/signup')}
-                  className="text-blue-500 hover:text-blue-700 font-medium"
-                >
-                  Sign Up
-                </button>
-              </p>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Signup Page
-const SignupPage = () => {
-  const { signup } = useAuth();
-  const { darkMode } = useTheme();
-  const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!username || !password) {
-      setError('Please enter both username and password');
-      return;
-    }
-    
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-    
-    signup(username, password);
-    navigate('/');
-  };
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <Header />
-      
-      <div className="max-w-md mx-auto mt-16">
-        <div className={`rounded-xl shadow-lg p-8 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h1 className={`text-3xl font-bold mb-8 text-center ${darkMode ? 'text-white' : 'text-black'}`}>
-            Create an Account
-          </h1>
-          
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
-            </div>
-          )}
-          
-          <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-              <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Username
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className={`w-full p-3 rounded-lg border ${
-                  darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                }`}
-                placeholder="Choose a username"
-              />
-            </div>
+            <p>To my dear friends, Oluwaseyifunmitan and Oluwashindara, thank you for the pep talks, and listening ears.</p>
             
-            <div className="mb-6">
-              <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`w-full p-3 rounded-lg border ${
-                  darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                }`}
-                placeholder="Create a password"
-              />
-            </div>
+            <p>Finally, to you the reader, for picking up this book and stepping into this world. I hope it brings you as much joy as writing it brought me. I love you all and enjoy and be impacted as you read.</p>
             
-            <div className="mb-6">
-              <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className={`w-full p-3 rounded-lg border ${
-                  darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                }`}
-                placeholder="Confirm your password"
-              />
-            </div>
+            <h3>INDEX</h3>
+            <p>Chapter 1: The Illusion Vs The Reality</p>
+            <p>Chapter 2: Pain Has A Purpose</p>
+            <p>Chapter 3: Your Choices, Your Life</p>
+            <p>Chapter 4: The people In Your Boat</p>
+            <p>Chapter 5: The Truth About Failure</p>
+            <p>Chapter 6: The Decision That Defines You</p>
+            <p>Chapter 7: The Silent battles We Fight</p>
+            <p>Chapter 8: The Power Of Belief - What Shapes Your Reality</p>
+            <p>Chapter 9: Taking The Leap - From Belief To Action</p>
+            <p>Chapter 10: The Journey Ahead - Living Your Main Reality</p>
             
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
-            >
-              Create Account
-            </button>
+            <h3>INTRODUCTION</h3>
+            <p><strong>Stepping Into Your Main Reality.</strong></p>
             
-            <div className="mt-6 text-center">
-              <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                Already have an account?{' '}
-                <button 
-                  onClick={() => navigate('/login')}
-                  className="text-blue-500 hover:text-blue-700 font-medium"
-                >
-                  Sign In
-                </button>
-              </p>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Book Reader Page
-const BookReader = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { darkMode } = useTheme();
-  const { user } = useAuth();
-  const [book, setBook] = useState(null);
-  const [accessLevel, setAccessLevel] = useState('free');
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
-
-  // Mock book data
-  const books = [
-    {
-      id: '1',
-      title: 'The Main Reality Of Life',
-      author: 'Samuel A.O.',
-      coverImage: '/book-covers/main-reality.jpg',
-      isFree: false,
-      price: 2500,
-      freeContent: `
-        <h1 class="text-3xl font-bold mb-4">THE MAIN REALITY OF LIFE</h1>
-        <h2 class="text-xl font-semibold mb-8">SAMUEL A.O</h2>
-        
-        <h3 class="text-lg font-bold mb-4">APPRECIATION</h3>
-        <p class="mb-4">Primarily, my endless thanks to God Almighty for seeing me through this journey...</p>
-        
-        <h3 class="text-xl font-bold mb-4">Chapter 1: The Illusion vs. The Reality</h3>
-        <p class="mb-4 italic">"Everyone is chasing something — success, love, validation, peace. But few stop to ask: What am I really chasing, and why?"</p>
-        
-        <p class="mb-4">From the moment we're born, we're introduced to a script, not handed to us directly but absorbed through the voices and expectations of those around us...</p>
-      `,
-      fullContent: `
-        <h1 class="text-3xl font-bold mb-4">THE MAIN REALITY OF LIFE</h1>
-        <h2 class="text-xl font-semibold mb-8">SAMUEL A.O</h2>
-        
-        <h3 class="text-lg font-bold mb-4">APPRECIATION</h3>
-        <p class="mb-4">Primarily, my endless thanks to God Almighty for seeing me through this journey...</p>
-        
-        <h3 class="text-xl font-bold mb-4">Chapter 1: The Illusion vs. The Reality</h3>
-        <p class="mb-4 italic">"Everyone is chasing something — success, love, validation, peace. But few stop to ask: What am I really chasing, and why?"</p>
-        
-        <p class="mb-4">From the moment we're born, we're introduced to a script, not handed to us directly but absorbed through the voices and expectations of those around us...</p>
-        
-        <!-- Full book content would continue here -->
-        
-        <h3 class="text-xl font-bold mt-8 mb-4">Chapter 10: The Journey Ahead — Living Your Main Reality</h3>
-        <p class="mb-4">The End is Just the Beginning</p>
-        
-        <p class="mb-4">As we reach the final chapter of this exploration into The Main Reality Of Life...</p>
-        
-        <h3 class="text-lg font-bold mt-8 mb-4">ABOUT THE AUTHOR</h3>
-        <p class="mb-4">Samuel A.O. is currently a student of Ekiti State University in the department of Statistics...</p>
-      `
-    }
-  ];
-
-  useEffect(() => {
-    const foundBook = books.find(b => b.id === id);
-    
-    if (!foundBook) {
-      navigate('/');
-      return;
-    }
-    
-    setBook(foundBook);
-    
-    // Check if user has purchased this book
-    const purchasedBooks = JSON.parse(localStorage.getItem('purchasedBooks') || '[]');
-    if (purchasedBooks.includes(id)) {
-      setAccessLevel('full');
-    }
-  }, [id, navigate]);
-
-  useEffect(() => {
-    const handleOnline = () => setIsOffline(false);
-    const handleOffline = () => setIsOffline(true);
-    
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
-
-  const handlePurchase = () => {
-    navigate('/payment');
-  };
-
-  if (!book) return <div className="text-center py-12">Loading book...</div>;
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <Header />
-      
-      <div className="mt-8 max-w-4xl mx-auto">
-        {isOffline && (
-          <div className="bg-yellow-500 text-black p-4 mb-6 rounded-lg text-center">
-            You are offline. Reading from cached version.
-          </div>
-        )}
-        
-        <div className="text-center mb-8">
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-48 h-64 mx-auto" />
-          <h1 className={`text-3xl font-bold mt-4 ${darkMode ? 'text-white' : 'text-black'}`}>
-            {book.title}
-          </h1>
-          <p className={`mt-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            By {book.author}
-          </p>
-        </div>
-        
-        <div 
-          className={`prose max-w-none mb-12 ${darkMode ? 'prose-invert' : ''}`}
-          dangerouslySetInnerHTML={{ 
-            __html: accessLevel === 'full' ? book.fullContent : book.freeContent 
-          }}
-        />
-        
-        {accessLevel === 'free' && (
-          <div className={`p-6 rounded-lg text-center mb-12 ${
-            darkMode ? 'bg-gray-800' : 'bg-gray-100'
-          }`}>
-            <h3 className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-black'}`}>
-              Want to read the full book?
-            </h3>
-            <button 
-              onClick={handlePurchase}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-colors"
-            >
-              Buy Full Access - ₦2,500
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Payment Page
-const PaymentPage = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const { darkMode } = useTheme();
-  const [paymentDetails] = useState({
-    bookName: 'The Main Reality Of Life',
-    amount: 2500,
-    accountNumber: '0863542562',
-    accountName: 'Alake Samuel',
-    bank: 'GTBank',
-    email: 'samcreation804@gmail.com',
-    whatsapp: '07034969325'
-  });
-  const [transactionProof, setTransactionProof] = useState(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleFileChange = (e) => {
-    setTransactionProof(e.target.files[0]);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Save purchase locally
-    const purchasedBooks = JSON.parse(localStorage.getItem('purchasedBooks') || '[]');
-    purchasedBooks.push('1'); // Book ID for "The Main Reality Of Life"
-    localStorage.setItem('purchasedBooks', JSON.stringify(purchasedBooks));
-    
-    setIsSubmitted(true);
-    
-    // Redirect to book after 3 seconds
-    setTimeout(() => {
-      navigate('/book/1');
-    }, 3000);
-  };
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <Header />
-      
-      <div className="max-w-3xl mx-auto mt-8">
-        <h1 className={`text-3xl font-bold text-center mb-8 ${darkMode ? 'text-white' : 'text-black'}`}>
-          Complete Your Purchase
-        </h1>
-        
-        {isSubmitted ? (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6">
-            <p className="font-bold">Payment Submitted!</p>
-            <p>Your payment proof has been sent for verification. You'll be redirected to the book shortly.</p>
-          </div>
-        ) : (
-          <div className={`rounded-xl shadow-lg p-6 mb-8 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <h2 className={`text-xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-black'}`}>
-              Payment Instructions
-            </h2>
+            <p>Life is a complex journey filled with moments of clarity and confusion, joy and pain, certainty, and doubt. We all navigate a world layered with illusions, stories we tell ourselves and narratives shaped by others. But beneath those layers lies a deeper truth: a main reality that defines who we are and how we experience the world. This book is an invitation to uncover that main reality.</p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className={`border rounded-lg p-4 ${
-                darkMode ? 'border-gray-700' : 'border-gray-200'
-              }`}>
-                <h3 className={`font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Bank Transfer Details
-                </h3>
-                <p className={`mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  <span className="font-medium">Bank:</span> {paymentDetails.bank}
-                </p>
-                <p className={`mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  <span className="font-medium">Account Name:</span> {paymentDetails.accountName}
-                </p>
-                <p className={`mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  <span className="font-medium">Account Number:</span> {paymentDetails.accountNumber}
-                </p>
-                <p className={`mt-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  <span className="font-medium">Amount:</span> ₦{paymentDetails.amount.toLocaleString()}
-                </p>
-              </div>
-              
-              <div className={`border rounded-lg p-4 ${
-                darkMode ? 'border-gray-700' : 'border-gray-200'
-              }`}>
-                <h3 className={`font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Book Information
-                </h3>
-                <p className={`mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  <span className="font-medium">Title:</span> {paymentDetails.bookName}
-                </p>
-                <p className={`mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  <span className="font-medium">Price:</span> ₦{paymentDetails.amount.toLocaleString()}
-                </p>
-                <p className={`mt-3 text-sm ${
-                  darkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}>
-                  After payment, please send proof and book name as narration to:
-                </p>
-                <p className="text-blue-500">{paymentDetails.email}</p>
-                <p className={`text-sm mt-2 ${
-                  darkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}>
-                  Or via WhatsApp: {paymentDetails.whatsapp}
-                </p>
-              </div>
-            </div>
+            <p>It's about stripping away illusions to see life clearly.</p>
             
-            <form onSubmit={handleSubmit}>
-              <div className="mb-4">
-                <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Upload Payment Proof
-                </label>
-                <input
-                  type="file"
-                  accept="image/*, .pdf"
-                  onChange={handleFileChange}
-                  className={`w-full p-3 rounded-lg border ${
-                    darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                  }`}
-                  required
-                />
-              </div>
-              
-              <div className="mb-4">
-                <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Transaction Reference (Optional)
-                </label>
-                <input
-                  type="text"
-                  className={`w-full p-3 rounded-lg border ${
-                    darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                  }`}
-                  placeholder="Enter reference number if available"
-                />
-              </div>
-              
-              <button
-                type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors"
-              >
-                Submit Payment Proof
-              </button>
-            </form>
-          </div>
-        )}
-        
-        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-6">
-          <p className="font-bold">Important Notice</p>
-          <p>Your book access will be activated after manual verification of your payment proof. This usually takes less than 24 hours.</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Dashboard Page
-const Dashboard = () => {
-  const { darkMode } = useTheme();
-  const { user, logout } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
-  
-  const menuItems = [
-    { path: 'profile', label: 'My Profile', icon: '👤' },
-    { path: 'inbox', label: 'Inbox', icon: '📥' },
-    { path: 'notification', label: 'Notification', icon: '🔔' },
-    { path: 'library', label: 'Library', icon: '📚' },
-    { path: 'language', label: 'Language', icon: '🌐' },
-    { path: 'payments', label: 'Payments', icon: '💳' },
-    { path: 'premium', label: 'Premium', icon: '⭐' },
-    { path: 'settings', label: 'Settings', icon: '⚙️' },
-    { path: 'help', label: 'Help', icon: '❓' },
-  ];
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <Header />
-      
-      <div className="flex flex-col md:flex-row mt-8 gap-6">
-        {/* Sidebar */}
-        <div className={`w-full md:w-64 rounded-xl p-4 ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
-          <div className="mb-6">
-            <h2 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-black'}`}>Dashboard</h2>
-            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Welcome, {user?.username}</p>
-          </div>
-          
-          <nav>
-            <ul className="space-y-2">
-              {menuItems.map(item => (
-                <li key={item.path}>
-                  <button
-                    onClick={() => navigate(`/dashboard/${item.path}`)}
-                    className={`flex items-center w-full px-3 py-2 rounded-lg transition-colors ${
-                      location.pathname.includes(item.path) 
-                        ? 'bg-blue-600 text-white' 
-                        : darkMode 
-                          ? 'hover:bg-gray-700 text-gray-300' 
-                          : 'hover:bg-gray-200 text-gray-700'
-                    }`}
-                  >
-                    <span className="mr-3">{item.icon}</span>
-                    {item.label}
-                  </button>
-                </li>
-              ))}
-              
-              <li>
-                <button
-                  onClick={logout}
-                  className={`flex items-center w-full px-3 py-2 rounded-lg transition-colors ${
-                    darkMode ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-200 text-gray-700'
-                  }`}
-                >
-                  <span className="mr-3">🚪</span>
-                  Logout
-                </button>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        
-        {/* Main Content */}
-        <div className="flex-1">
-          <Routes>
-            <Route path="profile" element={<Profile />} />
-            <Route path="inbox" element={<Inbox />} />
-            <Route path="notification" element={<NotificationSettings />} />
-            <Route path="library" element={<Library />} />
-            <Route path="language" element={<LanguageSettings />} />
-            <Route path="payments" element={<Payments />} />
-            <Route path="premium" element={<Premium />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="help" element={<HelpAssistant />} />
-            <Route index element={<Profile />} />
-          </Routes>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Dashboard Components
-const Profile = () => {
-  const { darkMode } = useTheme();
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [bio, setBio] = useState('');
-
-  useEffect(() => {
-    // Simulate loading user data
-    setTimeout(() => {
-      setName('Samuel Alake');
-      setUsername('samcreation');
-      setEmail('samcreation804@gmail.com');
-      setBio('Book lover and knowledge seeker');
-    }, 500);
-  }, []);
-
-  return (
-    <div className={`rounded-xl shadow-md p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-      <h2 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-black'}`}>
-        My Profile
-      </h2>
-      
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="md:w-1/3">
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-48 h-48 mx-auto" />
-          <button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg">
-            Change Profile Picture
-          </button>
-        </div>
-        
-        <div className="md:w-2/3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className={`w-full p-3 rounded-lg border ${
-                  darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                }`}
-              />
-            </div>
+            <p>It's about embracing pain as a teacher, not an enemy.</p>
             
-            <div>
-              <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Username
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className={`w-full p-3 rounded-lg border ${
-                  darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                }`}
-              />
-            </div>
+            <p>It's about understanding that your choices shape your destiny.</p>
             
-            <div>
-              <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={`w-full p-3 rounded-lg border ${
-                  darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-                }`}
-              />
-            </div>
-          </div>
-          
-          <div className="mb-6">
-            <label className={`block mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              Bio
-            </label>
-            <textarea
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-              rows="4"
-              className={`w-full p-3 rounded-lg border ${
-                darkMode ? 'border-gray-700 bg-gray-900 text-white' : 'border-gray-300'
-              }`}
-            ></textarea>
-          </div>
-          
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg">
-            Save Changes
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Library = () => {
-  const { darkMode } = useTheme();
-  
-  // Get purchased books from localStorage
-  const purchasedBooks = JSON.parse(localStorage.getItem('purchasedBooks') || []);
-  
-  // Mock book data
-  const books = [
-    {
-      id: '1',
-      title: 'The Main Reality Of Life',
-      author: 'Samuel A.O.',
-      lastRead: '2023-10-15',
-      progress: 42
-    }
-  ].filter(book => purchasedBooks.includes(book.id));
-
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
-
-  return (
-    <div className={`rounded-xl shadow-md p-6 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-      <h2 className={`text-2xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-black'}`}>
-        My Library
-      </h2>
-      
-      {isOffline && (
-        <div className="bg-yellow-500 text-black p-3 rounded-lg mb-6">
-          You are currently offline. Only downloaded books are available.
-        </div>
-      )}
-      
-      {books.length === 0 ? (
-        <div className="text-center py-12">
-          <p className={`mb-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-            You haven't purchased any books yet.
-          </p>
-          <button 
-            onClick={() => navigate('/')}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
-          >
-            Browse Books
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {books.map(book => (
-            <div key={book.id} className={`border rounded-lg p-4 flex ${
-              darkMode ? 'border-gray-700' : 'border-gray-200'
-            }`}>
-              <div className="w-24 flex-shrink-0">
-                <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-32" />
-              </div>
-              
-              <div className="ml-4 flex-1">
-                <h3 className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-black'}`}>
-                  {book.title}
-                </h3>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  By {book.author}
-                </p>
+            <p>It's about surrounding yourself with the right people who support your journey.</p>
+            
+            <p>It's about redefining failure as a stepping stone to growth.</p>
+            
+            <p>It's about recognizing the power of belief and then moving beyond belief into courageous action.</p>
+            
+            <p>Each chapter in this book peels back a layer of the human experience and offers insights to help you live more intentionally, authentically, and fully. The reality of life is not something that simply happens to you, it's something you create moment by moment.</p>
+            
+            <p>By the time you finish this book, my hope is that you'll feel empowered to make conscious decisions that align with your truest self and step boldly into the life you are meant to live.</p>
+            
+            <p>This is your journey. This is your main reality. Let's begin.</p>
+            
+            <h3>MONOLOGUE</h3>
+            <p>I want you to stop for a moment. Just pause and breathe. Look around you. Look inside you.</p>
+            
+            <p>How often do you feel truly seen? Utterly understood? Truly alive?</p>
+            
+            <p>Life isn't always what it seems, is it?</p>
+            
+            <p>So much of what we chase—success, approval, comfort—feels just out of reach.</p>
+            
+            <p>We get lost in stories we tell ourselves, in masks we wear, in voices that aren't really ours.</p>
+            
+            <p>But beneath all that noise, beneath all that struggle, there is something real. Something steady. Something waiting for you to discover it.</p>
+            
+            <p>Your main reality.</p>
+            
+            <p>It's not about perfection. It's not about never falling. It's about standing up, repeatedly, with clarity and courage.</p>
+            
+            <p>It's about knowing that your pain, your failures, your choices—they matter. They shape the life only you can live.</p>
+            
+            <p>This book isn't about giving you answers. It's about inviting you to ask better questions. To see more clearly. To live more fully.</p>
+            
+            <p>Because the truth is, the power to create your reality is in your hands.</p>
+            
+            <p>And I'm here to walk beside you, through the illusions, the pain, and the fears toward the life you were meant to live.</p>
+            
+            <p>Are you ready?</p>
+            
+            <div class="free-access">
+                <h1>Chapter 1: The Illusion vs. The Reality</h1>
+                <p>"Everyone is chasing something — success, love, validation, peace. But few stop to ask: What am I really chasing, and why?"</p>
                 
-                <div className="mt-4">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      Progress: {book.progress}%
-                    </span>
-                    <span className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      Last read: {book.lastRead}
-                    </span>
-                  </div>
-                  <div className={`w-full rounded-full h-2 ${
-                    darkMode ? 'bg-gray-700' : 'bg-gray-200'
-                  }`}>
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full" 
-                      style={{ width: `${book.progress}%` }}
-                    ></div>
-                  </div>
+                <p>From the moment we're born, we're introduced to a script, not handed to us directly but absorbed through the voices and expectations of those around us. Our parents, our teachers, our culture, even the movies and music we consume, all play a part in painting a picture of how life should be. We're told: "Do this, and you'll be happy. Avoid that, and you'll be safe. Achieve these things, and your life will be meaningful."</p>
+                
+                <p>It's not all bad. These ideals often come from a place of care, from people who want the best for us. But over time, many of us come to realize something unsettling: the life we were taught to expect doesn't always match the one we experience.</p>
+                
+                <p>Some people realize this early perhaps in childhood, when their family struggled financially, or when they saw loved ones fighting battles no one talked about. Others experience it much later, perhaps after achieving the very things they thought would bring joy, only to feel emptier than before.</p>
+                
+                <p>The truth? Life doesn't always deliver what it promises.</p>
+                
+                <p>And that's not because life is cruel… it's because the promises weren't real to begin with.</p>
+                
+                <h2>The Dream We're Sold</h2>
+                <p>It starts with a narrative — simple, idealistic, and appealing.</p>
+            </div>
+        </div>
+        
+        <div class="upgrade-box">
+            <h2 class="upgrade-title">Want to read the full book?</h2>
+            <div class="upgrade-price">₦10,000</div>
+            <button class="btn-upgrade">
+                <i class="fas fa-lock"></i> Unlock Full Access
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-title">Dashboard</div>
+                    <div class="sidebar-subtitle">Welcome, Samuel</div>
                 </div>
                 
-                <div className="mt-4">
-                  <button 
-                    onClick={() => navigate(`/book/${book.id}`)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg mr-2"
-                  >
-                    Continue Reading
-                  </button>
-                  <button className={`text-sm font-medium py-2 px-4 rounded-lg ${
-                    darkMode 
-                      ? 'bg-gray-700 hover:bg-gray-600 text-white' 
-                      : 'bg-gray-200 hover:bg-gray-300'
-                  }`}>
-                    Download
-                  </button>
+                <div class="menu-item active">
+                    <div class="menu-icon"><i class="fas fa-user"></i></div>
+                    <div>My Profile</div>
                 </div>
-              </div>
+                <div class="menu-item">
+                    <div class="menu-icon"><i class="fas fa-inbox"></i></div>
+                    <div>Inbox</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon"><i class="fas fa-bell"></i></div>
+                    <div>Notification</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon"><i class="fas fa-book"></i></div>
+                    <div>Library</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon"><i class="fas fa-globe"></i></div>
+                    <div>Language</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon"><i class="fas fa-credit-card"></i></div>
+                    <div>Payments</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon"><i class="fas fa-crown"></i></div>
+                    <div>Premium</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon"><i class="fas fa-cog"></i></div>
+                    <div>Settings</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon"><i class="fas fa-question-circle"></i></div>
+                    <div>Help</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon"><i class="fas fa-sign-out-alt"></i></div>
+                    <div>Logout</div>
+                </div>
             </div>
-          ))}
+            
+            <div class="main-content">
+                <div class="dashboard-card">
+                    <h2 class="card-title">My Profile</h2>
+                    
+                    <div class="profile-container">
+                        <div>
+                            <div class="profile-picture">
+                                Profile Picture
+                            </div>
+                            <button class="btn-upgrade" style="margin-top: 20px; width: 100%;">
+                                <i class="fas fa-upload"></i> Change Picture
+                            </button>
+                        </div>
+                        
+                        <div class="profile-form">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-input" value="Samuel Alake">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-input" value="samcreation">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" value="samcreation804@gmail.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Bio</label>
+                                <textarea class="form-input" rows="4">Book lover and knowledge seeker</textarea>
+                            </div>
+                            
+                            <button class="btn-save">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h2 class="card-title">Help Assistant</h2>
+                    
+                    <div class="chat-container">
+                        <div class="chat-messages">
+                            <div class="message message-ai">
+                                <div class="message-bubble">
+                                    Hello! I'm your InsightAtlas assistant. How can I help you today?
+                                </div>
+                            </div>
+                            
+                            <div class="message message-user">
+                                <div class="message-bubble">
+                                    How do I purchase a book?
+                                </div>
+                            </div>
+                            
+                            <div class="message message-ai">
+                                <div class="message-bubble">
+                                    To purchase a book, click the "Buy Full Access" button on the book page. You'll be guided through the payment process where you'll transfer to our GTBank account. After payment, send the proof to samcreation804@gmail.com with the book name as narration.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-area">
+                            <form class="chat-form">
+                                <input type="text" class="chat-input" placeholder="Ask a question...">
+                                <button type="submit" class="btn-send">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                            
+                            <div class="common-questions">
+                                <div class="questions-title">Common questions:</div>
+                                <div class="question-tags">
+                                    <div class="question-tag">How do I read offline?</div>
+                                    <div class="question-tag">How do I change my password?</div>
+                                    <div class="question-tag">I have a payment issue</div>
+                                    <div class="question-tag">Contact support</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      )}
     </div>
-  );
-};
 
-// Other dashboard components would be defined similarly
+    <div class="payment-container">
+        <div class="payment-header">
+            <h1 class="reader-title">Complete Your Purchase</h1>
+            <div class="reader-author">The Main Reality Of Life - ₦10,000</div>
+        </div>
+        
+        <div class="payment-steps">
+            <div class="payment-step step-active">
+                <div class="step-number">1</div>
+                <div class="step-title">Payment Details</div>
+            </div>
+            <div class="payment-step">
+                <div class="step-number">2</div>
+                <div class="step-title">Confirmation</div>
+            </div>
+            <div class="payment-step">
+                <div class="step-number">3</div>
+                <div class="step-title">Access Granted</div>
+            </div>
+        </div>
+        
+        <div class="payment-card">
+            <div class="payment-instructions">
+                <div class="instruction-card">
+                    <h3 class="card-section-title">Bank Transfer Details</h3>
+                    <div class="bank-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Bank:</div>
+                            <div class="detail-value">GTBank</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Account Name:</div>
+                            <div class="detail-value">Alake Samuel</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Account Number:</div>
+                            <div class="detail-value">0863542562</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Amount:</div>
+                            <div class="detail-value">₦10,000</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="instruction-card">
+                    <h3 class="card-section-title">Book Information</h3>
+                    <div class="detail-item">
+                        <div class="detail-label">Title:</div>
+                        <div class="detail-value">The Main Reality Of Life</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Author:</div>
+                        <div class="detail-value">Samuel A.O.</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Price:</div>
+                        <div class="detail-value">₦10,000</div>
+                    </div>
+                    <p style="margin-top: 20px; font-size: 14px;">
+                        After payment, please send proof to samcreation804@gmail.com with the book name as narration.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="upload-area">
+                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <div class="upload-text">Upload Payment Proof</div>
+                <div class="upload-hint">Click to upload screenshot or PDF of transaction</div>
+                <input type="file" style="display: none;">
+            </div>
+            
+            <button class="btn-submit">
+                <i class="fas fa-check-circle"></i> Submit Payment Proof
+            </button>
+        </div>
+        
+        <div class="notification">
+            <h3 class="notification-title">Important Notice</h3>
+            <p>Your book access will be activated after manual verification of your payment proof. This usually takes less than 24 hours.</p>
+        </div>
+    </div>
 
-// ======================
-// Main App Component
-// ======================
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-title">InsightAtlas</div>
+                    <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin-bottom: 20px;">
+                        InsightAtlas is a platform where online books are published and readers have full access to read them. Discover transformative literature that changes perspectives.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-title">Quick Links</div>
+                    <div class="footer-links">
+                        <a href="#" class="footer-link">Home</a>
+                        <a href="#" class="footer-link">Books</a>
+                        <a href="#" class="footer-link">Dashboard</a>
+                        <a href="#" class="footer-link">Premium</a>
+                        <a href="#" class="footer-link">Contact</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <div class="footer-title">Contact Us</div>
+                    <div class="footer-contact">
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>samcreation804@gmail.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>07034969325</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Ekiti State, Nigeria</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2023 InsightAtlas. All rights reserved. Created by Samuel A.O.
+            </div>
+        </div>
+    </footer>
 
-const App = () => {
-  return (
-    <AuthProvider>
-      <ThemeProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/book/:id" element={<BookReader />} />
-            <Route path="/payment" element={<PaymentPage />} />
-            <Route path="/dashboard/*" element={<Dashboard />} />
-          </Routes>
-        </Router>
-      </ThemeProvider>
-    </AuthProvider>
-  );
-};
-
-// ======================
-// Render the Application
-// ======================
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+    <script>
+        // Toggle dark mode
+        document.querySelector('.theme-toggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            
+            const icon = this.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+        
+        // Simulate page navigation
+        document.querySelectorAll('.btn-read, .logo, .menu-item, .btn-upgrade').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (this.classList.contains('btn-upgrade')) {
+                    document.querySelector('.payment-container').scrollIntoView({ behavior: 'smooth' });
+                } else if (this.classList.contains('menu-item')) {
+                    // Dashboard navigation
+                    const target = this.textContent.trim();
+                    alert(`Navigating to ${target} section in dashboard`);
+                } else {
+                    // Scroll to book reader
+                    document.querySelector('.reader-container').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+        
+        // File upload simulation
+        document.querySelector('.upload-area').addEventListener('click', function() {
+            alert('Payment proof upload dialog would appear here');
+        });
+    </script>
+</body>
+</html>
