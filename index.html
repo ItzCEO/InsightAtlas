@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InsightAtlas - The Main Reality Of Life</title>
+    <title>InsightAtlas - Authentication</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -35,1709 +35,909 @@
         }
         
         body {
-            background-color: var(--dark-bg);
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: var(--dark-text);
-            transition: background-color 0.3s ease;
-            padding-bottom: 80px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
         
-        body.light-mode {
-            background-color: var(--light-bg);
-            color: var(--light-text);
-        }
-        
-        body.light-mode .book-card,
-        body.light-mode header,
-        body.light-mode .bottom-nav,
-        body.light-mode .section-content,
-        body.light-mode .about-section {
-            background-color: var(--light-card);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        header {
+        .auth-container {
+            width: 100%;
+            max-width: 450px;
             background-color: var(--dark-card);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
+            overflow: hidden;
         }
         
-        .light-mode header {
-            background-color: var(--light-card);
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
+        .auth-header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
         }
         
         .logo-text {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: bold;
-            color: white;
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(90deg, #4361ee, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             letter-spacing: 1px;
-        }
-        
-        .light-mode .logo-text {
-            background: linear-gradient(90deg, #3a56d4, #ef476f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .header-buttons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-        
-        .btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .btn-premium {
-            background: linear-gradient(135deg, var(--premium), #ff8c00);
-            color: #1e293b;
-            font-weight: 700;
-        }
-        
-        .btn-premium:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 140, 0, 0.3);
-        }
-        
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-            font-size: 20px;
-            color: var(--gray);
-        }
-        
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: var(--danger);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .hero-section {
-            padding: 30px 0;
-            text-align: center;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-radius: 0 0 30px 30px;
-            margin-bottom: 30px;
-        }
-        
-        .light-mode .hero-section {
-            background: linear-gradient(135deg, #e0e7ff, #dbeafe);
-        }
-        
-        .hero-title {
-            font-size: 28px;
-            margin-bottom: 15px;
-            background: linear-gradient(90deg, var(--accent), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .hero-subtitle {
-            color: var(--gray);
-            margin-bottom: 25px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .section-title {
-            font-size: 20px;
-            margin: 25px 0 15px;
-            padding-left: 10px;
-            border-left: 4px solid var(--accent);
-        }
-        
-        .book-card {
-            background-color: var(--dark-card);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        .light-mode .book-card {
-            background-color: var(--light-card);
-        }
-        
-        .book-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .book-cover {
-            height: 300px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #2d46b3, #3a56d4);
-            color: white;
-            font-size: 24px;
-            text-align: center;
-            padding: 20px;
-            font-weight: bold;
-            line-height: 1.4;
-        }
-        
-        .book-cover-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .book-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: var(--premium);
-            color: #1e293b;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-        }
-        
-        .book-info {
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .book-title {
-            font-size: 24px;
-            font-weight: 700;
             margin-bottom: 10px;
         }
         
-        .book-author {
+        .auth-subtitle {
             font-size: 16px;
-            color: var(--gray);
-            margin-bottom: 15px;
+            opacity: 0.9;
         }
         
-        .book-price {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--premium);
-            margin-bottom: 15px;
-        }
-        
-        .book-actions {
+        .auth-tabs {
             display: flex;
-            gap: 10px;
-            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
         }
         
-        .btn-read {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-read:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
-        }
-        
-        .btn-buy {
-            background: linear-gradient(135deg, var(--success), #05b388);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .btn-buy:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(5, 179, 136, 0.3);
-        }
-        
-        .reader-container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: none;
-        }
-        
-        .reader-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        
-        .reader-book-cover {
-            width: 180px;
-            height: 240px;
-            border-radius: 12px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #2d46b3, #3a56d4);
-            color: white;
-            font-size: 16px;
-            text-align: center;
-            padding: 20px;
-            font-weight: bold;
-            line-height: 1.4;
-            box-shadow: var(--shadow);
-        }
-        
-        .reader-book-cover-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 12px;
-        }
-        
-        .reader-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-        
-        .reader-author {
-            font-size: 18px;
-            color: var(--gray);
-            margin-bottom: 24px;
-        }
-        
-        .reader-content {
-            line-height: 1.8;
-            font-size: 18px;
-            padding: 20px 0;
-            font-family: 'Merriweather', Georgia, serif;
-        }
-        
-        .reader-content h1, 
-        .reader-content h2, 
-        .reader-content h3 {
-            margin: 32px 0 16px;
-            color: var(--accent);
-            font-family: 'Montserrat', sans-serif;
-        }
-        
-        .reader-content p {
-            margin-bottom: 24px;
-            letter-spacing: 0.3px;
-        }
-        
-        .free-access {
-            position: relative;
-        }
-        
-        .free-access::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: linear-gradient(to bottom, rgba(30, 41, 59, 0.1), var(--dark-bg));
-            pointer-events: none;
-        }
-        
-        .light-mode .free-access::after {
-            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.1), var(--light-bg));
-        }
-        
-        .upgrade-box {
-            background: linear-gradient(135deg, #ffb700, #ffd166);
-            border-radius: var(--border-radius);
-            padding: 32px;
-            text-align: center;
-            margin: 48px 0;
-            box-shadow: var(--shadow);
-        }
-        
-        .upgrade-title {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 16px;
-            color: #1e293b;
-        }
-        
-        .upgrade-price {
-            font-size: 36px;
-            font-weight: 800;
-            color: #1e293b;
-            margin-bottom: 24px;
-        }
-        
-        .btn-upgrade {
-            background-color: #1e293b;
-            color: white;
-            padding: 16px 40px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 700;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
-        }
-        
-        .btn-upgrade:hover {
-            background-color: #0f172a;
-            transform: translateY(-3px);
-        }
-        
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--dark-card);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-        }
-        
-        .light-mode .bottom-nav {
-            background-color: var(--light-card);
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--gray);
-            text-decoration: none;
-            font-size: 12px;
-            transition: all 0.2s ease;
-        }
-        
-        .nav-item.active {
-            color: var(--accent);
-        }
-        
-        .nav-icon {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-        
-        .locked-content {
-            display: none;
-        }
-        
-        /* About Section */
-        .about-section {
-            background-color: var(--dark-card);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .light-mode .about-section {
-            background-color: var(--light-card);
-        }
-        
-        /* Settings View */
-        .settings-container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: none;
-        }
-        
-        .profile-container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: none;
-        }
-        
-        .premium-container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: none;
-        }
-        
-        .settings-section, .profile-section, .premium-section {
-            background-color: var(--dark-card);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
-        
-        .light-mode .settings-section, 
-        .light-mode .profile-section,
-        .light-mode .premium-section {
-            background-color: var(--light-card);
-        }
-        
-        .settings-title, .profile-title, .premium-title {
-            font-size: 22px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray);
-            color: var(--accent);
-        }
-        
-        .setting-item, .profile-item, .premium-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .light-mode .setting-item,
-        .light-mode .profile-item,
-        .light-mode .premium-item {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
-        .setting-label, .profile-label, .premium-label {
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .setting-label i, .profile-label i, .premium-label i {
-            font-size: 18px;
-            width: 24px;
-            text-align: center;
-        }
-        
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: var(--accent);
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        
-        select, input {
-            padding: 8px 12px;
-            border-radius: 8px;
-            background-color: var(--dark-card);
-            color: var(--dark-text);
-            border: 1px solid var(--gray);
-            width: 100%;
-        }
-        
-        .light-mode select, 
-        .light-mode input {
-            background-color: var(--light-card);
-            color: var(--light-text);
-        }
-        
-        .btn-logout, .btn-save {
-            background-color: var(--success);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 20px;
-        }
-        
-        .btn-logout:hover, .btn-save:hover {
-            background-color: #05b388;
-            transform: translateY(-2px);
-        }
-        
-        /* Payment Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background-color: var(--dark-card);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: var(--shadow);
-            position: relative;
-        }
-        
-        .light-mode .modal-content {
-            background-color: var(--light-card);
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray);
-        }
-        
-        .modal-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: var(--accent);
-        }
-        
-        .account-details {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius);
-            padding: 15px;
-            margin-bottom: 20px;
-            font-family: monospace;
-        }
-        
-        .light-mode .account-details {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-        
-        .account-details p {
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-        
-        .payment-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .payment-form input, 
-        .payment-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            border: 1px solid var(--gray);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--dark-text);
-        }
-        
-        .light-mode .payment-form input, 
-        .light-mode .payment-form textarea {
-            background-color: rgba(0, 0, 0, 0.05);
-            color: var(--light-text);
-        }
-        
-        .payment-form button {
-            background-color: var(--success);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-        
-        .payment-form button:hover {
-            background-color: #05b388;
-        }
-        
-        /* Chat interface */
-        .chat-container {
-            background-color: var(--dark-card);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: var(--shadow);
-        }
-        
-        .light-mode .chat-container {
-            background-color: var(--light-card);
-        }
-        
-        .chat-messages {
-            height: 300px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid var(--gray);
-            border-radius: var(--border-radius);
-        }
-        
-        .message {
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            max-width: 80%;
-        }
-        
-        .user-message {
-            background-color: var(--primary);
-            margin-left: auto;
-            color: white;
-        }
-        
-        .ai-message {
-            background-color: var(--dark-bg);
-            margin-right: auto;
-        }
-        
-        .light-mode .ai-message {
-            background-color: #e2e8f0;
-        }
-        
-        .chat-input {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .chat-input input {
+        .auth-tab {
             flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--gray);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--dark-text);
-        }
-        
-        .light-mode .chat-input input {
-            background-color: rgba(0, 0, 0, 0.05);
-            color: var(--light-text);
-        }
-        
-        .chat-input button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 15px;
+            text-align: center;
+            padding: 15px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
         }
         
-        /* Profile Form */
-        .profile-form {
-            display: grid;
-            gap: 15px;
+        .auth-tab.active {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .auth-content {
+            padding: 30px;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 500;
-        }
-        
-        /* Premium View */
-        .premium-empty {
-            text-align: center;
-            padding: 40px 20px;
             color: var(--gray);
         }
         
-        .premium-empty i {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: var(--premium);
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
+            font-size: 16px;
+            transition: all 0.3s ease;
         }
         
-        /* Notification dropdown */
-        .notification-dropdown {
-            display: none;
-            position: absolute;
-            top: 55px;
-            right: 15px;
-            background-color: var(--dark-card);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            width: 350px;
-            max-height: 400px;
-            overflow-y: auto;
-            z-index: 200;
-        }
-        
-        .light-mode .notification-dropdown {
-            background-color: var(--light-card);
-        }
-        
-        .notification-header {
-            padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .light-mode .notification-header {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
-        .notification-item {
-            padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-        }
-        
-        .light-mode .notification-item {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        
-        .notification-item.unread {
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
             background-color: rgba(67, 97, 238, 0.1);
         }
         
-        .notification-title {
-            font-weight: 600;
-            margin-bottom: 5px;
+        .password-container {
+            position: relative;
         }
         
-        .notification-time {
-            font-size: 12px;
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
             color: var(--gray);
         }
         
-        .notification-message {
-            font-size: 14px;
-        }
-        
-        .mark-all-read {
-            color: var(--primary);
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-google {
+            background-color: white;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-google:hover {
+            background-color: #f8fafc;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--gray);
             font-size: 14px;
         }
         
-        @media (min-width: 768px) {
-            .book-cover {
-                height: 400px;
-                font-size: 32px;
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .forgot-password {
+            display: block;
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            color: var(--gray);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        
+        .forgot-password:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        
+        .otp-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .otp-input {
+            width: 15%;
+            height: 50px;
+            text-align: center;
+            font-size: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
+        }
+        
+        .otp-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .resend-otp {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        .resend-otp a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .resend-otp a:hover {
+            text-decoration: underline;
+        }
+        
+        .back-to-login {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-to-login:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            color: var(--success);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .password-strength {
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .weak { width: 33%; background-color: var(--danger); }
+        .medium { width: 66%; background-color: var(--warning); }
+        .strong { width: 100%; background-color: var(--success); }
+        
+        .password-rules {
+            font-size: 12px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 480px) {
+            .auth-container {
+                max-width: 100%;
             }
             
-            .book-title {
-                font-size: 28px;
+            .auth-content {
+                padding: 20px;
+            }
+            
+            .otp-input {
+                width: 14%;
+                height: 40px;
             }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo" id="logo">
-                    <div class="logo-text">InsightAtlas</div>
-                </div>
-                
-                <div class="header-buttons">
-                    <button class="btn btn-premium" id="premium-btn">
-                        <i class="fas fa-crown"></i> Try Premium
-                    </button>
-                    <div class="notification-bell" id="notification-bell">
-                        <i class="fas fa-bell"></i>
-                        <div class="notification-badge" id="notification-badge">3</div>
-                    </div>
-                    <div class="user-avatar" id="user-avatar">S</div>
-                </div>
-            </div>
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="logo-text">InsightAtlas</div>
+            <div class="auth-subtitle">Unlock the reality of life through knowledge</div>
         </div>
         
-        <div class="notification-dropdown" id="notification-dropdown">
-            <div class="notification-header">
-                <h3>Notifications</h3>
-                <div class="mark-all-read" id="mark-all-read">Mark all as read</div>
-            </div>
-            <div class="notification-item unread">
-                <div class="notification-title">New Message</div>
-                <div class="notification-message">You have a new message from Samuel about your purchase</div>
-                <div class="notification-time">10 min ago</div>
-            </div>
-            <div class="notification-item unread">
-                <div class="notification-title">Book Update</div>
-                <div class="notification-message">New chapter added to "The Main Reality of Life"</div>
-                <div class="notification-time">2 hours ago</div>
-            </div>
-            <div class="notification-item">
-                <div class="notification-title">Payment Received</div>
-                <div class="notification-message">Your payment for "The Main Reality of Life" has been approved</div>
-                <div class="notification-time">1 day ago</div>
-            </div>
-            <div class="notification-item">
-                <div class="notification-title">Welcome to InsightAtlas!</div>
-                <div class="notification-message">Start your reading journey with our featured books</div>
-                <div class="notification-time">3 days ago</div>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div id="home-view">
-            <div class="hero-section">
-                <h1 class="hero-title">The Main Reality Of Life</h1>
-                <p class="hero-subtitle">Discover the transformative insights that will change how you experience life</p>
-            </div>
-
-            <div class="section-title">
-                <span>Featured Book</span>
-            </div>
-            
-            <div class="book-card">
-                <div class="book-cover">
-                    <img src="1000502195.png" alt="Book Cover" class="book-cover-img">
-                </div>
-                <div class="book-info">
-                    <div class="book-title">The Main Reality Of Life</div>
-                    <div class="book-author">By Samuel A.O.</div>
-                    <div class="book-price">₦10,000</div>
-                    <div class="book-actions">
-                        <button class="btn-read" id="read-now-btn">
-                            <i class="fas fa-book-open"></i> Read Now
-                        </button>
-                        <button class="btn-buy" id="buy-book-btn">
-                            <i class="fas fa-shopping-cart"></i> Buy Now
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section-title" style="margin-top: 40px;">
-                <span>About the Book</span>
-            </div>
-            
-            <div class="about-section">
-                <p style="line-height: 1.6; margin-bottom: 15px;">
-                    "The Main Reality Of Life" is an invitation to uncover the deeper truths that define who we are and how we experience the world. It's about stripping away illusions to see life clearly.
-                </p>
-                <p style="line-height: 1.6; margin-bottom: 15px;">
-                    By the time you finish this book, you'll feel empowered to make conscious decisions that align with your truest self and step boldly into the life you are meant to live.
-                </p>
-                <p style="line-height: 1.6;">
-                    This book peels back layers of the human experience and offers insights to help you live more intentionally, authentically, and fully.
-                </p>
-            </div>
-        </div>
-
-        <div class="reader-container" id="reader-view">
-            <div class="reader-header">
-                <div class="reader-book-cover">
-                    <img src="1000502195.png" alt="Book Cover" class="reader-book-cover-img">
-                </div>
-                <h1 class="reader-title">The Main Reality Of Life</h1>
-                <div class="reader-author">By Samuel A.O.</div>
-            </div>
-            
-            <div class="reader-content">
-                <h1>THE MAIN REALITY OF LIFE</h1>
-                <h2>SAMUEL A.O</h2>
-                
-                <h3>APPRECIATION</h3>
-                <p>Primarily, my endless thanks to God Almighty for seeing me through this journey and to my mother who gave me her full support in ways she could and I'm grateful to her.</p>
-                
-                <p>Immense gratitude to my incredible beta reader, my one and only sister. Your insightful feedback, sharp eyes, and willingness to wade through early drafts were invaluable. A huge thank you to my editor and cover designer for the stunning cover that perfectly captures the spirit of the book.</p>
-                
-                <p>To my dear friends, Oluwaseyifunmitan and Oluwashindara, thank you for the pep talks, and listening ears.</p>
-                
-                <p>Finally, to you the reader, for picking up this book and stepping into this world. I hope it brings you as much joy as writing it brought me. I love you all and enjoy and be impacted as you read.</p>
-                
-                <h3>INDEX</h3>
-                <p>Chapter 1: The Illusion Vs The Reality</p>
-                <p>Chapter 2: Pain Has A Purpose</p>
-                <p>Chapter 3: Your Choices, Your Life</p>
-                <p>Chapter 4: The people In Your Boat</p>
-                <p>Chapter 5: The Truth About Failure</p>
-                <p>Chapter 6: The Decision That Defines You</p>
-                <p>Chapter 7: The Silent battles We Fight</p>
-                <p>Chapter 8: The Power Of Belief - What Shapes Your Reality</p>
-                <p>Chapter 9: Taking The Leap - From Belief To Action</p>
-                <p>Chapter 10: The Journey Ahead - Living Your Main Reality</p>
-                
-                <h3>INTRODUCTION</h3>
-                <p><strong>Stepping Into Your Main Reality.</strong></p>
-                
-                <p>Life is a complex journey filled with moments of clarity and confusion, joy and pain, certainty, and doubt. We all navigate a world layered with illusions, stories we tell ourselves and narratives shaped by others. But beneath those layers lies a deeper truth: a main reality that defines who we are and how we experience the world. This book is an invitation to uncover that main reality.</p>
-                
-                <p>It's about stripping away illusions to see life clearly.</p>
-                
-                <p>It's about embracing pain as a teacher, not an enemy.</p>
-                
-                <p>It's about understanding that your choices shape your destiny.</p>
-                
-                <p>It's about surrounding yourself with the right people who support your journey.</p>
-                
-                <p>It's about redefining failure as a stepping stone to growth.</p>
-                
-                <p>It's about recognizing the power of belief and then moving beyond belief into courageous action.</p>
-                
-                <p>Each chapter in this book peels back a layer of the human experience and offers insights to help you live more intentionally, authentically, and fully. The reality of life is not something that simply happens to you, it's something you create moment by moment.</p>
-                
-                <p>By the time you finish this book, my hope is that you'll feel empowered to make conscious decisions that align with your truest self and step boldly into the life you are meant to live.</p>
-                
-                <p>This is your journey. This is your main reality. Let's begin.</p>
-                
-                <h3>MONOLOGUE</h3>
-                <p>I want you to stop for a moment. Just pause and breathe. Look around you. Look inside you.</p>
-                
-                <p>How often do you feel truly seen? Utterly understood? Truly alive?</p>
-                
-                <p>Life isn't always what it seems, is it?</p>
-                
-                <p>So much of what we chase—success, approval, comfort—feels just out of reach.</p>
-                
-                <p>We get lost in stories we tell ourselves, in masks we wear, in voices that aren't really ours.</p>
-                
-                <p>But beneath all that noise, beneath all that struggle, there is something real. Something steady. Something waiting for you to discover it.</p>
-                
-                <p>Your main reality.</p>
-                
-                <p>It's not about perfection. It's not about never falling. It's about standing up, repeatedly, with clarity and courage.</p>
-                
-                <p>It's about knowing that your pain, your failures, your choices—they matter. They shape the life only you can live.</p>
-                
-                <p>This book isn't about giving you answers. It's about inviting you to ask better questions. To see more clearly. To live more fully.</p>
-                
-                <p>Because the truth is, the power to create your reality is in your hands.</p>
-                
-                <p>And I'm here to walk beside you, through the illusions, the pain, and the fears toward the life you were meant to live.</p>
-                
-                <p>Are you ready?</p>
-                
-                <div class="free-access">
-                    <h1>Chapter 1: The Illusion vs. The Reality</h1>
-                    <p>"Everyone is chasing something — success, love, validation, peace. But few stop to ask: What am I really chasing, and why?"</p>
-                    
-                    <p>From the moment we're born, we're introduced to a script, not handed to us directly but absorbed through the voices and expectations of those around us. Our parents, our teachers, our culture, even the movies and music we consume, all play a part in painting a picture of how life should be. We're told: "Do this, and you'll be happy. Avoid that, and you'll be safe. Achieve these things, and your life will be meaningful."</p>
-                    
-                    <p>It's not all bad. These ideals often come from a place of care, from people who want the best for us. But over time, many of us come to realize something unsettling: the life we were taught to expect doesn't always match the one we experience.</p>
-                    
-                    <p>Some people realize this early perhaps in childhood, when their family struggled financially, or when they saw loved ones fighting battles no one talked about. Others experience it much later, perhaps after achieving the very things they thought would bring joy, only to feel emptier than before.</p>
-                    
-                    <p>The truth? Life doesn't always deliver what it promises.</p>
-                    
-                    <p>And that's not because life is cruel… it's because the promises weren't real to begin with.</p>
-                    
-                    <h2>The Dream We're Sold</h2>
-                    <p>It starts with a narrative — simple, idealistic, and appealing.</p>
-                </div>
-            </div>
-            
-            <div class="upgrade-box">
-                <h2 class="upgrade-title">Want to read the full book?</h2>
-                <div class="upgrade-price">₦10,000</div>
-                <button class="btn-upgrade" id="unlock-btn">
-                    <i class="fas fa-lock"></i> Unlock Full Access
-                </button>
-            </div>
-
-            <div class="locked-content">
-                <p>Get an education, and you'll be successful. Be nice to others, and they'll be nice in return. Fall in love, and everything will fall into place. If you work hard, life will reward you. If you avoid mistakes, you'll avoid pain. But then real life begins to unfold. You study hard, but the job doesn't come. You love someone, but they don't love you back. You give your all, but it's not enough. You do everything "right," yet still feel like everything is going wrong. This disconnect between expectation and reality is one of the main sources of frustration and pain in people's lives. We suffer not just because life is difficult but because we were led to believe it wouldn't be.</p>
-                
-                <p>We're sold a dream, and when the dream starts to crumble, we often assume the problem is us.</p>
-                
-                <p>"Maybe I'm not good enough."</p>
-                
-                <p>"Maybe I'm cursed."</p>
-                
-                <p>"Maybe I made the wrong choices."</p>
-                
-                <p>But maybe… nothing's wrong at all. Maybe you've just reached the point where life starts getting real.</p>
-                
-                <h2>The Awakening: When the Illusion Breaks</h2>
-                <p>Let me tell you a story.</p>
-                
-                <p>There was a young man named Dayo. In secondary school, he was the star. Top of his class, respectful, obedient, hopeful. Teachers said he was destined for greatness. His parents invested all they had in his education. Dayo believed, as many did, that life was linear: input equals' output. But life didn't go as planned. He didn't get the scholarship. His business failed. Friends drifted. He sank into depression, ashamed to talk to anyone. He kept asking, "What did I do wrong?". The turning point came not from success, but from surrender. One day, he simply sat in silence and asked a different question: "What if this is just life?"</p>
-                
-                <p>Not punishment. Not failure. Just… life.</p>
-                
-                <p>That question freed him. He began to detach his self-worth from his circumstances. He stopped judging himself by timelines or societal milestones. He started living with curiosity rather than control. He took small steps - volunteering, writing, learning new skills, not because it guaranteed success, but because it felt true.</p>
-                
-                <p>And slowly, his life took on new meaning - one based, not illusion.</p>
-                
-                <!-- More content would continue here in the full version -->
-            </div>
-        </div>
-
-        <!-- Settings View -->
-        <div class="settings-container" id="settings-view">
-            <div class="settings-section">
-                <h2 class="settings-title">Appearance</h2>
-                
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fas fa-moon"></i>
-                        <span>Dark Mode</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="dark-mode-toggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fas fa-font"></i>
-                        <span>Text Size</span>
-                    </div>
-                    <select id="text-size">
-                        <option value="small">Small</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="large">Large</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="settings-section">
-                <h2 class="settings-title">Notifications</h2>
-                
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fas fa-bell"></i>
-                        <span>Enable Notifications</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="notifications-toggle" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fas fa-book"></i>
-                        <span>New Book Alerts</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="book-alerts-toggle" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </div>
-            
-            <div class="settings-section">
-                <h2 class="settings-title">Language</h2>
-                
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fas fa-globe"></i>
-                        <span>App Language</span>
-                    </div>
-                    <select id="app-language">
-                        <option value="en">English</option>
-                        <option value="fr">French</option>
-                        <option value="es">Spanish</option>
-                        <option value="de">German</option>
-                        <option value="pt">Portuguese</option>
-                        <option value="ru">Russian</option>
-                        <option value="zh">Chinese</option>
-                        <option value="ar">Arabic</option>
-                        <option value="ja">Japanese</option>
-                        <option value="hi">Hindi</option>
-                        <option value="yo">Yoruba</option>
-                        <option value="ig">Igbo</option>
-                        <option value="ha">Hausa</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="settings-section">
-                <h2 class="settings-title">Help & Support</h2>
-                
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fas fa-question-circle"></i>
-                        <span>Help Center</span>
-                    </div>
-                    <button class="btn-read" id="help-center-btn">
-                        <i class="fas fa-external-link-alt"></i> Open
-                    </button>
-                </div>
-                
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fas fa-robot"></i>
-                        <span>AI Assistant</span>
-                    </div>
-                    <button class="btn-read" id="ai-assistant-btn">
-                        <i class="fas fa-comments"></i> Chat
-                    </button>
-                </div>
-                
-                <div class="chat-container" id="chat-container" style="display: none;">
-                    <div class="chat-messages" id="chat-messages">
-                        <div class="message ai-message">
-                            <strong>InsightAtlas Assistant</strong><br>
-                            Hello! I'm your AI assistant. I can answer questions about books, authors, payment, and app features. How can I help you today?
-                        </div>
-                    </div>
-                    <div class="chat-input">
-                        <input type="text" id="chat-input" placeholder="Ask about books, payment, or app features...">
-                        <button id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="btn-logout" id="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Log Out
-            </button>
+        <div class="auth-tabs">
+            <div class="auth-tab active" data-tab="login">Login</div>
+            <div class="auth-tab" data-tab="signup">Sign Up</div>
         </div>
         
-        <!-- Profile View -->
-        <div class="profile-container" id="profile-view">
-            <div class="profile-section">
-                <h2 class="profile-title">Your Profile</h2>
-                
-                <form class="profile-form" id="profile-form">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" value="BookLover123">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="fullname">Full Name</label>
-                        <input type="text" id="fullname" value="Samuel Reader">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" value="reader@example.com">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" value="+234 812 345 6789">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="bio">Bio</label>
-                        <textarea id="bio" rows="3">Passionate reader exploring life's deeper meanings</textarea>
-                    </div>
-                    
-                    <button type="button" class="btn-save" id="save-profile-btn">
-                        <i class="fas fa-save"></i> Save Profile
-                    </button>
-                </form>
-            </div>
-            
-            <div class="profile-section">
-                <h2 class="profile-title">Support Information</h2>
-                
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fas fa-envelope"></i>
-                        <span>Email Support</span>
-                    </div>
-                    <span>dolayinka884@gmail.com</span>
+        <div class="auth-content">
+            <!-- Login Form -->
+            <form class="auth-form active" id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" class="form-control" placeholder="Enter your username">
+                    <div class="error-message" id="login-username-error">Please enter your username</div>
                 </div>
                 
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fab fa-whatsapp"></i>
-                        <span>WhatsApp Support</span>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="login-password" class="form-control" placeholder="Enter your password">
+                        <i class="toggle-password fas fa-eye" data-target="login-password"></i>
                     </div>
-                    <span><a href="https://wa.me/2347034969325" style="color: var(--accent);">07034969325</a></span>
+                    <div class="error-message" id="login-password-error">Please enter your password</div>
+                    <a href="#" class="forgot-password" id="forgot-password-link">Forgot password?</a>
                 </div>
                 
-                <div class="setting-item">
-                    <div class="setting-label">
-                        <i class="fas fa-headset"></i>
-                        <span>Customer Support Hours</span>
+                <button type="submit" class="btn btn-primary">Login to Your Account</button>
+                
+                <div class="auth-footer">
+                    Don't have an account? <a href="#" id="signup-link">Sign up now</a>
+                </div>
+            </form>
+            
+            <!-- Sign Up Form -->
+            <form class="auth-form" id="signup-form">
+                <div class="form-group">
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" class="form-control" placeholder="Enter your email">
+                    <div class="error-message" id="signup-email-error">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-username">Username</label>
+                    <input type="text" id="signup-username" class="form-control" placeholder="Create a unique username">
+                    <div class="error-message" id="signup-username-error">Username must be at least 4 characters</div>
+                    <div class="success-message" id="signup-username-available">Username available!</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <div class="password-container">
+                        <input type="password" id="signup-password" class="form-control" placeholder="Create a strong password">
+                        <i class="toggle-password fas fa-eye" data-target="signup-password"></i>
                     </div>
-                    <span>Mon-Fri: 9AM - 5PM</span>
+                    <div class="password-strength">
+                        <div class="strength-meter" id="password-strength-meter"></div>
+                    </div>
+                    <div class="password-rules">
+                        Must be at least 8 characters with a number and special character
+                    </div>
+                    <div class="error-message" id="signup-password-error">Password is not strong enough</div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Premium View -->
-        <div class="premium-container" id="premium-view">
-            <div class="premium-section">
-                <h2 class="premium-title">Premium Books</h2>
                 
-                <div class="premium-empty">
-                    <i class="fas fa-book-open"></i>
-                    <h3>No Premium Books Available</h3>
-                    <p>Check back soon for exclusive premium content!</p>
+                <div class="form-group">
+                    <label for="signup-confirm-password">Confirm Password</label>
+                    <div class="password-container">
+                        <input type="password" id="signup-confirm-password" class="form-control" placeholder="Confirm your password">
+                        <i class="toggle-password fas fa-eye" data-target="signup-confirm-password"></i>
+                    </div>
+                    <div class="error-message" id="signup-confirm-password-error">Passwords do not match</div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Payment Modal -->
-    <div class="modal" id="payment-modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-modal">&times;</span>
-            <h2 class="modal-title">Complete Your Purchase</h2>
-            
-            <div class="account-details">
-                <p><strong>Bank Name:</strong> Guaranty Trust Bank (GTB)</p>
-                <p><strong>Account Name:</strong> Alake Samuel</p>
-                <p><strong>Account Number:</strong> 0863542562</p>
-                <p><strong>Payment Amount:</strong> ₦10,000</p>
-            </div>
-            
-            <p style="margin-bottom: 15px;">
-                <strong>Important:</strong> 
-                <ul style="margin-left: 20px; margin-bottom: 15px;">
-                    <li>Use the book name as your transaction reference</li>
-                    <li>Send proof of payment to dolayinka884@gmail.com</li>
-                    <li>Access will be activated within 24 hours of payment verification</li>
-                </ul>
-            </p>
-            
-            <form class="payment-form" id="payment-form">
-                <label for="transaction-ref">Transaction Reference:</label>
-                <input type="text" id="transaction-ref" required>
                 
-                <label for="payment-proof">Upload Payment Proof:</label>
-                <input type="file" id="payment-proof" accept="image/*" required>
+                <button type="submit" class="btn btn-primary">Create Account</button>
                 
-                <label for="payment-note">Additional Notes:</label>
-                <textarea id="payment-note" rows="3"></textarea>
+                <div class="auth-footer">
+                    Already have an account? <a href="#" id="login-link">Login here</a>
+                </div>
+            </form>
+            
+            <!-- Forgot Password Form -->
+            <form class="auth-form" id="forgot-password-form">
+                <div class="form-group">
+                    <label for="reset-email">Email Address</label>
+                    <input type="email" id="reset-email" class="form-control" placeholder="Enter your registered email">
+                    <div class="error-message" id="reset-email-error">Please enter your registered email</div>
+                    <div class="success-message" id="reset-email-success">OTP has been sent to your email!</div>
+                </div>
                 
-                <button type="submit">
-                    <i class="fas fa-check-circle"></i> Submit Payment
-                </button>
+                <button type="submit" class="btn btn-primary">Send OTP</button>
+                
+                <div class="back-to-login" id="back-to-login">Back to login</div>
+            </form>
+            
+            <!-- OTP Verification Form -->
+            <form class="auth-form" id="otp-form">
+                <div class="form-group">
+                    <label>Enter 6-digit OTP sent to your email</label>
+                    <div class="otp-container">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1">
+                        <input type="text" class="otp-input" maxlength="1" data-index="2">
+                        <input type="text" class="otp-input" maxlength="1" data-index="3">
+                        <input type="text" class="otp-input" maxlength="1" data-index="4">
+                        <input type="text" class="otp-input" maxlength="1" data-index="5">
+                        <input type="text" class="otp-input" maxlength="1" data-index="6">
+                    </div>
+                    <div class="error-message" id="otp-error">Invalid OTP. Please try again.</div>
+                    <div class="resend-otp">
+                        Didn't receive OTP? <a href="#" id="resend-otp">Resend OTP</a>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Verify OTP</button>
+                
+                <div class="back-to-login" id="back-to-login-otp">Back to login</div>
+            </form>
+            
+            <!-- Reset Password Form -->
+            <form class="auth-form" id="reset-password-form">
+                <div class="form-group">
+                    <label for="new-password">New Password</label>
+                    <div class="password-container">
+                        <input type="password" id="new-password" class="form-control" placeholder="Create a new password">
+                        <i class="toggle-password fas fa-eye" data-target="new-password"></i>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-meter" id="new-password-strength-meter"></div>
+                    </div>
+                    <div class="password-rules">
+                        Must be at least 8 characters with a number and special character
+                    </div>
+                    <div class="error-message" id="new-password-error">Password is not strong enough</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-new-password">Confirm New Password</label>
+                    <div class="password-container">
+                        <input type="password" id="confirm-new-password" class="form-control" placeholder="Confirm your new password">
+                        <i class="toggle-password fas fa-eye" data-target="confirm-new-password"></i>
+                    </div>
+                    <div class="error-message" id="confirm-new-password-error">Passwords do not match</div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Reset Password</button>
+                
+                <div class="back-to-login" id="back-to-login-reset">Back to login</div>
             </form>
         </div>
     </div>
 
-    <nav class="bottom-nav">
-        <a href="#" class="nav-item active" id="nav-home">
-            <i class="fas fa-home nav-icon"></i>
-            <span>Home</span>
-        </a>
-        <a href="#" class="nav-item" id="nav-library">
-            <i class="fas fa-book nav-icon"></i>
-            <span>Library</span>
-        </a>
-        <a href="#" class="nav-item" id="nav-settings">
-            <i class="fas fa-cog nav-icon"></i>
-            <span>Settings</span>
-        </a>
-    </nav>
-
     <script>
         // DOM Elements
-        const homeView = document.getElementById('home-view');
-        const readerView = document.getElementById('reader-view');
-        const settingsView = document.getElementById('settings-view');
-        const profileView = document.getElementById('profile-view');
-        const premiumView = document.getElementById('premium-view');
-        const readNowBtn = document.getElementById('read-now-btn');
-        const buyBookBtn = document.getElementById('buy-book-btn');
-        const unlockBtn = document.getElementById('unlock-btn');
-        const logo = document.getElementById('logo');
-        const userAvatar = document.getElementById('user-avatar');
-        const premiumBtn = document.getElementById('premium-btn');
-        const notificationBell = document.getElementById('notification-bell');
-        const notificationDropdown = document.getElementById('notification-dropdown');
-        const notificationBadge = document.getElementById('notification-badge');
-        const markAllRead = document.getElementById('mark-all-read');
-        const lockedContent = document.querySelector('.locked-content');
-        const unlockBox = document.querySelector('.upgrade-box');
-        const navItems = document.querySelectorAll('.nav-item');
-        const paymentModal = document.getElementById('payment-modal');
-        const closeModal = document.getElementById('close-modal');
-        const paymentForm = document.getElementById('payment-form');
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const notificationsToggle = document.getElementById('notifications-toggle');
-        const bookAlertsToggle = document.getElementById('book-alerts-toggle');
-        const textSizeSelect = document.getElementById('text-size');
-        const appLanguageSelect = document.getElementById('app-language');
-        const logoutBtn = document.getElementById('logout-btn');
-        const aiAssistantBtn = document.getElementById('ai-assistant-btn');
-        const chatContainer = document.getElementById('chat-container');
-        const chatMessages = document.getElementById('chat-messages');
-        const chatInput = document.getElementById('chat-input');
-        const sendMessageBtn = document.getElementById('send-message-btn');
-        const saveProfileBtn = document.getElementById('save-profile-btn');
-        const helpCenterBtn = document.getElementById('help-center-btn');
-
-        // Navigation functions
-        function showReader() {
-            homeView.style.display = 'none';
-            settingsView.style.display = 'none';
-            profileView.style.display = 'none';
-            premiumView.style.display = 'none';
-            readerView.style.display = 'block';
-            updateActiveNav('nav-library');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authForms = document.querySelectorAll('.auth-form');
+        const loginForm = document.getElementById('login-form');
+        const signupForm = document.getElementById('signup-form');
+        const forgotPasswordForm = document.getElementById('forgot-password-form');
+        const otpForm = document.getElementById('otp-form');
+        const resetPasswordForm = document.getElementById('reset-password-form');
+        const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+        const signupLink = document.getElementById('signup-link');
+        const loginLink = document.getElementById('login-link');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const backToLoginLinks = document.querySelectorAll('.back-to-login');
+        const resendOtpLink = document.getElementById('resend-otp');
+        
+        // User accounts storage (localStorage)
+        const USER_ACCOUNTS_KEY = 'insightAtlasAccounts';
+        let userAccounts = JSON.parse(localStorage.getItem(USER_ACCOUNTS_KEY)) || [];
+        
+        // OTP storage
+        let generatedOtp = null;
+        let otpExpiration = null;
+        
+        // Password strength function
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            
+            return strength;
         }
         
-        function showHome() {
-            homeView.style.display = 'block';
-            readerView.style.display = 'none';
-            settingsView.style.display = 'none';
-            profileView.style.display = 'none';
-            premiumView.style.display = 'none';
-            updateActiveNav('nav-home');
+        // Update password strength meter
+        function updatePasswordStrength(password, meterId) {
+            const strength = checkPasswordStrength(password);
+            const meter = document.getElementById(meterId);
+            meter.className = 'strength-meter';
+            
+            if (password.length === 0) {
+                meter.style.width = '0';
+                return;
+            }
+            
+            if (strength < 2) {
+                meter.classList.add('weak');
+            } else if (strength < 4) {
+                meter.classList.add('medium');
+            } else {
+                meter.classList.add('strong');
+            }
         }
         
-        function showSettings() {
-            homeView.style.display = 'none';
-            readerView.style.display = 'none';
-            settingsView.style.display = 'block';
-            profileView.style.display = 'none';
-            premiumView.style.display = 'none';
-            updateActiveNav('nav-settings');
+        // Generate a 6-digit OTP
+        function generateOtp() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
         }
         
-        function showProfile() {
-            homeView.style.display = 'none';
-            readerView.style.display = 'none';
-            settingsView.style.display = 'none';
-            profileView.style.display = 'block';
-            premiumView.style.display = 'none';
-            // Not updating nav since this is accessed via avatar
+        // Send OTP to email (simulated)
+        function sendOtpToEmail(email) {
+            generatedOtp = generateOtp();
+            otpExpiration = Date.now() + 300000; // 5 minutes expiration
+            
+            // In a real app, you would send the OTP to the user's email
+            // For this demo, we'll just log it and show a success message
+            console.log(`OTP for ${email}: ${generatedOtp}`);
+            
+            // Show success message
+            document.getElementById('reset-email-success').style.display = 'block';
+            
+            // Simulate sending
+            setTimeout(() => {
+                alert(`OTP sent to ${email}: ${generatedOtp}\n\nIn a real app, this would be sent via email.`);
+            }, 500);
         }
         
-        function showPremium() {
-            homeView.style.display = 'none';
-            readerView.style.display = 'none';
-            settingsView.style.display = 'none';
-            profileView.style.display = 'none';
-            premiumView.style.display = 'block';
-            // Not updating nav since this is accessed via button
+        // Verify OTP
+        function verifyOtp(otp) {
+            if (!generatedOtp || !otpExpiration) {
+                return false;
+            }
+            
+            if (Date.now() > otpExpiration) {
+                return false;
+            }
+            
+            return otp === generatedOtp;
         }
         
-        function updateActiveNav(activeId) {
-            navItems.forEach(item => {
-                if (item.id === activeId) {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
+        // Switch between auth forms
+        function showForm(formId) {
+            authForms.forEach(form => {
+                form.classList.remove('active');
+                if (form.id === formId) {
+                    form.classList.add('active');
                 }
             });
         }
         
-        function unlockBook() {
-            paymentModal.style.display = 'flex';
-        }
-        
-        function closePaymentModal() {
-            paymentModal.style.display = 'none';
-        }
-        
-        function submitPayment(e) {
-            e.preventDefault();
-            alert('Payment details submitted! Your access will be activated after verification.');
-            closePaymentModal();
-        }
-        
-        function toggleDarkMode() {
-            document.body.classList.toggle('light-mode');
-            localStorage.setItem('darkMode', darkModeToggle.checked ? 'off' : 'on');
-        }
-        
-        function changeTextSize() {
-            const size = textSizeSelect.value;
-            const readerContent = document.querySelector('.reader-content');
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.querySelector(`.toggle-password[data-target="${inputId}"]`);
             
-            if (size === 'small') {
-                readerContent.style.fontSize = '16px';
-            } else if (size === 'medium') {
-                readerContent.style.fontSize = '18px';
-            } else if (size === 'large') {
-                readerContent.style.fontSize = '20px';
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         }
         
-        function toggleChat() {
-            chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
+        // Handle OTP input navigation
+        function handleOtpInput(e) {
+            const input = e.target;
+            const index = parseInt(input.dataset.index);
+            
+            if (e.inputType === 'deleteContentBackward' && input.value === '') {
+                if (index > 1) {
+                    const prevInput = document.querySelector(`.otp-input[data-index="${index - 1}"]`);
+                    prevInput.focus();
+                }
+                return;
+            }
+            
+            if (input.value.length === 1 && index < 6) {
+                const nextInput = document.querySelector(`.otp-input[data-index="${index + 1}"]`);
+                nextInput.focus();
+            }
         }
         
-        function saveProfile() {
-            alert('Profile saved successfully!');
-            showHome();
+        // Get full OTP from inputs
+        function getFullOtp() {
+            let otp = '';
+            for (let i = 1; i <= 6; i++) {
+                const input = document.querySelector(`.otp-input[data-index="${i}"]`);
+                otp += input.value;
+            }
+            return otp;
         }
         
-        function showHelpCenter() {
-            alert("Contact Support:\nEmail: dolayinka884@gmail.com\nWhatsApp: 07034969325\nWe're here to help you!");
+        // Validate email format
+        function isValidEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
         }
         
-        function toggleNotifications() {
-            notificationDropdown.style.display = 
-                notificationDropdown.style.display === 'block' ? 'none' : 'block';
+        // Check if username is available
+        function isUsernameAvailable(username) {
+            return !userAccounts.some(account => account.username === username);
         }
         
-        function markNotificationsRead() {
-            // Remove unread class from all notifications
-            document.querySelectorAll('.notification-item.unread').forEach(item => {
-                item.classList.remove('unread');
-            });
-            
-            // Hide badge
-            notificationBadge.style.display = 'none';
-        }
-
-        // Enhanced AI Assistant Functionality
-        function getAIResponse(question) {
-            const lowerQuestion = question.toLowerCase();
-            
-            // Book content questions
-            if (lowerQuestion.includes('illusion') || lowerQuestion.includes('reality')) {
-                return "Chapter 1 explores the difference between societal expectations and actual life experiences. It discusses how we're taught to expect certain outcomes but often face different realities.";
-            }
-            
-            if (lowerQuestion.includes('pain') || lowerQuestion.includes('purpose')) {
-                return "Chapter 2 explains how pain serves as a teacher rather than an enemy. It shares stories of how difficult experiences lead to growth and transformation.";
-            }
-            
-            if (lowerQuestion.includes('choices') || lowerQuestion.includes('life')) {
-                return "Chapter 3 emphasizes that your daily choices shape your destiny. Small decisions accumulate to create significant life changes.";
-            }
-            
-            if (lowerQuestion.includes('failure')) {
-                return "Chapter 5 redefines failure as a stepping stone to success. It features inspiring stories of famous people who overcame failures.";
-            }
-            
-            if (lowerQuestion.includes('author') || lowerQuestion.includes('samuel')) {
-                return "Samuel A.O. is a student at Ekiti State University studying Statistics. He wrote 'The Main Reality of Life' to educate people about life's truths based on real-life experiences.";
-            }
-            
-            if (lowerQuestion.includes('theme') || lowerQuestion.includes('main idea')) {
-                return "The book's central theme is about uncovering the deeper truths beneath life's illusions. It guides readers to live intentionally and authentically.";
-            }
-            
-            // Payment questions
-            if (lowerQuestion.includes('payment') || lowerQuestion.includes('pay')) {
-                return "To purchase the full book: 1. Click 'Buy Now' 2. Transfer ₦10,000 to GTB (Account: Alake Samuel, 0863542562) 3. Use the book name as reference 4. Send proof to dolayinka884@gmail.com";
-            }
-            
-            if (lowerQuestion.includes('price') || lowerQuestion.includes('cost')) {
-                return "The full book costs ₦10,000. This includes lifetime access to all content and future updates.";
-            }
-            
-            // Support questions
-            if (lowerQuestion.includes('support') || lowerQuestion.includes('help') || 
-                lowerQuestion.includes('contact') || lowerQuestion.includes('problem')) {
-                return "Contact support:\nEmail: dolayinka884@gmail.com\nWhatsApp: 07034969325\nWe're available Mon-Fri, 9AM-5PM to assist you.";
-            }
-            
-            // App feature questions
-            if (lowerQuestion.includes('dark mode') || lowerQuestion.includes('light mode')) {
-                return "You can change the theme in Settings > Appearance. Toggle 'Dark Mode' to switch between themes.";
-            }
-            
-            if (lowerQuestion.includes('language')) {
-                return "The app supports multiple languages. Go to Settings > Language to select from 13 options including English, French, Spanish, and local Nigerian languages.";
-            }
-            
-            if (lowerQuestion.includes('bookmark') || lowerQuestion.includes('save')) {
-                return "To bookmark pages: 1. While reading, tap the bookmark icon in the top right corner. 2. Access your bookmarks through your profile.";
-            }
-            
-            if (lowerQuestion.includes('notification')) {
-                return "Manage notifications in Settings > Notifications. You can enable/disable new book alerts and app updates.";
-            }
-            
-            // Profile questions
-            if (lowerQuestion.includes('profile') || lowerQuestion.includes('account')) {
-                return "Edit your profile by clicking your avatar in the top right corner. You can update your name, email, and other personal details.";
-            }
-            
-            // General questions
-            if (lowerQuestion.includes('hi') || lowerQuestion.includes('hello')) {
-                return "Hello! How can I assist you today? You can ask about books, payment, or app features.";
-            }
-            
-            return "I'm here to help with any questions about books, authors, or app features. Try asking about chapter summaries, payment process, or how to change app settings.";
-        }
-
-        function sendMessage() {
-            const message = chatInput.value.trim();
-            if (!message) return;
-            
-            // Add user message
-            const userMessage = document.createElement('div');
-            userMessage.classList.add('message', 'user-message');
-            userMessage.textContent = message;
-            chatMessages.appendChild(userMessage);
-            
-            // Clear input
-            chatInput.value = '';
-            
-            // Scroll to bottom
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            // Generate AI response
-            setTimeout(() => {
-                const aiResponse = getAIResponse(message);
-                const aiMessage = document.createElement('div');
-                aiMessage.classList.add('message', 'ai-message');
-                aiMessage.innerHTML = `<strong>InsightAtlas Assistant</strong><br>${aiResponse}`;
-                chatMessages.appendChild(aiMessage);
-                
-                // Scroll to bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-        }
-
         // Event Listeners
-        readNowBtn.addEventListener('click', showReader);
-        buyBookBtn.addEventListener('click', unlockBook);
-        unlockBtn.addEventListener('click', unlockBook);
-        logo.addEventListener('click', showHome);
-        userAvatar.addEventListener('click', showProfile);
-        premiumBtn.addEventListener('click', showPremium);
-        notificationBell.addEventListener('click', toggleNotifications);
-        markAllRead.addEventListener('click', markNotificationsRead);
-        closeModal.addEventListener('click', closePaymentModal);
-        paymentForm.addEventListener('submit', submitPayment);
-        darkModeToggle.addEventListener('change', toggleDarkMode);
-        textSizeSelect.addEventListener('change', changeTextSize);
-        aiAssistantBtn.addEventListener('click', toggleChat);
-        sendMessageBtn.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.dataset.tab;
+                
+                authTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                if (tabId === 'login') {
+                    showForm('login-form');
+                } else if (tabId === 'signup') {
+                    showForm('signup-form');
+                }
+            });
         });
-        logoutBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to log out?')) {
-                alert('You have been logged out successfully.');
-                showHome();
+        
+        signupLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authTabs.forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.auth-tab[data-tab="signup"]').classList.add('active');
+            showForm('signup-form');
+        });
+        
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authTabs.forEach(tab => tab.classList.remove('active'));
+            document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
+            showForm('login-form');
+        });
+        
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showForm('forgot-password-form');
+        });
+        
+        backToLoginLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                authTabs.forEach(tab => tab.classList.remove('active'));
+                document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
+                showForm('login-form');
+            });
+        });
+        
+        resendOtpLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reset-email').value;
+            if (isValidEmail(email)) {
+                sendOtpToEmail(email);
             }
         });
-        saveProfileBtn.addEventListener('click', saveProfile);
-        helpCenterBtn.addEventListener('click', showHelpCenter);
         
-        // Nav item click handlers
-        document.getElementById('nav-home').addEventListener('click', (e) => {
-            e.preventDefault();
-            showHome();
+        togglePasswordIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                const target = icon.dataset.target;
+                togglePasswordVisibility(target);
+            });
         });
         
-        document.getElementById('nav-library').addEventListener('click', (e) => {
-            e.preventDefault();
-            showReader();
+        document.querySelectorAll('.otp-input').forEach(input => {
+            input.addEventListener('input', handleOtpInput);
         });
         
-        document.getElementById('nav-settings').addEventListener('click', (e) => {
-            e.preventDefault();
-            showSettings();
+        // Password strength indicators
+        document.getElementById('signup-password').addEventListener('input', function() {
+            updatePasswordStrength(this.value, 'password-strength-meter');
         });
         
-        // Close notifications when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!notificationBell.contains(e.target) && 
-                !notificationDropdown.contains(e.target)) {
-                notificationDropdown.style.display = 'none';
+        document.getElementById('new-password').addEventListener('input', function() {
+            updatePasswordStrength(this.value, 'new-password-strength-meter');
+        });
+        
+        // Username availability check
+        document.getElementById('signup-username').addEventListener('input', function() {
+            const username = this.value;
+            const errorElement = document.getElementById('signup-username-error');
+            const successElement = document.getElementById('signup-username-available');
+            
+            if (username.length < 4) {
+                errorElement.textContent = 'Username must be at least 4 characters';
+                errorElement.style.display = 'block';
+                successElement.style.display = 'none';
+                return;
+            }
+            
+            if (!isUsernameAvailable(username)) {
+                errorElement.textContent = 'Username is already taken';
+                errorElement.style.display = 'block';
+                successElement.style.display = 'none';
+            } else {
+                errorElement.style.display = 'none';
+                successElement.style.display = 'block';
             }
         });
-
-        // Initialize settings
-        function initSettings() {
-            // Dark mode preference
-            if (localStorage.getItem('darkMode') === 'off') {
-                document.body.classList.add('light-mode');
-                darkModeToggle.checked = true;
-            }
-        }
         
-        // Initialize app
-        initSettings();
+        // Form submissions
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            let isValid = true;
+            
+            // Reset errors
+            document.getElementById('login-username-error').style.display = 'none';
+            document.getElementById('login-password-error').style.display = 'none';
+            
+            // Validate username
+            if (!username) {
+                document.getElementById('login-username-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (!password) {
+                document.getElementById('login-password-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Find user account
+                const user = userAccounts.find(account => 
+                    account.username === username && account.password === password);
+                
+                if (user) {
+                    alert('Login successful! Redirecting to the app...');
+                    // In a real app, you would redirect to the main app page
+                    // window.location.href = 'app.html';
+                } else {
+                    document.getElementById('login-password-error').textContent = 'Invalid username or password';
+                    document.getElementById('login-password-error').style.display = 'block';
+                }
+            }
+        });
+        
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            let isValid = true;
+            
+            // Reset errors
+            document.getElementById('signup-email-error').style.display = 'none';
+            document.getElementById('signup-username-error').style.display = 'none';
+            document.getElementById('signup-password-error').style.display = 'none';
+            document.getElementById('signup-confirm-password-error').style.display = 'none';
+            
+            // Validate email
+            if (!isValidEmail(email)) {
+                document.getElementById('signup-email-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate username
+            if (username.length < 4) {
+                document.getElementById('signup-username-error').textContent = 'Username must be at least 4 characters';
+                document.getElementById('signup-username-error').style.display = 'block';
+                isValid = false;
+            } else if (!isUsernameAvailable(username)) {
+                document.getElementById('signup-username-error').textContent = 'Username is already taken';
+                document.getElementById('signup-username-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            const strength = checkPasswordStrength(password);
+            if (strength < 3) {
+                document.getElementById('signup-password-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password match
+            if (password !== confirmPassword) {
+                document.getElementById('signup-confirm-password-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Create new account
+                const newAccount = {
+                    email,
+                    username,
+                    password
+                };
+                
+                // Save to localStorage
+                userAccounts.push(newAccount);
+                localStorage.setItem(USER_ACCOUNTS_KEY, JSON.stringify(userAccounts));
+                
+                alert('Account created successfully! You can now login.');
+                
+                // Switch to login form
+                authTabs.forEach(tab => tab.classList.remove('active'));
+                document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
+                showForm('login-form');
+                
+                // Clear form
+                signupForm.reset();
+                document.getElementById('signup-username-available').style.display = 'none';
+                document.getElementById('password-strength-meter').style.width = '0';
+            }
+        });
+        
+        forgotPasswordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('reset-email').value;
+            
+            // Reset messages
+            document.getElementById('reset-email-error').style.display = 'none';
+            document.getElementById('reset-email-success').style.display = 'none';
+            
+            // Validate email
+            if (!isValidEmail(email)) {
+                document.getElementById('reset-email-error').style.display = 'block';
+                return;
+            }
+            
+            // Check if email exists
+            const userExists = userAccounts.some(account => account.email === email);
+            if (!userExists) {
+                document.getElementById('reset-email-error').textContent = 'Email not found in our system';
+                document.getElementById('reset-email-error').style.display = 'block';
+                return;
+            }
+            
+            // Send OTP
+            sendOtpToEmail(email);
+            showForm('otp-form');
+        });
+        
+        otpForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const otp = getFullOtp();
+            
+            // Reset error
+            document.getElementById('otp-error').style.display = 'none';
+            
+            // Verify OTP
+            if (verifyOtp(otp)) {
+                showForm('reset-password-form');
+            } else {
+                document.getElementById('otp-error').style.display = 'block';
+            }
+        });
+        
+        resetPasswordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-new-password').value;
+            let isValid = true;
+            
+            // Reset errors
+            document.getElementById('new-password-error').style.display = 'none';
+            document.getElementById('confirm-new-password-error').style.display = 'none';
+            
+            // Validate password strength
+            const strength = checkPasswordStrength(newPassword);
+            if (strength < 3) {
+                document.getElementById('new-password-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password match
+            if (newPassword !== confirmPassword) {
+                document.getElementById('confirm-new-password-error').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Get email from reset form
+                const email = document.getElementById('reset-email').value;
+                
+                // Update password in accounts
+                const accountIndex = userAccounts.findIndex(account => account.email === email);
+                if (accountIndex !== -1) {
+                    userAccounts[accountIndex].password = newPassword;
+                    localStorage.setItem(USER_ACCOUNTS_KEY, JSON.stringify(userAccounts));
+                    
+                    alert('Password reset successfully! You can now login with your new password.');
+                    
+                    // Switch to login form
+                    authTabs.forEach(tab => tab.classList.remove('active'));
+                    document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
+                    showForm('login-form');
+                    
+                    // Clear forms
+                    forgotPasswordForm.reset();
+                    resetPasswordForm.reset();
+                    
+                    // Reset OTP
+                    generatedOtp = null;
+                    otpExpiration = null;
+                    
+                    // Clear OTP inputs
+                    document.querySelectorAll('.otp-input').forEach(input => input.value = '');
+                }
+            }
+        });
     </script>
 </body>
 </html>
