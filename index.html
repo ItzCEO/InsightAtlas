@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InsightAtlas - Authentication</title>
+    <title>InsightAtlas - The Main Reality Of Life</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -35,79 +35,69 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background-color: var(--dark-bg);
             color: var(--dark-text);
+            transition: background-color 0.3s ease;
+            padding-bottom: 80px;
             min-height: 100vh;
+        }
+        
+        body.light-mode {
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+        
+        body.light-mode .book-card,
+        body.light-mode header,
+        body.light-mode .bottom-nav,
+        body.light-mode .section-content,
+        body.light-mode .about-section {
+            background-color: var(--light-card);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Auth Container */
+        .auth-container {
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             padding: 20px;
         }
         
-        .auth-container {
+        .auth-box {
             width: 100%;
             max-width: 450px;
             background-color: var(--dark-card);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            overflow: hidden;
+            padding: 30px;
         }
         
         .auth-header {
             text-align: center;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
+            margin-bottom: 30px;
         }
         
         .logo-text {
             font-size: 32px;
             font-weight: bold;
-            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(90deg, #4361ee, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             letter-spacing: 1px;
             margin-bottom: 10px;
+            font-family: 'Montserrat', sans-serif;
         }
         
         .auth-subtitle {
+            color: var(--gray);
             font-size: 16px;
-            opacity: 0.9;
-        }
-        
-        .auth-tabs {
-            display: flex;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .auth-tab {
-            flex: 1;
-            text-align: center;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        
-        .auth-tab.active {
-            background-color: white;
-            color: var(--primary);
-        }
-        
-        .auth-content {
-            padding: 30px;
-        }
-        
-        .auth-form {
-            display: none;
-        }
-        
-        .auth-form.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .form-group {
@@ -129,7 +119,6 @@
             background-color: rgba(255, 255, 255, 0.05);
             color: var(--dark-text);
             font-size: 16px;
-            transition: all 0.3s ease;
         }
         
         .form-control:focus {
@@ -175,19 +164,6 @@
             box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
         }
         
-        .btn-google {
-            background-color: white;
-            color: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .btn-google:hover {
-            background-color: #f8fafc;
-        }
-        
         .auth-footer {
             text-align: center;
             margin-top: 20px;
@@ -208,8 +184,7 @@
         .forgot-password {
             display: block;
             text-align: right;
-            margin-top: -10px;
-            margin-bottom: 20px;
+            margin: 5px 0 20px;
             color: var(--gray);
             font-size: 14px;
             text-decoration: none;
@@ -217,59 +192,6 @@
         
         .forgot-password:hover {
             color: var(--primary);
-            text-decoration: underline;
-        }
-        
-        .otp-container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        
-        .otp-input {
-            width: 15%;
-            height: 50px;
-            text-align: center;
-            font-size: 20px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--dark-text);
-        }
-        
-        .otp-input:focus {
-            border-color: var(--primary);
-            outline: none;
-            background-color: rgba(67, 97, 238, 0.1);
-        }
-        
-        .resend-otp {
-            text-align: center;
-            margin-top: 15px;
-            color: var(--gray);
-            font-size: 14px;
-        }
-        
-        .resend-otp a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .resend-otp a:hover {
-            text-decoration: underline;
-        }
-        
-        .back-to-login {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .back-to-login:hover {
             text-decoration: underline;
         }
         
@@ -287,62 +209,563 @@
             display: none;
         }
         
-        .password-strength {
-            height: 5px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            margin-top: 5px;
-            overflow: hidden;
+        /* Main App Container */
+        .app-container {
+            display: none;
         }
         
-        .strength-meter {
-            height: 100%;
-            width: 0;
-            transition: width 0.3s ease;
+        header {
+            background-color: var(--dark-card);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
         }
         
-        .weak { width: 33%; background-color: var(--danger); }
-        .medium { width: 66%; background-color: var(--warning); }
-        .strong { width: 100%; background-color: var(--success); }
+        .light-mode header {
+            background-color: var(--light-card);
+        }
         
-        .password-rules {
-            font-size: 12px;
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 20px;
             color: var(--gray);
-            margin-top: 5px;
         }
         
-        @media (max-width: 480px) {
-            .auth-container {
-                max-width: 100%;
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-section {
+            padding: 30px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 30px;
+        }
+        
+        .light-mode .hero-section {
+            background: linear-gradient(135deg, #e0e7ff, #dbeafe);
+        }
+        
+        .hero-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-subtitle {
+            color: var(--gray);
+            margin-bottom: 25px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            margin: 25px 0 15px;
+            padding-left: 10px;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .book-card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .light-mode .book-card {
+            background-color: var(--light-card);
+        }
+        
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .book-cover {
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2c2c2c;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            padding: 20px;
+            font-weight: bold;
+            line-height: 1.4;
+            flex-direction: column;
+        }
+        
+        .cover-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            font-family: 'Merriweather', serif;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .cover-author {
+            font-size: 20px;
+            font-style: italic;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .book-info {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .book-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .book-author {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .book-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--premium);
+            margin-bottom: 15px;
+        }
+        
+        .book-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .btn-read {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-read:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-buy {
+            background: linear-gradient(135deg, var(--success), #05b388);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-buy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(5, 179, 136, 0.3);
+        }
+        
+        .reader-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .reader-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .reader-book-cover {
+            width: 180px;
+            height: 240px;
+            border-radius: 12px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2c2c2c;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            padding: 20px;
+            font-weight: bold;
+            line-height: 1.4;
+            box-shadow: var(--shadow);
+            flex-direction: column;
+        }
+        
+        .reader-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        
+        .reader-author {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 24px;
+        }
+        
+        .reader-content {
+            line-height: 1.8;
+            font-size: 18px;
+            padding: 20px 0;
+            font-family: 'Merriweather', Georgia, serif;
+        }
+        
+        .reader-content h1, 
+        .reader-content h2, 
+        .reader-content h3 {
+            margin: 32px 0 16px;
+            color: var(--accent);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .reader-content p {
+            margin-bottom: 24px;
+            letter-spacing: 0.3px;
+        }
+        
+        .free-access {
+            position: relative;
+        }
+        
+        .free-access::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(30, 41, 59, 0.1), var(--dark-bg));
+            pointer-events: none;
+        }
+        
+        .light-mode .free-access::after {
+            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.1), var(--light-bg));
+        }
+        
+        .upgrade-box {
+            background: linear-gradient(135deg, #ffb700, #ffd166);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            text-align: center;
+            margin: 48px 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .upgrade-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #1e293b;
+        }
+        
+        .upgrade-price {
+            font-size: 36px;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 24px;
+        }
+        
+        .btn-upgrade {
+            background-color: #1e293b;
+            color: white;
+            padding: 16px 40px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-upgrade:hover {
+            background-color: #0f172a;
+            transform: translateY(-3px);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--dark-card);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+        
+        .light-mode .bottom-nav {
+            background-color: var(--light-card);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-item.active {
+            color: var(--accent);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .locked-content {
+            display: none;
+        }
+        
+        /* Welcome Modal */
+        .welcome-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .welcome-content {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+        }
+        
+        .welcome-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .welcome-message {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-features {
+            text-align: left;
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        
+        .welcome-features li {
+            margin-bottom: 10px;
+        }
+        
+        .btn-continue {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-continue:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        /* Share Section */
+        .share-section {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .share-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .share-link-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .share-link {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--gray);
+            color: var(--dark-text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .btn-copy {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-copy:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .share-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .share-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .share-icon.whatsapp {
+            background-color: #25D366;
+        }
+        
+        .share-icon.facebook {
+            background-color: #3b5998;
+        }
+        
+        .share-icon.twitter {
+            background-color: #1DA1F2;
+        }
+        
+        .share-icon.link {
+            background-color: var(--accent);
+        }
+        
+        .share-icon:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .book-cover {
+                height: 400px;
             }
             
-            .auth-content {
-                padding: 20px;
+            .cover-title {
+                font-size: 42px;
             }
             
-            .otp-input {
-                width: 14%;
-                height: 40px;
+            .cover-author {
+                font-size: 24px;
             }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-header">
-            <div class="logo-text">InsightAtlas</div>
-            <div class="auth-subtitle">Unlock the reality of life through knowledge</div>
-        </div>
-        
-        <div class="auth-tabs">
-            <div class="auth-tab active" data-tab="login">Login</div>
-            <div class="auth-tab" data-tab="signup">Sign Up</div>
-        </div>
-        
-        <div class="auth-content">
+    <!-- Authentication Section -->
+    <div class="auth-container" id="auth-view">
+        <div class="auth-box">
+            <div class="auth-header">
+                <div class="logo-text">InsightAtlas</div>
+                <div class="auth-subtitle">Unlock the reality of life through knowledge</div>
+            </div>
+            
             <!-- Login Form -->
-            <form class="auth-form active" id="login-form">
+            <form id="login-form">
                 <div class="form-group">
                     <label for="login-username">Username</label>
                     <input type="text" id="login-username" class="form-control" placeholder="Enter your username">
@@ -367,7 +790,7 @@
             </form>
             
             <!-- Sign Up Form -->
-            <form class="auth-form" id="signup-form">
+            <form id="signup-form" style="display: none;">
                 <div class="form-group">
                     <label for="signup-email">Email Address</label>
                     <input type="email" id="signup-email" class="form-control" placeholder="Enter your email">
@@ -387,13 +810,7 @@
                         <input type="password" id="signup-password" class="form-control" placeholder="Create a strong password">
                         <i class="toggle-password fas fa-eye" data-target="signup-password"></i>
                     </div>
-                    <div class="password-strength">
-                        <div class="strength-meter" id="password-strength-meter"></div>
-                    </div>
-                    <div class="password-rules">
-                        Must be at least 8 characters with a number and special character
-                    </div>
-                    <div class="error-message" id="signup-password-error">Password is not strong enough</div>
+                    <div class="error-message" id="signup-password-error">Password must be at least 8 characters</div>
                 </div>
                 
                 <div class="form-group">
@@ -413,7 +830,7 @@
             </form>
             
             <!-- Forgot Password Form -->
-            <form class="auth-form" id="forgot-password-form">
+            <form id="forgot-password-form" style="display: none;">
                 <div class="form-group">
                     <label for="reset-email">Email Address</label>
                     <input type="email" id="reset-email" class="form-control" placeholder="Enter your registered email">
@@ -423,47 +840,45 @@
                 
                 <button type="submit" class="btn btn-primary">Send OTP</button>
                 
-                <div class="back-to-login" id="back-to-login">Back to login</div>
+                <div class="auth-footer">
+                    Remembered your password? <a href="#" id="back-to-login">Back to login</a>
+                </div>
             </form>
             
             <!-- OTP Verification Form -->
-            <form class="auth-form" id="otp-form">
+            <form id="otp-form" style="display: none;">
                 <div class="form-group">
                     <label>Enter 6-digit OTP sent to your email</label>
-                    <div class="otp-container">
-                        <input type="text" class="otp-input" maxlength="1" data-index="1">
-                        <input type="text" class="otp-input" maxlength="1" data-index="2">
-                        <input type="text" class="otp-input" maxlength="1" data-index="3">
-                        <input type="text" class="otp-input" maxlength="1" data-index="4">
-                        <input type="text" class="otp-input" maxlength="1" data-index="5">
-                        <input type="text" class="otp-input" maxlength="1" data-index="6">
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
                     </div>
                     <div class="error-message" id="otp-error">Invalid OTP. Please try again.</div>
-                    <div class="resend-otp">
+                    <div class="auth-footer" style="margin-top: 10px;">
                         Didn't receive OTP? <a href="#" id="resend-otp">Resend OTP</a>
                     </div>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Verify OTP</button>
                 
-                <div class="back-to-login" id="back-to-login-otp">Back to login</div>
+                <div class="auth-footer">
+                    <a href="#" id="back-to-login-otp">Back to login</a>
+                </div>
             </form>
             
             <!-- Reset Password Form -->
-            <form class="auth-form" id="reset-password-form">
+            <form id="reset-password-form" style="display: none;">
                 <div class="form-group">
                     <label for="new-password">New Password</label>
                     <div class="password-container">
                         <input type="password" id="new-password" class="form-control" placeholder="Create a new password">
                         <i class="toggle-password fas fa-eye" data-target="new-password"></i>
                     </div>
-                    <div class="password-strength">
-                        <div class="strength-meter" id="new-password-strength-meter"></div>
-                    </div>
-                    <div class="password-rules">
-                        Must be at least 8 characters with a number and special character
-                    </div>
-                    <div class="error-message" id="new-password-error">Password is not strong enough</div>
+                    <div class="error-message" id="new-password-error">Password must be at least 8 characters</div>
                 </div>
                 
                 <div class="form-group">
@@ -477,116 +892,184 @@
                 
                 <button type="submit" class="btn btn-primary">Reset Password</button>
                 
-                <div class="back-to-login" id="back-to-login-reset">Back to login</div>
+                <div class="auth-footer">
+                    <a href="#" id="back-to-login-reset">Back to login</a>
+                </div>
             </form>
         </div>
     </div>
+    
+    <!-- Welcome Modal -->
+    <div class="welcome-modal" id="welcome-modal">
+        <div class="welcome-content">
+            <h2 class="welcome-title">Welcome to InsightAtlas!</h2>
+            <div class="welcome-message">
+                <p>We're thrilled to have you join our community of readers. InsightAtlas is designed to help you discover life's deepest truths through transformative literature.</p>
+            </div>
+            
+            <ul class="welcome-features">
+                <li>📚 Access our exclusive collection of life-changing books</li>
+                <li>🔒 Read purchased books anytime, even offline</li>
+                <li>🌐 Sync your progress across all devices</li>
+                <li>🎁 Get special discounts on new releases</li>
+            </ul>
+            
+            <button class="btn-continue" id="close-welcome">Start Reading</button>
+        </div>
+    </div>
+    
+    <!-- Main App Content -->
+    <div class="app-container" id="app-view">
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo" id="logo">
+                        <div class="logo-text">InsightAtlas</div>
+                    </div>
+                    
+                    <div class="header-buttons">
+                        <div class="notification-bell" id="notification-bell">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge" id="notification-badge">3</div>
+                        </div>
+                        <div class="user-avatar" id="user-avatar">U</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <div id="home-view">
+                <div class="hero-section">
+                    <h1 class="hero-title">The Main Reality Of Life</h1>
+                    <p class="hero-subtitle">Discover the transformative insights that will change how you experience life</p>
+                </div>
+
+                <div class="section-title">
+                    <span>Featured Book</span>
+                </div>
+                
+                <div class="book-card">
+                    <div class="book-cover">
+                        <div class="cover-title">The Main Reality Of Life</div>
+                        <div class="cover-author">By Samuel A.O</div>
+                    </div>
+                    <div class="book-info">
+                        <div class="book-title">The Main Reality Of Life</div>
+                        <div class="book-author">By Samuel A.O.</div>
+                        <div class="book-price">₦10,000</div>
+                        <div class="book-actions">
+                            <button class="btn-read" id="read-now-btn">
+                                <i class="fas fa-book-open"></i> Read Now
+                            </button>
+                            <button class="btn-buy" id="buy-book-btn">
+                                <i class="fas fa-shopping-cart"></i> Buy Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title" style="margin-top: 40px;">
+                    <span>About the Book</span>
+                </div>
+                
+                <div class="about-section">
+                    <p style="line-height: 1.6; margin-bottom: 15px;">
+                        "The Main Reality Of Life" is an invitation to uncover the deeper truths that define who we are and how we experience the world. It's about stripping away illusions to see life clearly.
+                    </p>
+                    <p style="line-height: 1.6; margin-bottom: 15px;">
+                        By the time you finish this book, you'll feel empowered to make conscious decisions that align with your truest self and step boldly into the life you are meant to live.
+                    </p>
+                    <p style="line-height: 1.6;">
+                        This book peels back layers of the human experience and offers insights to help you live more intentionally, authentically, and fully.
+                    </p>
+                </div>
+                
+                <!-- Share Section -->
+                <div class="share-section">
+                    <h3 class="share-title">Share InsightAtlas with Friends</h3>
+                    <div class="share-link-container">
+                        <input type="text" class="share-link" id="share-link" value="https://insightatlas.app/samuel" readonly>
+                        <button class="btn-copy" id="copy-link">Copy Link</button>
+                    </div>
+                    <p>Share this link to give friends access to InsightAtlas before it's on app stores!</p>
+                    
+                    <div class="share-icons">
+                        <div class="share-icon whatsapp" title="Share via WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div class="share-icon facebook" title="Share on Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="share-icon twitter" title="Share on Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </div>
+                        <div class="share-icon link" title="Copy Link">
+                            <i class="fas fa-link"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other views (reader, settings, etc.) would go here -->
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" id="nav-home">
+                <i class="fas fa-home nav-icon"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-library">
+                <i class="fas fa-book nav-icon"></i>
+                <span>Library</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-settings">
+                <i class="fas fa-cog nav-icon"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
 
     <script>
+        // User Account Management
+        const USER_ACCOUNTS_KEY = 'insightAtlasAccounts';
+        const CURRENT_USER_KEY = 'insightAtlasCurrentUser';
+        
         // DOM Elements
-        const authTabs = document.querySelectorAll('.auth-tab');
-        const authForms = document.querySelectorAll('.auth-form');
+        const authView = document.getElementById('auth-view');
+        const appView = document.getElementById('app-view');
         const loginForm = document.getElementById('login-form');
         const signupForm = document.getElementById('signup-form');
         const forgotPasswordForm = document.getElementById('forgot-password-form');
         const otpForm = document.getElementById('otp-form');
         const resetPasswordForm = document.getElementById('reset-password-form');
-        const togglePasswordIcons = document.querySelectorAll('.toggle-password');
         const signupLink = document.getElementById('signup-link');
         const loginLink = document.getElementById('login-link');
         const forgotPasswordLink = document.getElementById('forgot-password-link');
-        const backToLoginLinks = document.querySelectorAll('.back-to-login');
+        const backToLoginLinks = document.querySelectorAll('#back-to-login, #back-to-login-otp, #back-to-login-reset');
         const resendOtpLink = document.getElementById('resend-otp');
+        const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+        const welcomeModal = document.getElementById('welcome-modal');
+        const closeWelcomeBtn = document.getElementById('close-welcome');
+        const userAvatar = document.getElementById('user-avatar');
+        const shareLink = document.getElementById('share-link');
+        const copyLinkBtn = document.getElementById('copy-link');
         
-        // User accounts storage (localStorage)
-        const USER_ACCOUNTS_KEY = 'insightAtlasAccounts';
+        // Load user accounts from localStorage
         let userAccounts = JSON.parse(localStorage.getItem(USER_ACCOUNTS_KEY)) || [];
+        let currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY)) || null;
         
-        // OTP storage
-        let generatedOtp = null;
-        let otpExpiration = null;
-        
-        // Password strength function
-        function checkPasswordStrength(password) {
-            let strength = 0;
-            if (password.length >= 8) strength += 1;
-            if (/[A-Z]/.test(password)) strength += 1;
-            if (/[0-9]/.test(password)) strength += 1;
-            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
-            
-            return strength;
-        }
-        
-        // Update password strength meter
-        function updatePasswordStrength(password, meterId) {
-            const strength = checkPasswordStrength(password);
-            const meter = document.getElementById(meterId);
-            meter.className = 'strength-meter';
-            
-            if (password.length === 0) {
-                meter.style.width = '0';
-                return;
-            }
-            
-            if (strength < 2) {
-                meter.classList.add('weak');
-            } else if (strength < 4) {
-                meter.classList.add('medium');
-            } else {
-                meter.classList.add('strong');
-            }
-        }
-        
-        // Generate a 6-digit OTP
-        function generateOtp() {
-            return Math.floor(100000 + Math.random() * 900000).toString();
-        }
-        
-        // Send OTP to email (simulated)
-        function sendOtpToEmail(email) {
-            generatedOtp = generateOtp();
-            otpExpiration = Date.now() + 300000; // 5 minutes expiration
-            
-            // In a real app, you would send the OTP to the user's email
-            // For this demo, we'll just log it and show a success message
-            console.log(`OTP for ${email}: ${generatedOtp}`);
-            
-            // Show success message
-            document.getElementById('reset-email-success').style.display = 'block';
-            
-            // Simulate sending
-            setTimeout(() => {
-                alert(`OTP sent to ${email}: ${generatedOtp}\n\nIn a real app, this would be sent via email.`);
-            }, 500);
-        }
-        
-        // Verify OTP
-        function verifyOtp(otp) {
-            if (!generatedOtp || !otpExpiration) {
-                return false;
-            }
-            
-            if (Date.now() > otpExpiration) {
-                return false;
-            }
-            
-            return otp === generatedOtp;
-        }
-        
-        // Switch between auth forms
-        function showForm(formId) {
-            authForms.forEach(form => {
-                form.classList.remove('active');
-                if (form.id === formId) {
-                    form.classList.add('active');
-                }
-            });
+        // Check if user is logged in
+        if (currentUser) {
+            showApp();
+            showWelcome();
+            updateUserAvatar();
         }
         
         // Toggle password visibility
-        function togglePasswordVisibility(inputId) {
-            const input = document.getElementById(inputId);
-            const icon = document.querySelector(`.toggle-password[data-target="${inputId}"]`);
+        function togglePasswordVisibility(targetId) {
+            const input = document.getElementById(targetId);
+            const icon = document.querySelector(`.toggle-password[data-target="${targetId}"]`);
             
             if (input.type === 'password') {
                 input.type = 'text';
@@ -599,73 +1082,95 @@
             }
         }
         
-        // Handle OTP input navigation
-        function handleOtpInput(e) {
-            const input = e.target;
-            const index = parseInt(input.dataset.index);
-            
-            if (e.inputType === 'deleteContentBackward' && input.value === '') {
-                if (index > 1) {
-                    const prevInput = document.querySelector(`.otp-input[data-index="${index - 1}"]`);
-                    prevInput.focus();
-                }
-                return;
-            }
-            
-            if (input.value.length === 1 && index < 6) {
-                const nextInput = document.querySelector(`.otp-input[data-index="${index + 1}"]`);
-                nextInput.focus();
+        // Show form and hide others
+        function showForm(formId) {
+            const forms = [loginForm, signupForm, forgotPasswordForm, otpForm, resetPasswordForm];
+            forms.forEach(form => form.style.display = 'none');
+            document.getElementById(formId).style.display = 'block';
+        }
+        
+        // Show main app
+        function showApp() {
+            authView.style.display = 'none';
+            appView.style.display = 'block';
+        }
+        
+        // Show welcome modal
+        function showWelcome() {
+            welcomeModal.style.display = 'flex';
+        }
+        
+        // Close welcome modal
+        function closeWelcome() {
+            welcomeModal.style.display = 'none';
+        }
+        
+        // Update user avatar with first letter
+        function updateUserAvatar() {
+            if (currentUser && currentUser.username) {
+                userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
             }
         }
         
-        // Get full OTP from inputs
-        function getFullOtp() {
-            let otp = '';
-            for (let i = 1; i <= 6; i++) {
-                const input = document.querySelector(`.otp-input[data-index="${i}"]`);
-                otp += input.value;
-            }
+        // Generate OTP
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+        
+        // Send OTP to email (simulated)
+        function sendOTP(email) {
+            const otp = generateOTP();
+            
+            // In a real app, this would be sent via email service
+            // For demo purposes, we'll show it in an alert
+            alert(`OTP sent to ${email}: ${otp}\n\nIn a real app, this would be delivered to the user's email.`);
+            
+            // Save OTP to localStorage for verification
+            localStorage.setItem('insightAtlasOTP', otp);
+            localStorage.setItem('insightAtlasOTPEmail', email);
+            localStorage.setItem('insightAtlasOTPTime', Date.now());
+            
             return otp;
         }
         
-        // Validate email format
-        function isValidEmail(email) {
-            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return re.test(String(email).toLowerCase());
+        // Verify OTP
+        function verifyOTP(email, otp) {
+            const storedOTP = localStorage.getItem('insightAtlasOTP');
+            const storedEmail = localStorage.getItem('insightAtlasOTPEmail');
+            const storedTime = localStorage.getItem('insightAtlasOTPTime');
+            
+            // Check if OTP is expired (5 minutes)
+            if (Date.now() - storedTime > 300000) {
+                return false;
+            }
+            
+            return storedOTP === otp && storedEmail === email;
         }
         
-        // Check if username is available
-        function isUsernameAvailable(username) {
-            return !userAccounts.some(account => account.username === username);
+        // Copy share link to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
         }
         
         // Event Listeners
-        authTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabId = tab.dataset.tab;
-                
-                authTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                if (tabId === 'login') {
-                    showForm('login-form');
-                } else if (tabId === 'signup') {
-                    showForm('signup-form');
-                }
+        togglePasswordIcons.forEach(icon => {
+            icon.addEventListener('click', () => {
+                const target = icon.dataset.target;
+                togglePasswordVisibility(target);
             });
         });
         
         signupLink.addEventListener('click', (e) => {
             e.preventDefault();
-            authTabs.forEach(tab => tab.classList.remove('active'));
-            document.querySelector('.auth-tab[data-tab="signup"]').classList.add('active');
             showForm('signup-form');
         });
         
         loginLink.addEventListener('click', (e) => {
             e.preventDefault();
-            authTabs.forEach(tab => tab.classList.remove('active'));
-            document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
             showForm('login-form');
         });
         
@@ -677,8 +1182,6 @@
         backToLoginLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                authTabs.forEach(tab => tab.classList.remove('active'));
-                document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
                 showForm('login-form');
             });
         });
@@ -686,132 +1189,107 @@
         resendOtpLink.addEventListener('click', (e) => {
             e.preventDefault();
             const email = document.getElementById('reset-email').value;
-            if (isValidEmail(email)) {
-                sendOtpToEmail(email);
+            if (email) {
+                sendOTP(email);
+                document.getElementById('reset-email-success').style.display = 'block';
             }
         });
         
-        togglePasswordIcons.forEach(icon => {
+        closeWelcomeBtn.addEventListener('click', closeWelcome);
+        
+        copyLinkBtn.addEventListener('click', () => {
+            copyToClipboard(shareLink.value);
+        });
+        
+        document.querySelectorAll('.share-icon').forEach(icon => {
             icon.addEventListener('click', () => {
-                const target = icon.dataset.target;
-                togglePasswordVisibility(target);
+                copyToClipboard(shareLink.value);
             });
         });
         
-        document.querySelectorAll('.otp-input').forEach(input => {
-            input.addEventListener('input', handleOtpInput);
-        });
-        
-        // Password strength indicators
-        document.getElementById('signup-password').addEventListener('input', function() {
-            updatePasswordStrength(this.value, 'password-strength-meter');
-        });
-        
-        document.getElementById('new-password').addEventListener('input', function() {
-            updatePasswordStrength(this.value, 'new-password-strength-meter');
-        });
-        
-        // Username availability check
-        document.getElementById('signup-username').addEventListener('input', function() {
-            const username = this.value;
-            const errorElement = document.getElementById('signup-username-error');
-            const successElement = document.getElementById('signup-username-available');
-            
-            if (username.length < 4) {
-                errorElement.textContent = 'Username must be at least 4 characters';
-                errorElement.style.display = 'block';
-                successElement.style.display = 'none';
-                return;
-            }
-            
-            if (!isUsernameAvailable(username)) {
-                errorElement.textContent = 'Username is already taken';
-                errorElement.style.display = 'block';
-                successElement.style.display = 'none';
-            } else {
-                errorElement.style.display = 'none';
-                successElement.style.display = 'block';
-            }
-        });
-        
-        // Form submissions
+        // Form Submissions
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const username = document.getElementById('login-username').value;
+            const username = document.getElementById('login-username').value.trim();
             const password = document.getElementById('login-password').value;
-            let isValid = true;
             
             // Reset errors
             document.getElementById('login-username-error').style.display = 'none';
             document.getElementById('login-password-error').style.display = 'none';
             
-            // Validate username
+            // Validate inputs
             if (!username) {
                 document.getElementById('login-username-error').style.display = 'block';
-                isValid = false;
+                return;
             }
             
-            // Validate password
             if (!password) {
                 document.getElementById('login-password-error').style.display = 'block';
-                isValid = false;
+                return;
             }
             
-            if (isValid) {
-                // Find user account
-                const user = userAccounts.find(account => 
-                    account.username === username && account.password === password);
-                
-                if (user) {
-                    alert('Login successful! Redirecting to the app...');
-                    // In a real app, you would redirect to the main app page
-                    // window.location.href = 'app.html';
-                } else {
-                    document.getElementById('login-password-error').textContent = 'Invalid username or password';
-                    document.getElementById('login-password-error').style.display = 'block';
-                }
+            // Find user
+            const user = userAccounts.find(account => 
+                account.username === username && account.password === password);
+            
+            if (user) {
+                // Login successful
+                currentUser = user;
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+                showApp();
+                showWelcome();
+                updateUserAvatar();
+            } else {
+                document.getElementById('login-password-error').textContent = 'Invalid username or password';
+                document.getElementById('login-password-error').style.display = 'block';
             }
         });
         
         signupForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const email = document.getElementById('signup-email').value;
-            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value.trim();
+            const username = document.getElementById('signup-username').value.trim();
             const password = document.getElementById('signup-password').value;
             const confirmPassword = document.getElementById('signup-confirm-password').value;
-            let isValid = true;
             
             // Reset errors
             document.getElementById('signup-email-error').style.display = 'none';
             document.getElementById('signup-username-error').style.display = 'none';
             document.getElementById('signup-password-error').style.display = 'none';
             document.getElementById('signup-confirm-password-error').style.display = 'none';
+            document.getElementById('signup-username-available').style.display = 'none';
             
-            // Validate email
-            if (!isValidEmail(email)) {
+            // Validate inputs
+            let isValid = true;
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
                 document.getElementById('signup-email-error').style.display = 'block';
                 isValid = false;
             }
             
-            // Validate username
-            if (username.length < 4) {
+            // Username validation
+            if (!username || username.length < 4) {
                 document.getElementById('signup-username-error').textContent = 'Username must be at least 4 characters';
                 document.getElementById('signup-username-error').style.display = 'block';
                 isValid = false;
-            } else if (!isUsernameAvailable(username)) {
+            } else if (userAccounts.some(account => account.username === username)) {
                 document.getElementById('signup-username-error').textContent = 'Username is already taken';
                 document.getElementById('signup-username-error').style.display = 'block';
                 isValid = false;
+            } else {
+                document.getElementById('signup-username-available').style.display = 'block';
             }
             
-            // Validate password
-            const strength = checkPasswordStrength(password);
-            if (strength < 3) {
+            // Password validation
+            if (!password || password.length < 8) {
+                document.getElementById('signup-password-error').textContent = 'Password must be at least 8 characters';
                 document.getElementById('signup-password-error').style.display = 'block';
                 isValid = false;
             }
             
-            // Validate password match
+            // Password match validation
             if (password !== confirmPassword) {
                 document.getElementById('signup-confirm-password-error').style.display = 'block';
                 isValid = false;
@@ -825,34 +1303,33 @@
                     password
                 };
                 
-                // Save to localStorage
+                // Save account
                 userAccounts.push(newAccount);
                 localStorage.setItem(USER_ACCOUNTS_KEY, JSON.stringify(userAccounts));
                 
-                alert('Account created successfully! You can now login.');
+                // Set as current user
+                currentUser = newAccount;
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
                 
-                // Switch to login form
-                authTabs.forEach(tab => tab.classList.remove('active'));
-                document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
-                showForm('login-form');
-                
-                // Clear form
-                signupForm.reset();
-                document.getElementById('signup-username-available').style.display = 'none';
-                document.getElementById('password-strength-meter').style.width = '0';
+                // Show app
+                showApp();
+                showWelcome();
+                updateUserAvatar();
             }
         });
         
         forgotPasswordForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const email = document.getElementById('reset-email').value;
+            const email = document.getElementById('reset-email').value.trim();
             
             // Reset messages
             document.getElementById('reset-email-error').style.display = 'none';
             document.getElementById('reset-email-success').style.display = 'none';
             
             // Validate email
-            if (!isValidEmail(email)) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !emailRegex.test(email)) {
+                document.getElementById('reset-email-error').textContent = 'Please enter a valid email address';
                 document.getElementById('reset-email-error').style.display = 'block';
                 return;
             }
@@ -866,19 +1343,26 @@
             }
             
             // Send OTP
-            sendOtpToEmail(email);
+            sendOTP(email);
+            document.getElementById('reset-email-success').style.display = 'block';
             showForm('otp-form');
         });
         
         otpForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const otp = getFullOtp();
+            const email = document.getElementById('reset-email').value.trim();
+            const otpInputs = document.querySelectorAll('.otp-input');
+            let otp = '';
+            
+            otpInputs.forEach(input => {
+                otp += input.value;
+            });
             
             // Reset error
             document.getElementById('otp-error').style.display = 'none';
             
             // Verify OTP
-            if (verifyOtp(otp)) {
+            if (verifyOTP(email, otp)) {
                 showForm('reset-password-form');
             } else {
                 document.getElementById('otp-error').style.display = 'block';
@@ -889,52 +1373,40 @@
             e.preventDefault();
             const newPassword = document.getElementById('new-password').value;
             const confirmPassword = document.getElementById('confirm-new-password').value;
-            let isValid = true;
+            const email = document.getElementById('reset-email').value.trim();
             
             // Reset errors
             document.getElementById('new-password-error').style.display = 'none';
             document.getElementById('confirm-new-password-error').style.display = 'none';
             
-            // Validate password strength
-            const strength = checkPasswordStrength(newPassword);
-            if (strength < 3) {
+            // Validate inputs
+            let isValid = true;
+            
+            if (!newPassword || newPassword.length < 8) {
+                document.getElementById('new-password-error').textContent = 'Password must be at least 8 characters';
                 document.getElementById('new-password-error').style.display = 'block';
                 isValid = false;
             }
             
-            // Validate password match
             if (newPassword !== confirmPassword) {
                 document.getElementById('confirm-new-password-error').style.display = 'block';
                 isValid = false;
             }
             
             if (isValid) {
-                // Get email from reset form
-                const email = document.getElementById('reset-email').value;
-                
-                // Update password in accounts
-                const accountIndex = userAccounts.findIndex(account => account.email === email);
-                if (accountIndex !== -1) {
-                    userAccounts[accountIndex].password = newPassword;
+                // Update password
+                const userIndex = userAccounts.findIndex(account => account.email === email);
+                if (userIndex !== -1) {
+                    userAccounts[userIndex].password = newPassword;
                     localStorage.setItem(USER_ACCOUNTS_KEY, JSON.stringify(userAccounts));
                     
+                    // Clear OTP data
+                    localStorage.removeItem('insightAtlasOTP');
+                    localStorage.removeItem('insightAtlasOTPEmail');
+                    localStorage.removeItem('insightAtlasOTPTime');
+                    
                     alert('Password reset successfully! You can now login with your new password.');
-                    
-                    // Switch to login form
-                    authTabs.forEach(tab => tab.classList.remove('active'));
-                    document.querySelector('.auth-tab[data-tab="login"]').classList.add('active');
                     showForm('login-form');
-                    
-                    // Clear forms
-                    forgotPasswordForm.reset();
-                    resetPasswordForm.reset();
-                    
-                    // Reset OTP
-                    generatedOtp = null;
-                    otpExpiration = null;
-                    
-                    // Clear OTP inputs
-                    document.querySelectorAll('.otp-input').forEach(input => input.value = '');
                 }
             }
         });
