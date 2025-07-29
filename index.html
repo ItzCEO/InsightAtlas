@@ -51,7 +51,8 @@
         body.light-mode header,
         body.light-mode .bottom-nav,
         body.light-mode .section-content,
-        body.light-mode .about-section {
+        body.light-mode .about-section,
+        body.light-mode .offline-section {
             background-color: var(--light-card);
         }
         
@@ -258,6 +259,7 @@
             cursor: pointer;
             font-size: 20px;
             color: var(--gray);
+            margin-right: 15px;
         }
         
         .notification-badge {
@@ -339,7 +341,6 @@
             justify-content: center;
             background: #2c2c2c;
             color: white;
-            font-size: 24px;
             text-align: center;
             padding: 20px;
             font-weight: bold;
@@ -445,7 +446,6 @@
             justify-content: center;
             background: #2c2c2c;
             color: white;
-            font-size: 16px;
             text-align: center;
             padding: 20px;
             font-weight: bold;
@@ -738,6 +738,230 @@
             transform: translateY(-5px);
         }
         
+        /* Offline Section */
+        .offline-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .offline-section {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .offline-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray);
+            color: var(--accent);
+        }
+        
+        .offline-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .offline-empty i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .offline-book-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .offline-book-item {
+            background-color: var(--dark-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .light-mode .offline-book-item {
+            background-color: #e2e8f0;
+        }
+        
+        .offline-book-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .offline-book-cover {
+            width: 100px;
+            height: 150px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2c2c2c;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        
+        .offline-book-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .offline-book-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .offline-book-author {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        /* Settings View */
+        .settings-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .settings-section {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .settings-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray);
+            color: var(--accent);
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .light-mode .setting-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .setting-label {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .setting-label i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--accent);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            background-color: var(--dark-card);
+            color: var(--dark-text);
+            border: 1px solid var(--gray);
+            width: 100%;
+        }
+        
+        .light-mode select {
+            background-color: var(--light-card);
+            color: var(--light-text);
+        }
+        
+        .btn-logout {
+            background-color: var(--danger);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn-logout:hover {
+            background-color: #d32f2f;
+            transform: translateY(-2px);
+        }
+        
         /* Responsive Design */
         @media (min-width: 768px) {
             .book-cover {
@@ -850,12 +1074,12 @@
                 <div class="form-group">
                     <label>Enter 6-digit OTP sent to your email</label>
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="2" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="3" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="4" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="5" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="6" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
                     </div>
                     <div class="error-message" id="otp-error">Invalid OTP. Please try again.</div>
                     <div class="auth-footer" style="margin-top: 10px;">
@@ -939,6 +1163,7 @@
         </header>
 
         <div class="container">
+            <!-- Home View -->
             <div id="home-view">
                 <div class="hero-section">
                     <h1 class="hero-title">The Main Reality Of Life</h1>
@@ -1011,7 +1236,247 @@
                 </div>
             </div>
 
-            <!-- Other views (reader, settings, etc.) would go here -->
+            <!-- Reader View -->
+            <div class="reader-container" id="reader-view">
+                <div class="reader-header">
+                    <div class="reader-book-cover">
+                        <div class="cover-title">The Main Reality Of Life</div>
+                        <div class="cover-author">By Samuel A.O</div>
+                    </div>
+                    <h1 class="reader-title">The Main Reality Of Life</h1>
+                    <div class="reader-author">By Samuel A.O.</div>
+                </div>
+                
+                <div class="reader-content">
+                    <h1>THE MAIN REALITY OF LIFE</h1>
+                    <h2>SAMUEL A.O</h2>
+                    
+                    <h3>APPRECIATION</h3>
+                    <p>Primarily, my endless thanks to God Almighty for seeing me through this journey and to my mother who gave me her full support in ways she could and I'm grateful to her.</p>
+                    
+                    <p>Immense gratitude to my incredible beta reader, my one and only sister. Your insightful feedback, sharp eyes, and willingness to wade through early drafts were invaluable. A huge thank you to my editor and cover designer for the stunning cover that perfectly captures the spirit of the book.</p>
+                    
+                    <p>To my dear friends, Oluwaseyifunmitan and Oluwashindara, thank you for the pep talks, and listening ears.</p>
+                    
+                    <p>Finally, to you the reader, for picking up this book and stepping into this world. I hope it brings you as much joy as writing it brought me. I love you all and enjoy and be impacted as you read.</p>
+                    
+                    <h3>INDEX</h3>
+                    <p>Chapter 1: The Illusion Vs The Reality</p>
+                    <p>Chapter 2: Pain Has A Purpose</p>
+                    <p>Chapter 3: Your Choices, Your Life</p>
+                    <p>Chapter 4: The people In Your Boat</p>
+                    <p>Chapter 5: The Truth About Failure</p>
+                    <p>Chapter 6: The Decision That Defines You</p>
+                    <p>Chapter 7: The Silent battles We Fight</p>
+                    <p>Chapter 8: The Power Of Belief - What Shapes Your Reality</p>
+                    <p>Chapter 9: Taking The Leap - From Belief To Action</p>
+                    <p>Chapter 10: The Journey Ahead - Living Your Main Reality</p>
+                    
+                    <h3>INTRODUCTION</h3>
+                    <p><strong>Stepping Into Your Main Reality.</strong></p>
+                    
+                    <p>Life is a complex journey filled with moments of clarity and confusion, joy and pain, certainty, and doubt. We all navigate a world layered with illusions, stories we tell ourselves and narratives shaped by others. But beneath those layers lies a deeper truth: a main reality that defines who we are and how we experience the world. This book is an invitation to uncover that main reality.</p>
+                    
+                    <p>It's about stripping away illusions to see life clearly.</p>
+                    
+                    <p>It's about embracing pain as a teacher, not an enemy.</p>
+                    
+                    <p>It's about understanding that your choices shape your destiny.</p>
+                    
+                    <p>It's about surrounding yourself with the right people who support your journey.</p>
+                    
+                    <p>It's about redefining failure as a stepping stone to growth.</p>
+                    
+                    <p>It's about recognizing the power of belief and then moving beyond belief into courageous action.</p>
+                    
+                    <p>Each chapter in this book peels back a layer of the human experience and offers insights to help you live more intentionally, authentically, and fully. The reality of life is not something that simply happens to you, it's something you create moment by moment.</p>
+                    
+                    <p>By the time you finish this book, my hope is that you'll feel empowered to make conscious decisions that align with your truest self and step boldly into the life you are meant to live.</p>
+                    
+                    <p>This is your journey. This is your main reality. Let's begin.</p>
+                    
+                    <h3>MONOLOGUE</h3>
+                    <p>I want you to stop for a moment. Just pause and breathe. Look around you. Look inside you.</p>
+                    
+                    <p>How often do you feel truly seen? Utterly understood? Truly alive?</p>
+                    
+                    <p>Life isn't always what it seems, is it?</p>
+                    
+                    <p>So much of what we chase—success, approval, comfort—feels just out of reach.</p>
+                    
+                    <p>We get lost in stories we tell ourselves, in masks we wear, in voices that aren't really ours.</p>
+                    
+                    <p>But beneath all that noise, beneath all that struggle, there is something real. Something steady. Something waiting for you to discover it.</p>
+                    
+                    <p>Your main reality.</p>
+                    
+                    <p>It's not about perfection. It's not about never falling. It's about standing up, repeatedly, with clarity and courage.</p>
+                    
+                    <p>It's about knowing that your pain, your failures, your choices—they matter. They shape the life only you can live.</p>
+                    
+                    <p>This book isn't about giving you answers. It's about inviting you to ask better questions. To see more clearly. To live more fully.</p>
+                    
+                    <p>Because the truth is, the power to create your reality is in your hands.</p>
+                    
+                    <p>And I'm here to walk beside you, through the illusions, the pain, and the fears toward the life you were meant to live.</p>
+                    
+                    <p>Are you ready?</p>
+                    
+                    <div class="free-access">
+                        <h1>Chapter 1: The Illusion vs. The Reality</h1>
+                        <p>"Everyone is chasing something — success, love, validation, peace. But few stop to ask: What am I really chasing, and why?"</p>
+                        
+                        <p>From the moment we're born, we're introduced to a script, not handed to us directly but absorbed through the voices and expectations of those around us. Our parents, our teachers, our culture, even the movies and music we consume, all play a part in painting a picture of how life should be. We're told: "Do this, and you'll be happy. Avoid that, and you'll be safe. Achieve these things, and your life will be meaningful."</p>
+                        
+                        <p>It's not all bad. These ideals often come from a place of care, from people who want the best for us. But over time, many of us come to realize something unsettling: the life we were taught to expect doesn't always match the one we experience.</p>
+                        
+                        <p>Some people realize this early perhaps in childhood, when their family struggled financially, or when they saw loved ones fighting battles no one talked about. Others experience it much later, perhaps after achieving the very things they thought would bring joy, only to feel emptier than before.</p>
+                        
+                        <p>The truth? Life doesn't always deliver what it promises.</p>
+                        
+                        <p>And that's not because life is cruel… it's because the promises weren't real to begin with.</p>
+                        
+                        <h2>The Dream We're Sold</h2>
+                        <p>It starts with a narrative — simple, idealistic, and appealing.</p>
+                    </div>
+                </div>
+                
+                <div class="upgrade-box">
+                    <h2 class="upgrade-title">Want to read the full book?</h2>
+                    <div class="upgrade-price">₦10,000</div>
+                    <button class="btn-upgrade" id="unlock-btn">
+                        <i class="fas fa-lock"></i> Unlock Full Access
+                    </button>
+                </div>
+
+                <div class="locked-content">
+                    <p>Get an education, and you'll be successful. Be nice to others, and they'll be nice in return. Fall in love, and everything will fall into place. If you work hard, life will reward you. If you avoid mistakes, you'll avoid pain. But then real life begins to unfold. You study hard, but the job doesn't come. You love someone, but they don't love you back. You give your all, but it's not enough. You do everything "right," yet still feel like everything is going wrong. This disconnect between expectation and reality is one of the main sources of frustration and pain in people's lives. We suffer not just because life is difficult but because we were led to believe it wouldn't be.</p>
+                    
+                    <p>We're sold a dream, and when the dream starts to crumble, we often assume the problem is us.</p>
+                    
+                    <p>"Maybe I'm not good enough."</p>
+                    
+                    <p>"Maybe I'm cursed."</p>
+                    
+                    <p>"Maybe I made the wrong choices."</p>
+                    
+                    <p>But maybe… nothing's wrong at all. Maybe you've just reached the point where life starts getting real.</p>
+                    
+                    <h2>The Awakening: When the Illusion Breaks</h2>
+                    <p>Let me tell you a story.</p>
+                    
+                    <p>There was a young man named Dayo. In secondary school, he was the star. Top of his class, respectful, obedient, hopeful. Teachers said he was destined for greatness. His parents invested all they had in his education. Dayo believed, as many did, that life was linear: input equals' output. But life didn't go as planned. He didn't get the scholarship. His business failed. Friends drifted. He sank into depression, ashamed to talk to anyone. He kept asking, "What did I do wrong?". The turning point came not from success, but from surrender. One day, he simply sat in silence and asked a different question: "What if this is just life?"</p>
+                    
+                    <p>Not punishment. Not failure. Just… life.</p>
+                    
+                    <p>That question freed him. He began to detach his self-worth from his circumstances. He stopped judging himself by timelines or societal milestones. He started living with curiosity rather than control. He took small steps - volunteering, writing, learning new skills, not because it guaranteed success, but because it felt true.</p>
+                    
+                    <p>And slowly, his life took on new meaning - one based, not illusion.</p>
+                    
+                    <!-- More content would continue here in the full version -->
+                </div>
+            </div>
+            
+            <!-- Settings View -->
+            <div class="settings-container" id="settings-view">
+                <div class="settings-section">
+                    <h2 class="settings-title">Appearance</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-moon"></i>
+                            <span>Dark Mode</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="dark-mode-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-font"></i>
+                            <span>Text Size</span>
+                        </div>
+                        <select id="text-size">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h2 class="settings-title">Notifications</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-bell"></i>
+                            <span>Enable Notifications</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="notifications-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-book"></i>
+                            <span>New Book Alerts</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="book-alerts-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h2 class="settings-title">Language</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-globe"></i>
+                            <span>App Language</span>
+                        </div>
+                        <select id="app-language">
+                            <option value="en">English</option>
+                            <option value="fr">French</option>
+                            <option value="es">Spanish</option>
+                            <option value="de">German</option>
+                            <option value="pt">Portuguese</option>
+                            <option value="ru">Russian</option>
+                            <option value="zh">Chinese</option>
+                            <option value="ar">Arabic</option>
+                            <option value="ja">Japanese</option>
+                            <option value="hi">Hindi</option>
+                            <option value="yo">Yoruba</option>
+                            <option value="ig">Igbo</option>
+                            <option value="ha">Hausa</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn-logout" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </button>
+            </div>
+            
+            <!-- Offline View -->
+            <div class="offline-container" id="offline-view">
+                <div class="offline-section">
+                    <h2 class="offline-title">Offline Books</h2>
+                    
+                    <div id="offline-content">
+                        <div class="offline-empty">
+                            <i class="fas fa-download"></i>
+                            <h3>No available books offline</h3>
+                            <p>Purchase books to read them offline</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <nav class="bottom-nav">
@@ -1022,6 +1487,10 @@
             <a href="#" class="nav-item" id="nav-library">
                 <i class="fas fa-book nav-icon"></i>
                 <span>Library</span>
+            </a>
+            <a href="#" class="nav-item" id="nav-offline">
+                <i class="fas fa-download nav-icon"></i>
+                <span>Offline</span>
             </a>
             <a href="#" class="nav-item" id="nav-settings">
                 <i class="fas fa-cog nav-icon"></i>
@@ -1034,6 +1503,7 @@
         // User Account Management
         const USER_ACCOUNTS_KEY = 'insightAtlasAccounts';
         const CURRENT_USER_KEY = 'insightAtlasCurrentUser';
+        const PURCHASED_BOOKS_KEY = 'insightAtlasPurchasedBooks';
         
         // DOM Elements
         const authView = document.getElementById('auth-view');
@@ -1054,15 +1524,33 @@
         const userAvatar = document.getElementById('user-avatar');
         const shareLink = document.getElementById('share-link');
         const copyLinkBtn = document.getElementById('copy-link');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        // Views
+        const homeView = document.getElementById('home-view');
+        const readerView = document.getElementById('reader-view');
+        const settingsView = document.getElementById('settings-view');
+        const offlineView = document.getElementById('offline-view');
+        
+        // Navigation items
+        const navHome = document.getElementById('nav-home');
+        const navLibrary = document.getElementById('nav-library');
+        const navOffline = document.getElementById('nav-offline');
+        const navSettings = document.getElementById('nav-settings');
+        
+        // Buttons
+        const readNowBtn = document.getElementById('read-now-btn');
+        const buyBookBtn = document.getElementById('buy-book-btn');
+        const unlockBtn = document.getElementById('unlock-btn');
         
         // Load user accounts from localStorage
         let userAccounts = JSON.parse(localStorage.getItem(USER_ACCOUNTS_KEY)) || [];
         let currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY)) || null;
+        let purchasedBooks = JSON.parse(localStorage.getItem(PURCHASED_BOOKS_KEY)) || [];
         
         // Check if user is logged in
         if (currentUser) {
             showApp();
-            showWelcome();
             updateUserAvatar();
         }
         
@@ -1093,6 +1581,7 @@
         function showApp() {
             authView.style.display = 'none';
             appView.style.display = 'block';
+            showHomeView();
         }
         
         // Show welcome modal
@@ -1156,6 +1645,100 @@
             });
         }
         
+        // Show home view
+        function showHomeView() {
+            hideAllViews();
+            homeView.style.display = 'block';
+            setActiveNav('nav-home');
+        }
+        
+        // Show reader view
+        function showReaderView() {
+            hideAllViews();
+            readerView.style.display = 'block';
+            setActiveNav('nav-library');
+        }
+        
+        // Show settings view
+        function showSettingsView() {
+            hideAllViews();
+            settingsView.style.display = 'block';
+            setActiveNav('nav-settings');
+        }
+        
+        // Show offline view
+        function showOfflineView() {
+            hideAllViews();
+            offlineView.style.display = 'block';
+            setActiveNav('nav-offline');
+            renderOfflineBooks();
+        }
+        
+        // Hide all views
+        function hideAllViews() {
+            homeView.style.display = 'none';
+            readerView.style.display = 'none';
+            settingsView.style.display = 'none';
+            offlineView.style.display = 'none';
+        }
+        
+        // Set active navigation item
+        function setActiveNav(navId) {
+            const navItems = [navHome, navLibrary, navOffline, navSettings];
+            navItems.forEach(item => {
+                if (item.id === navId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+        
+        // Render offline books
+        function renderOfflineBooks() {
+            const offlineContent = document.getElementById('offline-content');
+            
+            if (purchasedBooks.length === 0) {
+                offlineContent.innerHTML = `
+                    <div class="offline-empty">
+                        <i class="fas fa-download"></i>
+                        <h3>No available books offline</h3>
+                        <p>Purchase books to read them offline</p>
+                    </div>
+                `;
+            } else {
+                offlineContent.innerHTML = `
+                    <div class="offline-book-list">
+                        ${purchasedBooks.map(book => `
+                            <div class="offline-book-item">
+                                <div class="offline-book-cover">
+                                    <div class="cover-title" style="font-size: 18px;">${book.title}</div>
+                                    <div class="cover-author" style="font-size: 14px;">${book.author}</div>
+                                </div>
+                                <div class="offline-book-title">${book.title}</div>
+                                <div class="offline-book-author">${book.author}</div>
+                                <button class="btn-read">
+                                    <i class="fas fa-book-open"></i> Read
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+        
+        // Purchase book
+        function purchaseBook() {
+            purchasedBooks.push({
+                id: 1,
+                title: "The Main Reality Of Life",
+                author: "Samuel A.O."
+            });
+            localStorage.setItem(PURCHASED_BOOKS_KEY, JSON.stringify(purchasedBooks));
+            alert('Book purchased successfully! You can now read it offline.');
+            renderOfflineBooks();
+        }
+
         // Event Listeners
         togglePasswordIcons.forEach(icon => {
             icon.addEventListener('click', () => {
@@ -1205,6 +1788,55 @@
             icon.addEventListener('click', () => {
                 copyToClipboard(shareLink.value);
             });
+        });
+        
+        logoutBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to log out?')) {
+                localStorage.removeItem(CURRENT_USER_KEY);
+                location.reload();
+            }
+        });
+        
+        // Navigation
+        navHome.addEventListener('click', (e) => {
+            e.preventDefault();
+            showHomeView();
+        });
+        
+        navLibrary.addEventListener('click', (e) => {
+            e.preventDefault();
+            showReaderView();
+        });
+        
+        navOffline.addEventListener('click', (e) => {
+            e.preventDefault();
+            showOfflineView();
+        });
+        
+        navSettings.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSettingsView();
+        });
+        
+        // Book actions
+        readNowBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showReaderView();
+        });
+        
+        buyBookBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            purchaseBook();
+        });
+        
+        unlockBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            purchaseBook();
+        });
+        
+        // Dark mode toggle
+        document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+            document.body.classList.toggle('light-mode');
         });
         
         // Form Submissions
