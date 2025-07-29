@@ -84,29 +84,21 @@
             cursor: pointer;
         }
         
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: white;
-            font-size: 20px;
-            box-shadow: var(--shadow);
-        }
-        
         .logo-text {
-            margin-left: 10px;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             color: white;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(90deg, #4361ee, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
         }
         
         .light-mode .logo-text {
-            color: var(--light-text);
+            background: linear-gradient(90deg, #3a56d4, #ef476f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .header-buttons {
@@ -487,7 +479,14 @@
             display: none;
         }
         
-        .settings-section {
+        .profile-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .settings-section, .profile-section {
             background-color: var(--dark-card);
             border-radius: var(--border-radius);
             padding: 20px;
@@ -495,11 +494,12 @@
             box-shadow: var(--shadow);
         }
         
-        .light-mode .settings-section {
+        .light-mode .settings-section, 
+        .light-mode .profile-section {
             background-color: var(--light-card);
         }
         
-        .settings-title {
+        .settings-title, .profile-title {
             font-size: 22px;
             margin-bottom: 20px;
             padding-bottom: 10px;
@@ -507,7 +507,7 @@
             color: var(--accent);
         }
         
-        .setting-item {
+        .setting-item, .profile-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -515,18 +515,19 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .light-mode .setting-item {
+        .light-mode .setting-item,
+        .light-mode .profile-item {
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
         
-        .setting-label {
+        .setting-label, .profile-label {
             font-size: 16px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .setting-label i {
+        .setting-label i, .profile-label i {
             font-size: 18px;
             width: 24px;
             text-align: center;
@@ -577,21 +578,23 @@
             transform: translateX(26px);
         }
         
-        select {
+        select, input {
             padding: 8px 12px;
             border-radius: 8px;
             background-color: var(--dark-card);
             color: var(--dark-text);
             border: 1px solid var(--gray);
+            width: 100%;
         }
         
-        .light-mode select {
+        .light-mode select, 
+        .light-mode input {
             background-color: var(--light-card);
             color: var(--light-text);
         }
         
-        .btn-logout {
-            background-color: var(--danger);
+        .btn-logout, .btn-save {
+            background-color: var(--success);
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
@@ -603,8 +606,8 @@
             margin-top: 20px;
         }
         
-        .btn-logout:hover {
-            background-color: #d0345c;
+        .btn-logout:hover, .btn-save:hover {
+            background-color: #05b388;
             transform: translateY(-2px);
         }
         
@@ -739,6 +742,7 @@
         .user-message {
             background-color: var(--primary);
             margin-left: auto;
+            color: white;
         }
         
         .ai-message {
@@ -778,6 +782,22 @@
             cursor: pointer;
         }
         
+        /* Profile Form */
+        .profile-form {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
         @media (min-width: 768px) {
             .book-cover {
                 height: 400px;
@@ -789,14 +809,13 @@
             }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="container">
             <div class="header-content">
                 <div class="logo" id="logo">
-                    <div class="logo-icon">IA</div>
                     <div class="logo-text">InsightAtlas</div>
                 </div>
                 
@@ -805,7 +824,7 @@
                     <button class="btn btn-premium">
                         <i class="fas fa-crown"></i> Try Premium
                     </button>
-                    <div class="user-avatar">S</div>
+                    <div class="user-avatar" id="user-avatar">S</div>
                 </div>
             </div>
         </div>
@@ -1104,11 +1123,12 @@
                 <div class="chat-container" id="chat-container" style="display: none;">
                     <div class="chat-messages" id="chat-messages">
                         <div class="message ai-message">
-                            Hello! I'm your AI assistant. How can I help you today?
+                            <strong>InsightAtlas Assistant</strong><br>
+                            Hello! I'm your AI assistant. I can answer questions about books, authors, payment, and app features. How can I help you today?
                         </div>
                     </div>
                     <div class="chat-input">
-                        <input type="text" id="chat-input" placeholder="Type your question...">
+                        <input type="text" id="chat-input" placeholder="Ask about books, payment, or app features...">
                         <button id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
@@ -1117,6 +1137,72 @@
             <button class="btn-logout" id="logout-btn">
                 <i class="fas fa-sign-out-alt"></i> Log Out
             </button>
+        </div>
+        
+        <!-- Profile View -->
+        <div class="profile-container" id="profile-view">
+            <div class="profile-section">
+                <h2 class="profile-title">Your Profile</h2>
+                
+                <form class="profile-form" id="profile-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" value="BookLover123">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fullname">Full Name</label>
+                        <input type="text" id="fullname" value="Samuel Reader">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" value="reader@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" value="+234 812 345 6789">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea id="bio" rows="3">Passionate reader exploring life's deeper meanings</textarea>
+                    </div>
+                    
+                    <button type="button" class="btn-save" id="save-profile-btn">
+                        <i class="fas fa-save"></i> Save Profile
+                    </button>
+                </form>
+            </div>
+            
+            <div class="profile-section">
+                <h2 class="profile-title">Support Information</h2>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email Support</span>
+                    </div>
+                    <span>dolayinka884@gmail.com</span>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp Support</span>
+                    </div>
+                    <span>07034969325</span>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <i class="fas fa-headset"></i>
+                        <span>Customer Support Hours</span>
+                    </div>
+                    <span>Mon-Fri: 9AM - 5PM</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1127,13 +1213,20 @@
             <h2 class="modal-title">Complete Your Purchase</h2>
             
             <div class="account-details">
-                <p><strong>Account Name:</strong> Samuel A.O. Publishing</p>
-                <p><strong>Bank Name:</strong> Zenith Bank</p>
-                <p><strong>Account Number:</strong> 1234567890</p>
+                <p><strong>Bank Name:</strong> Guaranty Trust Bank (GTB)</p>
+                <p><strong>Account Name:</strong> Alake Samuel</p>
+                <p><strong>Account Number:</strong> 0863542562</p>
                 <p><strong>Payment Amount:</strong> ₦10,000</p>
             </div>
             
-            <p style="margin-bottom: 15px;">After payment, upload proof below. Your access will be activated after verification.</p>
+            <p style="margin-bottom: 15px;">
+                <strong>Important:</strong> 
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li>Use the book name as your transaction reference</li>
+                    <li>Send proof of payment to dolayinka884@gmail.com</li>
+                    <li>Access will be activated within 24 hours of payment verification</li>
+                </ul>
+            </p>
             
             <form class="payment-form" id="payment-form">
                 <label for="transaction-ref">Transaction Reference:</label>
@@ -1172,10 +1265,12 @@
         const homeView = document.getElementById('home-view');
         const readerView = document.getElementById('reader-view');
         const settingsView = document.getElementById('settings-view');
+        const profileView = document.getElementById('profile-view');
         const readNowBtn = document.getElementById('read-now-btn');
         const buyBookBtn = document.getElementById('buy-book-btn');
         const unlockBtn = document.getElementById('unlock-btn');
         const logo = document.getElementById('logo');
+        const userAvatar = document.getElementById('user-avatar');
         const lockedContent = document.querySelector('.locked-content');
         const unlockBox = document.querySelector('.upgrade-box');
         const navItems = document.querySelectorAll('.nav-item');
@@ -1193,11 +1288,14 @@
         const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
         const sendMessageBtn = document.getElementById('send-message-btn');
+        const saveProfileBtn = document.getElementById('save-profile-btn');
+        const helpCenterBtn = document.getElementById('help-center-btn');
 
         // Navigation functions
         function showReader() {
             homeView.style.display = 'none';
             settingsView.style.display = 'none';
+            profileView.style.display = 'none';
             readerView.style.display = 'block';
             updateActiveNav('nav-library');
         }
@@ -1206,6 +1304,7 @@
             homeView.style.display = 'block';
             readerView.style.display = 'none';
             settingsView.style.display = 'none';
+            profileView.style.display = 'none';
             updateActiveNav('nav-home');
         }
         
@@ -1213,7 +1312,16 @@
             homeView.style.display = 'none';
             readerView.style.display = 'none';
             settingsView.style.display = 'block';
+            profileView.style.display = 'none';
             updateActiveNav('nav-settings');
+        }
+        
+        function showProfile() {
+            homeView.style.display = 'none';
+            readerView.style.display = 'none';
+            settingsView.style.display = 'none';
+            profileView.style.display = 'block';
+            // Not updating nav since this is accessed via avatar
         }
         
         function updateActiveNav(activeId) {
@@ -1262,6 +1370,89 @@
             chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
         }
         
+        function saveProfile() {
+            alert('Profile saved successfully!');
+            showHome();
+        }
+        
+        function showHelpCenter() {
+            alert("Contact Support:\nEmail: dolayinka884@gmail.com\nWhatsApp: 07034969325\nWe're here to help you!");
+        }
+
+        // Enhanced AI Assistant Functionality
+        function getAIResponse(question) {
+            const lowerQuestion = question.toLowerCase();
+            
+            // Book content questions
+            if (lowerQuestion.includes('illusion') || lowerQuestion.includes('reality')) {
+                return "Chapter 1 explores the difference between societal expectations and actual life experiences. It discusses how we're taught to expect certain outcomes but often face different realities.";
+            }
+            
+            if (lowerQuestion.includes('pain') || lowerQuestion.includes('purpose')) {
+                return "Chapter 2 explains how pain serves as a teacher rather than an enemy. It shares stories of how difficult experiences lead to growth and transformation.";
+            }
+            
+            if (lowerQuestion.includes('choices') || lowerQuestion.includes('life')) {
+                return "Chapter 3 emphasizes that your daily choices shape your destiny. Small decisions accumulate to create significant life changes.";
+            }
+            
+            if (lowerQuestion.includes('failure')) {
+                return "Chapter 5 redefines failure as a stepping stone to success. It features inspiring stories of famous people who overcame failures.";
+            }
+            
+            if (lowerQuestion.includes('author') || lowerQuestion.includes('samuel')) {
+                return "Samuel A.O. is a student at Ekiti State University studying Statistics. He wrote 'The Main Reality of Life' to educate people about life's truths based on real-life experiences.";
+            }
+            
+            if (lowerQuestion.includes('theme') || lowerQuestion.includes('main idea')) {
+                return "The book's central theme is about uncovering the deeper truths beneath life's illusions. It guides readers to live intentionally and authentically.";
+            }
+            
+            // Payment questions
+            if (lowerQuestion.includes('payment') || lowerQuestion.includes('pay')) {
+                return "To purchase the full book: 1. Click 'Buy Now' 2. Transfer ₦10,000 to GTB (Account: Alake Samuel, 0863542562) 3. Use the book name as reference 4. Send proof to dolayinka884@gmail.com";
+            }
+            
+            if (lowerQuestion.includes('price') || lowerQuestion.includes('cost')) {
+                return "The full book costs ₦10,000. This includes lifetime access to all content and future updates.";
+            }
+            
+            // Support questions
+            if (lowerQuestion.includes('support') || lowerQuestion.includes('help') || 
+                lowerQuestion.includes('contact') || lowerQuestion.includes('problem')) {
+                return "Contact support:\nEmail: dolayinka884@gmail.com\nWhatsApp: 07034969325\nWe're available Mon-Fri, 9AM-5PM to assist you.";
+            }
+            
+            // App feature questions
+            if (lowerQuestion.includes('dark mode') || lowerQuestion.includes('light mode')) {
+                return "You can change the theme in Settings > Appearance. Toggle 'Dark Mode' to switch between themes.";
+            }
+            
+            if (lowerQuestion.includes('language')) {
+                return "The app supports multiple languages. Go to Settings > Language to select from 13 options including English, French, Spanish, and local Nigerian languages.";
+            }
+            
+            if (lowerQuestion.includes('bookmark') || lowerQuestion.includes('save')) {
+                return "To bookmark pages: 1. While reading, tap the bookmark icon in the top right corner. 2. Access your bookmarks through your profile.";
+            }
+            
+            if (lowerQuestion.includes('notification')) {
+                return "Manage notifications in Settings > Notifications. You can enable/disable new book alerts and app updates.";
+            }
+            
+            // Profile questions
+            if (lowerQuestion.includes('profile') || lowerQuestion.includes('account')) {
+                return "Edit your profile by clicking your avatar in the top right corner. You can update your name, email, and other personal details.";
+            }
+            
+            // General questions
+            if (lowerQuestion.includes('hi') || lowerQuestion.includes('hello')) {
+                return "Hello! How can I assist you today? You can ask about books, payment, or app features.";
+            }
+            
+            return "I'm here to help with any questions about books, authors, or app features. Try asking about chapter summaries, payment process, or how to change app settings.";
+        }
+
         function sendMessage() {
             const message = chatInput.value.trim();
             if (!message) return;
@@ -1278,11 +1469,12 @@
             // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
             
-            // Simulate AI response
+            // Generate AI response
             setTimeout(() => {
+                const aiResponse = getAIResponse(message);
                 const aiMessage = document.createElement('div');
                 aiMessage.classList.add('message', 'ai-message');
-                aiMessage.textContent = "Thank you for your message. I'm an AI assistant here to help with your questions about the book or app. How can I assist you today?";
+                aiMessage.innerHTML = `<strong>InsightAtlas Assistant</strong><br>${aiResponse}`;
                 chatMessages.appendChild(aiMessage);
                 
                 // Scroll to bottom
@@ -1295,6 +1487,7 @@
         buyBookBtn.addEventListener('click', unlockBook);
         unlockBtn.addEventListener('click', unlockBook);
         logo.addEventListener('click', showHome);
+        userAvatar.addEventListener('click', showProfile);
         closeModal.addEventListener('click', closePaymentModal);
         paymentForm.addEventListener('submit', submitPayment);
         darkModeToggle.addEventListener('change', toggleDarkMode);
@@ -1310,6 +1503,8 @@
                 showHome();
             }
         });
+        saveProfileBtn.addEventListener('click', saveProfile);
+        helpCenterBtn.addEventListener('click', showHelpCenter);
         
         // Nav item click handlers
         document.getElementById('nav-home').addEventListener('click', (e) => {
