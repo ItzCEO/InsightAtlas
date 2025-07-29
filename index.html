@@ -52,7 +52,9 @@
         body.light-mode .bottom-nav,
         body.light-mode .section-content,
         body.light-mode .about-section,
-        body.light-mode .offline-section {
+        body.light-mode .offline-section,
+        body.light-mode .settings-section,
+        body.light-mode .profile-section {
             background-color: var(--light-card);
         }
         
@@ -790,6 +792,7 @@
             text-align: center;
             transition: transform 0.3s ease;
             cursor: pointer;
+            position: relative;
         }
         
         .light-mode .offline-book-item {
@@ -834,6 +837,28 @@
             font-size: 14px;
             color: var(--gray);
             margin-bottom: 10px;
+        }
+        
+        .btn-remove {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        
+        .btn-remove:hover {
+            opacity: 1;
         }
         
         /* Settings View */
@@ -960,6 +985,299 @@
         .btn-logout:hover {
             background-color: #d32f2f;
             transform: translateY(-2px);
+        }
+        
+        /* Chat interface */
+        .chat-container {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .light-mode .chat-container {
+            background-color: var(--light-card);
+        }
+        
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid var(--gray);
+            border-radius: var(--border-radius);
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+        
+        .user-message {
+            background-color: var(--primary);
+            margin-left: auto;
+            color: white;
+        }
+        
+        .ai-message {
+            background-color: var(--dark-bg);
+            margin-right: auto;
+        }
+        
+        .light-mode .ai-message {
+            background-color: #e2e8f0;
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--gray);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
+        }
+        
+        .light-mode .chat-input input {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--light-text);
+        }
+        
+        .chat-input button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        
+        /* Profile View */
+        .profile-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .profile-section {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .profile-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray);
+            color: var(--accent);
+        }
+        
+        .profile-form {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .btn-save {
+            background-color: var(--success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn-save:hover {
+            background-color: #05b388;
+            transform: translateY(-2px);
+        }
+        
+        /* Payment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+        
+        .light-mode .modal-content {
+            background-color: var(--light-card);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        
+        .account-details {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+        
+        .light-mode .account-details {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .account-details p {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .payment-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .payment-form input, 
+        .payment-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--gray);
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
+        }
+        
+        .light-mode .payment-form input, 
+        .light-mode .payment-form textarea {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--light-text);
+        }
+        
+        .payment-form button {
+            background-color: var(--success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .payment-form button:hover {
+            background-color: #05b388;
+        }
+        
+        /* Notification dropdown */
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 55px;
+            right: 15px;
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 200;
+        }
+        
+        .light-mode .notification-dropdown {
+            background-color: var(--light-card);
+        }
+        
+        .notification-header {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .light-mode .notification-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+        
+        .light-mode .notification-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .notification-item.unread {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .notification-time {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .notification-message {
+            font-size: 14px;
+        }
+        
+        .mark-all-read {
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 14px;
         }
         
         /* Responsive Design */
@@ -1142,6 +1460,45 @@
         </div>
     </div>
     
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-payment-modal">&times;</span>
+            <h2 class="modal-title">Complete Your Purchase</h2>
+            
+            <div class="account-details">
+                <p><strong>Bank Name:</strong> Guaranty Trust Bank (GTB)</p>
+                <p><strong>Account Name:</strong> Alake Samuel</p>
+                <p><strong>Account Number:</strong> 0863542562</p>
+                <p><strong>Payment Amount:</strong> ₦10,000</p>
+            </div>
+            
+            <p style="margin-bottom: 15px;">
+                <strong>Important:</strong> 
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li>Use the book name as your transaction reference</li>
+                    <li>Send proof of payment to dolayinka884@gmail.com</li>
+                    <li>Access will be activated within 24 hours of payment verification</li>
+                </ul>
+            </p>
+            
+            <form class="payment-form" id="payment-form">
+                <label for="transaction-ref">Transaction Reference:</label>
+                <input type="text" id="transaction-ref" required>
+                
+                <label for="payment-proof">Upload Payment Proof:</label>
+                <input type="file" id="payment-proof" accept="image/*" required>
+                
+                <label for="payment-note">Additional Notes:</label>
+                <textarea id="payment-note" rows="3"></textarea>
+                
+                <button type="submit">
+                    <i class="fas fa-check-circle"></i> Submit Payment
+                </button>
+            </form>
+        </div>
+    </div>
+    
     <!-- Main App Content -->
     <div class="app-container" id="app-view">
         <header>
@@ -1158,6 +1515,34 @@
                         </div>
                         <div class="user-avatar" id="user-avatar">U</div>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Notification Dropdown -->
+            <div class="notification-dropdown" id="notification-dropdown">
+                <div class="notification-header">
+                    <h3>Notifications</h3>
+                    <div class="mark-all-read" id="mark-all-read">Mark all as read</div>
+                </div>
+                <div class="notification-item unread">
+                    <div class="notification-title">New Message</div>
+                    <div class="notification-message">You have a new message from Samuel about your purchase</div>
+                    <div class="notification-time">10 min ago</div>
+                </div>
+                <div class="notification-item unread">
+                    <div class="notification-title">Book Update</div>
+                    <div class="notification-message">New chapter added to "The Main Reality of Life"</div>
+                    <div class="notification-time">2 hours ago</div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-title">Payment Received</div>
+                    <div class="notification-message">Your payment for "The Main Reality of Life" has been approved</div>
+                    <div class="notification-time">1 day ago</div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-title">Welcome to InsightAtlas!</div>
+                    <div class="notification-message">Start your reading journey with our featured books</div>
+                    <div class="notification-time">3 days ago</div>
                 </div>
             </div>
         </header>
@@ -1458,6 +1843,43 @@
                     </div>
                 </div>
                 
+                <div class="settings-section">
+                    <h2 class="settings-title">Help & Support</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Help Center</span>
+                        </div>
+                        <button class="btn-read" id="help-center-btn">
+                            <i class="fas fa-external-link-alt"></i> Open
+                        </button>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-robot"></i>
+                            <span>AI Assistant</span>
+                        </div>
+                        <button class="btn-read" id="ai-assistant-btn">
+                            <i class="fas fa-comments"></i> Chat
+                        </button>
+                    </div>
+                    
+                    <div class="chat-container" id="chat-container" style="display: none;">
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="message ai-message">
+                                <strong>InsightAtlas Assistant</strong><br>
+                                Hello! I'm your AI assistant. I can answer questions about books, authors, payment, and app features. How can I help you today?
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="chat-input" placeholder="Ask about books, payment, or app features...">
+                            <button id="send-message-btn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
                 <button class="btn-logout" id="logout-btn">
                     <i class="fas fa-sign-out-alt"></i> Log Out
                 </button>
@@ -1474,6 +1896,72 @@
                             <h3>No available books offline</h3>
                             <p>Purchase books to read them offline</p>
                         </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile View -->
+            <div class="profile-container" id="profile-view">
+                <div class="profile-section">
+                    <h2 class="profile-title">Your Profile</h2>
+                    
+                    <form class="profile-form" id="profile-form">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" value="BookLover123">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" value="Samuel Reader">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" value="reader@example.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" value="+234 812 345 6789">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bio">Bio</label>
+                            <textarea id="bio" rows="3">Passionate reader exploring life's deeper meanings</textarea>
+                        </div>
+                        
+                        <button type="button" class="btn-save" id="save-profile-btn">
+                            <i class="fas fa-save"></i> Save Profile
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="profile-section">
+                    <h2 class="profile-title">Support Information</h2>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email Support</span>
+                        </div>
+                        <span>dolayinka884@gmail.com</span>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp Support</span>
+                        </div>
+                        <span><a href="https://wa.me/2347034969325" style="color: var(--accent);">07034969325</a></span>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-label">
+                            <i class="fas fa-headset"></i>
+                            <span>Customer Support Hours</span>
+                        </div>
+                        <span>Mon-Fri: 9AM - 5PM</span>
                     </div>
                 </div>
             </div>
@@ -1525,12 +2013,16 @@
         const shareLink = document.getElementById('share-link');
         const copyLinkBtn = document.getElementById('copy-link');
         const logoutBtn = document.getElementById('logout-btn');
+        const notificationBell = document.getElementById('notification-bell');
+        const notificationDropdown = document.getElementById('notification-dropdown');
+        const markAllRead = document.getElementById('mark-all-read');
         
         // Views
         const homeView = document.getElementById('home-view');
         const readerView = document.getElementById('reader-view');
         const settingsView = document.getElementById('settings-view');
         const offlineView = document.getElementById('offline-view');
+        const profileView = document.getElementById('profile-view');
         
         // Navigation items
         const navHome = document.getElementById('nav-home');
@@ -1542,6 +2034,17 @@
         const readNowBtn = document.getElementById('read-now-btn');
         const buyBookBtn = document.getElementById('buy-book-btn');
         const unlockBtn = document.getElementById('unlock-btn');
+        const paymentModal = document.getElementById('payment-modal');
+        const closePaymentModalBtn = document.getElementById('close-payment-modal');
+        const paymentForm = document.getElementById('payment-form');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const aiAssistantBtn = document.getElementById('ai-assistant-btn');
+        const chatContainer = document.getElementById('chat-container');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendMessageBtn = document.getElementById('send-message-btn');
+        const saveProfileBtn = document.getElementById('save-profile-btn');
+        const helpCenterBtn = document.getElementById('help-center-btn');
         
         // Load user accounts from localStorage
         let userAccounts = JSON.parse(localStorage.getItem(USER_ACCOUNTS_KEY)) || [];
@@ -1674,12 +2177,19 @@
             renderOfflineBooks();
         }
         
+        // Show profile view
+        function showProfileView() {
+            hideAllViews();
+            profileView.style.display = 'block';
+        }
+        
         // Hide all views
         function hideAllViews() {
             homeView.style.display = 'none';
             readerView.style.display = 'none';
             settingsView.style.display = 'none';
             offlineView.style.display = 'none';
+            profileView.style.display = 'none';
         }
         
         // Set active navigation item
@@ -1710,33 +2220,174 @@
                 offlineContent.innerHTML = `
                     <div class="offline-book-list">
                         ${purchasedBooks.map(book => `
-                            <div class="offline-book-item">
+                            <div class="offline-book-item" data-id="${book.id}">
+                                <button class="btn-remove" data-id="${book.id}">
+                                    <i class="fas fa-times"></i>
+                                </button>
                                 <div class="offline-book-cover">
                                     <div class="cover-title" style="font-size: 18px;">${book.title}</div>
                                     <div class="cover-author" style="font-size: 14px;">${book.author}</div>
                                 </div>
                                 <div class="offline-book-title">${book.title}</div>
                                 <div class="offline-book-author">${book.author}</div>
-                                <button class="btn-read">
+                                <button class="btn-read read-offline-btn" data-id="${book.id}">
                                     <i class="fas fa-book-open"></i> Read
                                 </button>
                             </div>
                         `).join('')}
                     </div>
                 `;
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.btn-remove').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const bookId = btn.dataset.id;
+                        removeOfflineBook(bookId);
+                    });
+                });
+                
+                // Add event listeners to read buttons
+                document.querySelectorAll('.read-offline-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const bookId = btn.dataset.id;
+                        showReaderView();
+                    });
+                });
             }
+        }
+        
+        // Remove offline book
+        function removeOfflineBook(bookId) {
+            purchasedBooks = purchasedBooks.filter(book => book.id !== bookId);
+            localStorage.setItem(PURCHASED_BOOKS_KEY, JSON.stringify(purchasedBooks));
+            renderOfflineBooks();
         }
         
         // Purchase book
         function purchaseBook() {
+            // Show payment modal
+            paymentModal.style.display = 'flex';
+        }
+        
+        // Submit payment
+        function submitPayment() {
+            alert('Payment details submitted! Your access will be activated after verification.');
+            paymentModal.style.display = 'none';
+            
+            // Add book to purchased books (admin approval needed in real app)
             purchasedBooks.push({
                 id: 1,
                 title: "The Main Reality Of Life",
                 author: "Samuel A.O."
             });
             localStorage.setItem(PURCHASED_BOOKS_KEY, JSON.stringify(purchasedBooks));
-            alert('Book purchased successfully! You can now read it offline.');
+            
+            // Update offline view
             renderOfflineBooks();
+        }
+        
+        // Enhanced AI Assistant Functionality
+        function getAIResponse(question) {
+            const lowerQuestion = question.toLowerCase();
+            
+            // Book content questions
+            if (lowerQuestion.includes('illusion') || lowerQuestion.includes('reality')) {
+                return "Chapter 1 explores the difference between societal expectations and actual life experiences. It discusses how we're taught to expect certain outcomes but often face different realities.";
+            }
+            
+            if (lowerQuestion.includes('pain') || lowerQuestion.includes('purpose')) {
+                return "Chapter 2 explains how pain serves as a teacher rather than an enemy. It shares stories of how difficult experiences lead to growth and transformation.";
+            }
+            
+            if (lowerQuestion.includes('choices') || lowerQuestion.includes('life')) {
+                return "Chapter 3 emphasizes that your daily choices shape your destiny. Small decisions accumulate to create significant life changes.";
+            }
+            
+            if (lowerQuestion.includes('failure')) {
+                return "Chapter 5 redefines failure as a stepping stone to success. It features inspiring stories of famous people who overcame failures.";
+            }
+            
+            if (lowerQuestion.includes('author') || lowerQuestion.includes('samuel')) {
+                return "Samuel A.O. is a student at Ekiti State University studying Statistics. He wrote 'The Main Reality of Life' to educate people about life's truths based on real-life experiences.";
+            }
+            
+            if (lowerQuestion.includes('theme') || lowerQuestion.includes('main idea')) {
+                return "The book's central theme is about uncovering the deeper truths beneath life's illusions. It guides readers to live intentionally and authentically.";
+            }
+            
+            // Payment questions
+            if (lowerQuestion.includes('payment') || lowerQuestion.includes('pay')) {
+                return "To purchase the full book: 1. Click 'Buy Now' 2. Transfer ₦10,000 to GTB (Account: Alake Samuel, 0863542562) 3. Use the book name as reference 4. Send proof to dolayinka884@gmail.com";
+            }
+            
+            if (lowerQuestion.includes('price') || lowerQuestion.includes('cost')) {
+                return "The full book costs ₦10,000. This includes lifetime access to all content and future updates.";
+            }
+            
+            // Support questions
+            if (lowerQuestion.includes('support') || lowerQuestion.includes('help') || 
+                lowerQuestion.includes('contact') || lowerQuestion.includes('problem')) {
+                return "Contact support:\nEmail: dolayinka884@gmail.com\nWhatsApp: 07034969325\nWe're available Mon-Fri, 9AM-5PM to assist you.";
+            }
+            
+            // App feature questions
+            if (lowerQuestion.includes('dark mode') || lowerQuestion.includes('light mode')) {
+                return "You can change the theme in Settings > Appearance. Toggle 'Dark Mode' to switch between themes.";
+            }
+            
+            if (lowerQuestion.includes('language')) {
+                return "The app supports multiple languages. Go to Settings > Language to select from 13 options including English, French, Spanish, and local Nigerian languages.";
+            }
+            
+            if (lowerQuestion.includes('bookmark') || lowerQuestion.includes('save')) {
+                return "To bookmark pages: 1. While reading, tap the bookmark icon in the top right corner. 2. Access your bookmarks through your profile.";
+            }
+            
+            if (lowerQuestion.includes('notification')) {
+                return "Manage notifications in Settings > Notifications. You can enable/disable new book alerts and app updates.";
+            }
+            
+            // Profile questions
+            if (lowerQuestion.includes('profile') || lowerQuestion.includes('account')) {
+                return "Edit your profile by clicking your avatar in the top right corner. You can update your name, email, and other personal details.";
+            }
+            
+            // General questions
+            if (lowerQuestion.includes('hi') || lowerQuestion.includes('hello')) {
+                return "Hello! How can I assist you today? You can ask about books, payment, or app features.";
+            }
+            
+            return "I'm here to help with any questions about books, authors, or app features. Try asking about chapter summaries, payment process, or how to change app settings.";
+        }
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('message', 'user-message');
+            userMessage.textContent = message;
+            chatMessages.appendChild(userMessage);
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Generate AI response
+            setTimeout(() => {
+                const aiResponse = getAIResponse(message);
+                const aiMessage = document.createElement('div');
+                aiMessage.classList.add('message', 'ai-message');
+                aiMessage.innerHTML = `<strong>InsightAtlas Assistant</strong><br>${aiResponse}`;
+                chatMessages.appendChild(aiMessage);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000);
         }
 
         // Event Listeners
@@ -1797,6 +2448,22 @@
             }
         });
         
+        notificationBell.addEventListener('click', () => {
+            notificationDropdown.style.display = 
+                notificationDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        markAllRead.addEventListener('click', () => {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            document.getElementById('notification-badge').style.display = 'none';
+        });
+        
+        userAvatar.addEventListener('click', () => {
+            showProfileView();
+        });
+        
         // Navigation
         navHome.addEventListener('click', (e) => {
             e.preventDefault();
@@ -1805,7 +2472,11 @@
         
         navLibrary.addEventListener('click', (e) => {
             e.preventDefault();
-            showReaderView();
+            if (purchasedBooks.length > 0) {
+                showReaderView();
+            } else {
+                purchaseBook();
+            }
         });
         
         navOffline.addEventListener('click', (e) => {
@@ -1821,7 +2492,11 @@
         // Book actions
         readNowBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            showReaderView();
+            if (purchasedBooks.length > 0) {
+                showOfflineView();
+            } else {
+                purchaseBook();
+            }
         });
         
         buyBookBtn.addEventListener('click', (e) => {
@@ -1834,9 +2509,39 @@
             purchaseBook();
         });
         
+        closePaymentModalBtn.addEventListener('click', () => {
+            paymentModal.style.display = 'none';
+        });
+        
+        paymentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitPayment();
+        });
+        
         // Dark mode toggle
-        document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+        darkModeToggle.addEventListener('change', function() {
             document.body.classList.toggle('light-mode');
+        });
+        
+        // AI Assistant
+        aiAssistantBtn.addEventListener('click', () => {
+            chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
+        });
+        
+        sendMessageBtn.addEventListener('click', sendMessage);
+        
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        // Profile
+        saveProfileBtn.addEventListener('click', () => {
+            alert('Profile saved successfully!');
+            showHomeView();
+        });
+        
+        helpCenterBtn.addEventListener('click', () => {
+            alert("Contact Support:\nEmail: dolayinka884@gmail.com\nWhatsApp: 07034969325\nWe're here to help you!");
         });
         
         // Form Submissions
