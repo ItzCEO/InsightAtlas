@@ -49,7 +49,8 @@
         body.light-mode .book-card,
         body.light-mode header,
         body.light-mode .bottom-nav,
-        body.light-mode .section-content {
+        body.light-mode .section-content,
+        body.light-mode .about-section {
             background-color: var(--light-card);
         }
         
@@ -103,7 +104,7 @@
         
         .header-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             align-items: center;
         }
         
@@ -142,12 +143,29 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
+            position: relative;
         }
         
-        .time-display {
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 20px;
             color: var(--gray);
-            font-size: 14px;
-            margin-right: 10px;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .hero-section {
@@ -471,6 +489,18 @@
             display: none;
         }
         
+        /* About Section */
+        .about-section {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .light-mode .about-section {
+            background-color: var(--light-card);
+        }
+        
         /* Settings View */
         .settings-container {
             max-width: 800px;
@@ -486,7 +516,14 @@
             display: none;
         }
         
-        .settings-section, .profile-section {
+        .premium-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .settings-section, .profile-section, .premium-section {
             background-color: var(--dark-card);
             border-radius: var(--border-radius);
             padding: 20px;
@@ -495,11 +532,12 @@
         }
         
         .light-mode .settings-section, 
-        .light-mode .profile-section {
+        .light-mode .profile-section,
+        .light-mode .premium-section {
             background-color: var(--light-card);
         }
         
-        .settings-title, .profile-title {
+        .settings-title, .profile-title, .premium-title {
             font-size: 22px;
             margin-bottom: 20px;
             padding-bottom: 10px;
@@ -507,7 +545,7 @@
             color: var(--accent);
         }
         
-        .setting-item, .profile-item {
+        .setting-item, .profile-item, .premium-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -516,18 +554,19 @@
         }
         
         .light-mode .setting-item,
-        .light-mode .profile-item {
+        .light-mode .profile-item,
+        .light-mode .premium-item {
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
         
-        .setting-label, .profile-label {
+        .setting-label, .profile-label, .premium-label {
             font-size: 16px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .setting-label i, .profile-label i {
+        .setting-label i, .profile-label i, .premium-label i {
             font-size: 18px;
             width: 24px;
             text-align: center;
@@ -798,6 +837,84 @@
             font-weight: 500;
         }
         
+        /* Premium View */
+        .premium-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .premium-empty i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--premium);
+        }
+        
+        /* Notification dropdown */
+        .notification-dropdown {
+            display: none;
+            position: absolute;
+            top: 55px;
+            right: 15px;
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 200;
+        }
+        
+        .light-mode .notification-dropdown {
+            background-color: var(--light-card);
+        }
+        
+        .notification-header {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .light-mode .notification-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .notification-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+        
+        .light-mode .notification-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .notification-item.unread {
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .notification-time {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .notification-message {
+            font-size: 14px;
+        }
+        
+        .mark-all-read {
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
         @media (min-width: 768px) {
             .book-cover {
                 height: 400px;
@@ -820,12 +937,42 @@
                 </div>
                 
                 <div class="header-buttons">
-                    <div class="time-display">08:34</div>
-                    <button class="btn btn-premium">
+                    <button class="btn btn-premium" id="premium-btn">
                         <i class="fas fa-crown"></i> Try Premium
                     </button>
+                    <div class="notification-bell" id="notification-bell">
+                        <i class="fas fa-bell"></i>
+                        <div class="notification-badge" id="notification-badge">3</div>
+                    </div>
                     <div class="user-avatar" id="user-avatar">S</div>
                 </div>
+            </div>
+        </div>
+        
+        <div class="notification-dropdown" id="notification-dropdown">
+            <div class="notification-header">
+                <h3>Notifications</h3>
+                <div class="mark-all-read" id="mark-all-read">Mark all as read</div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-title">New Message</div>
+                <div class="notification-message">You have a new message from Samuel about your purchase</div>
+                <div class="notification-time">10 min ago</div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-title">Book Update</div>
+                <div class="notification-message">New chapter added to "The Main Reality of Life"</div>
+                <div class="notification-time">2 hours ago</div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-title">Payment Received</div>
+                <div class="notification-message">Your payment for "The Main Reality of Life" has been approved</div>
+                <div class="notification-time">1 day ago</div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-title">Welcome to InsightAtlas!</div>
+                <div class="notification-message">Start your reading journey with our featured books</div>
+                <div class="notification-time">3 days ago</div>
             </div>
         </div>
     </header>
@@ -864,7 +1011,7 @@
                 <span>About the Book</span>
             </div>
             
-            <div style="background-color: var(--dark-card); border-radius: var(--border-radius); padding: 20px; margin-bottom: 30px;">
+            <div class="about-section">
                 <p style="line-height: 1.6; margin-bottom: 15px;">
                     "The Main Reality Of Life" is an invitation to uncover the deeper truths that define who we are and how we experience the world. It's about stripping away illusions to see life clearly.
                 </p>
@@ -1192,7 +1339,7 @@
                         <i class="fab fa-whatsapp"></i>
                         <span>WhatsApp Support</span>
                     </div>
-                    <span>07034969325</span>
+                    <span><a href="https://wa.me/2347034969325" style="color: var(--accent);">07034969325</a></span>
                 </div>
                 
                 <div class="setting-item">
@@ -1201,6 +1348,19 @@
                         <span>Customer Support Hours</span>
                     </div>
                     <span>Mon-Fri: 9AM - 5PM</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Premium View -->
+        <div class="premium-container" id="premium-view">
+            <div class="premium-section">
+                <h2 class="premium-title">Premium Books</h2>
+                
+                <div class="premium-empty">
+                    <i class="fas fa-book-open"></i>
+                    <h3>No Premium Books Available</h3>
+                    <p>Check back soon for exclusive premium content!</p>
                 </div>
             </div>
         </div>
@@ -1266,11 +1426,17 @@
         const readerView = document.getElementById('reader-view');
         const settingsView = document.getElementById('settings-view');
         const profileView = document.getElementById('profile-view');
+        const premiumView = document.getElementById('premium-view');
         const readNowBtn = document.getElementById('read-now-btn');
         const buyBookBtn = document.getElementById('buy-book-btn');
         const unlockBtn = document.getElementById('unlock-btn');
         const logo = document.getElementById('logo');
         const userAvatar = document.getElementById('user-avatar');
+        const premiumBtn = document.getElementById('premium-btn');
+        const notificationBell = document.getElementById('notification-bell');
+        const notificationDropdown = document.getElementById('notification-dropdown');
+        const notificationBadge = document.getElementById('notification-badge');
+        const markAllRead = document.getElementById('mark-all-read');
         const lockedContent = document.querySelector('.locked-content');
         const unlockBox = document.querySelector('.upgrade-box');
         const navItems = document.querySelectorAll('.nav-item');
@@ -1296,6 +1462,7 @@
             homeView.style.display = 'none';
             settingsView.style.display = 'none';
             profileView.style.display = 'none';
+            premiumView.style.display = 'none';
             readerView.style.display = 'block';
             updateActiveNav('nav-library');
         }
@@ -1305,6 +1472,7 @@
             readerView.style.display = 'none';
             settingsView.style.display = 'none';
             profileView.style.display = 'none';
+            premiumView.style.display = 'none';
             updateActiveNav('nav-home');
         }
         
@@ -1313,6 +1481,7 @@
             readerView.style.display = 'none';
             settingsView.style.display = 'block';
             profileView.style.display = 'none';
+            premiumView.style.display = 'none';
             updateActiveNav('nav-settings');
         }
         
@@ -1321,7 +1490,17 @@
             readerView.style.display = 'none';
             settingsView.style.display = 'none';
             profileView.style.display = 'block';
+            premiumView.style.display = 'none';
             // Not updating nav since this is accessed via avatar
+        }
+        
+        function showPremium() {
+            homeView.style.display = 'none';
+            readerView.style.display = 'none';
+            settingsView.style.display = 'none';
+            profileView.style.display = 'none';
+            premiumView.style.display = 'block';
+            // Not updating nav since this is accessed via button
         }
         
         function updateActiveNav(activeId) {
@@ -1377,6 +1556,21 @@
         
         function showHelpCenter() {
             alert("Contact Support:\nEmail: dolayinka884@gmail.com\nWhatsApp: 07034969325\nWe're here to help you!");
+        }
+        
+        function toggleNotifications() {
+            notificationDropdown.style.display = 
+                notificationDropdown.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        function markNotificationsRead() {
+            // Remove unread class from all notifications
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            
+            // Hide badge
+            notificationBadge.style.display = 'none';
         }
 
         // Enhanced AI Assistant Functionality
@@ -1488,6 +1682,9 @@
         unlockBtn.addEventListener('click', unlockBook);
         logo.addEventListener('click', showHome);
         userAvatar.addEventListener('click', showProfile);
+        premiumBtn.addEventListener('click', showPremium);
+        notificationBell.addEventListener('click', toggleNotifications);
+        markAllRead.addEventListener('click', markNotificationsRead);
         closeModal.addEventListener('click', closePaymentModal);
         paymentForm.addEventListener('submit', submitPayment);
         darkModeToggle.addEventListener('change', toggleDarkMode);
@@ -1522,18 +1719,14 @@
             showSettings();
         });
         
-        // Update time display
-        function updateTime() {
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            document.querySelector('.time-display').textContent = `${hours}:${minutes}`;
-        }
-        
-        // Update time every minute
-        updateTime();
-        setInterval(updateTime, 60000);
-        
+        // Close notifications when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationBell.contains(e.target) && 
+                !notificationDropdown.contains(e.target)) {
+                notificationDropdown.style.display = 'none';
+            }
+        });
+
         // Initialize settings
         function initSettings() {
             // Dark mode preference
