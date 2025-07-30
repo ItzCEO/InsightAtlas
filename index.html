@@ -1366,6 +1366,17 @@
             color: var(--gray);
         }
         
+        /* Tutorial Highlight */
+        .tutorial-highlight {
+            position: absolute;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.7), 0 0 15px var(--accent);
+            z-index: 2001;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        
         /* Responsive Design */
         @media (min-width: 768px) {
             .book-cover {
@@ -1551,13 +1562,16 @@
         <div class="otp-display-content">
             <h3>Your Verification Code</h3>
             <div class="otp-display-code" id="otp-code-display">123456</div>
-            <div class="otp-display-timer">Expires in <span id="otp-timer">02:00</span></div>
+            <div class="otp-display-timer">Expires in <span id="otp-timer">00:30</span></div>
             <p style="font-size: 12px; margin-top: 10px;">For security reasons, this code will expire shortly</p>
         </div>
     </div>
     
     <!-- Tutorial Overlay -->
     <div class="tutorial-overlay" id="tutorial-overlay"></div>
+    
+    <!-- Tutorial Highlight -->
+    <div class="tutorial-highlight" id="tutorial-highlight"></div>
     
     <!-- Payment Modal -->
     <div class="modal" id="payment-modal">
@@ -1585,8 +1599,8 @@
                 <label for="transaction-ref">Transaction Reference:</label>
                 <input type="text" id="transaction-ref" required>
                 
-                <label for="payment-proof">Upload Payment Proof:</label>
-                <input type="file" id="payment-proof" accept="image/*" required>
+                <label for="payment-proof">Upload Payment Proof (Image or PDF):</label>
+                <input type="file" id="payment-proof" accept="image/*,.pdf" required>
                 
                 <label for="payment-note">Additional Notes:</label>
                 <textarea id="payment-note" rows="3"></textarea>
@@ -2086,11 +2100,17 @@
         </nav>
     </div>
 
+    <!-- Notification Sound -->
+    <audio id="notification-sound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-notification-bleep-1323.mp3" type="audio/mp3">
+    </audio>
+
     <script>
         // User Account Management
         const USER_ACCOUNTS_KEY = 'insightAtlasAccounts';
         const CURRENT_USER_KEY = 'insightAtlasCurrentUser';
         const PURCHASED_BOOKS_KEY = 'insightAtlasPurchasedBooks';
+        const APP_LANGUAGE_KEY = 'insightAtlasAppLanguage';
         
         // DOM Elements
         const authView = document.getElementById('auth-view');
@@ -2123,6 +2143,10 @@
         
         // Tutorial Elements
         const tutorialOverlay = document.getElementById('tutorial-overlay');
+        const tutorialHighlight = document.getElementById('tutorial-highlight');
+        
+        // Notification Sound
+        const notificationSound = document.getElementById('notification-sound');
         
         // Views
         const homeView = document.getElementById('home-view');
@@ -2152,16 +2176,94 @@
         const sendMessageBtn = document.getElementById('send-message-btn');
         const saveProfileBtn = document.getElementById('save-profile-btn');
         const helpCenterBtn = document.getElementById('help-center-btn');
+        const appLanguageSelect = document.getElementById('app-language');
         
         // Load user accounts from localStorage
         let userAccounts = JSON.parse(localStorage.getItem(USER_ACCOUNTS_KEY)) || [];
         let currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY)) || null;
         let purchasedBooks = JSON.parse(localStorage.getItem(PURCHASED_BOOKS_KEY)) || [];
+        let appLanguage = localStorage.getItem(APP_LANGUAGE_KEY) || 'en';
+        
+        // Language translations
+        const translations = {
+            en: {
+                welcomeTitle: "Welcome to InsightAtlas!",
+                welcomeMessage: "We're thrilled to have you join our community of readers. InsightAtlas is designed to help you discover life's deepest truths through transformative literature.",
+                feature1: "Access our exclusive collection of life-changing books",
+                feature2: "Read purchased books anytime, even offline",
+                feature3: "Sync your progress across all devices",
+                feature4: "Get special discounts on new releases",
+                continueBtn: "Start Reading",
+                homeTitle: "Home",
+                libraryTitle: "Library",
+                offlineTitle: "Offline",
+                settingsTitle: "Settings",
+                // ... add more translations as needed
+            },
+            fr: {
+                welcomeTitle: "Bienvenue sur InsightAtlas!",
+                welcomeMessage: "Nous sommes ravis de vous accueillir dans notre communauté de lecteurs. InsightAtlas est conçu pour vous aider à découvrir les vérités les plus profondes de la vie grâce à une littérature transformatrice.",
+                feature1: "Accédez à notre collection exclusive de livres qui changent la vie",
+                feature2: "Lisez les livres achetés à tout moment, même hors ligne",
+                feature3: "Synchronisez votre progression sur tous vos appareils",
+                feature4: "Bénéficiez de remises spéciales sur les nouvelles sorties",
+                continueBtn: "Commencer à lire",
+                homeTitle: "Accueil",
+                libraryTitle: "Bibliothèque",
+                offlineTitle: "Hors ligne",
+                settingsTitle: "Paramètres",
+                // ... add more translations as needed
+            },
+            es: {
+                welcomeTitle: "¡Bienvenido a InsightAtlas!",
+                welcomeMessage: "Estamos encantados de que te unas a nuestra comunidad de lectores. InsightAtlas está diseñado para ayudarte a descubrir las verdades más profundas de la vida a través de literatura transformadora.",
+                feature1: "Accede a nuestra exclusiva colección de libros que cambian vidas",
+                feature2: "Lee libros comprados en cualquier momento, incluso sin conexión",
+                feature3: "Sincroniza tu progreso en todos tus dispositivos",
+                feature4: "Obtén descuentos especiales en nuevos lanzamientos",
+                continueBtn: "Empezar a leer",
+                homeTitle: "Inicio",
+                libraryTitle: "Biblioteca",
+                offlineTitle: "Sin conexión",
+                settingsTitle: "Ajustes",
+                // ... add more translations as needed
+            }
+            // Add other languages as needed
+        };
         
         // Check if user is logged in
         if (currentUser) {
             showApp();
             updateUserAvatar();
+            applyLanguage(appLanguage);
+        }
+        
+        // Apply selected language
+        function applyLanguage(lang) {
+            const langData = translations[lang] || translations.en;
+            
+            // Update UI elements with translations
+            if (welcomeModal.style.display === 'flex') {
+                document.querySelector('.welcome-title').textContent = langData.welcomeTitle;
+                document.querySelector('.welcome-message').innerHTML = `<p>${langData.welcomeMessage}</p>`;
+                document.querySelector('.welcome-features').innerHTML = `
+                    <li>📚 ${langData.feature1}</li>
+                    <li>🔒 ${langData.feature2}</li>
+                    <li>🌐 ${langData.feature3}</li>
+                    <li>🎁 ${langData.feature4}</li>
+                `;
+                document.getElementById('close-welcome').textContent = langData.continueBtn;
+            }
+            
+            // Update navigation
+            document.getElementById('nav-home').querySelector('span').textContent = langData.homeTitle;
+            document.getElementById('nav-library').querySelector('span').textContent = langData.libraryTitle;
+            document.getElementById('nav-offline').querySelector('span').textContent = langData.offlineTitle;
+            document.getElementById('nav-settings').querySelector('span').textContent = langData.settingsTitle;
+            
+            // Save language preference
+            appLanguage = lang;
+            localStorage.setItem(APP_LANGUAGE_KEY, lang);
         }
         
         // Toggle password visibility
@@ -2197,6 +2299,7 @@
         // Show welcome modal
         function showWelcome() {
             welcomeModal.style.display = 'flex';
+            applyLanguage(appLanguage);
         }
         
         // Close welcome modal
@@ -2227,7 +2330,7 @@
             otpCodeDisplay.textContent = otp;
             otpDisplay.style.display = 'block';
             
-            let seconds = 120;
+            let seconds = 30; // Changed to 30 seconds
             const timer = setInterval(() => {
                 seconds--;
                 const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
@@ -2388,16 +2491,32 @@
         
         // Submit payment
         function submitPayment() {
-            alert('Payment details submitted! Your access will be activated after verification.');
-            paymentModal.style.display = 'none';
+            const transactionRef = document.getElementById('transaction-ref').value;
+            const paymentProof = document.getElementById('payment-proof').files[0];
+            const paymentNote = document.getElementById('payment-note').value;
             
-            // Add book to purchased books (admin approval needed in real app)
+            // Validate required fields
+            if (!transactionRef || !paymentProof) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Simulate sending email
+            alert('Payment details submitted! Your access will be activated after verification. Receipt sent to admin.');
+            
+            // Add book to purchased books
             purchasedBooks.push({
                 id: 1,
                 title: "The Main Reality Of Life",
                 author: "Samuel A.O."
             });
             localStorage.setItem(PURCHASED_BOOKS_KEY, JSON.stringify(purchasedBooks));
+            
+            // Close payment modal
+            paymentModal.style.display = 'none';
+            
+            // Reset form
+            paymentForm.reset();
             
             // Update offline view
             renderOfflineBooks();
@@ -2516,6 +2635,12 @@
             }
         }
         
+        // Play notification sound
+        function playNotificationSound() {
+            notificationSound.currentTime = 0;
+            notificationSound.play().catch(e => console.log("Notification sound play failed:", e));
+        }
+        
         // Start tutorial for new users
         function startTutorial() {
             // Create tutorial steps
@@ -2571,6 +2696,7 @@
                 if (stepIndex >= steps.length) {
                     tutorialOverlay.style.display = 'none';
                     tutorialStep.remove();
+                    tutorialHighlight.style.display = 'none';
                     return;
                 }
                 
@@ -2587,22 +2713,30 @@
                 // Position tutorial step
                 if (step.element) {
                     const rect = step.element.getBoundingClientRect();
+                    
+                    // Highlight the element
+                    tutorialHighlight.style.display = 'block';
+                    tutorialHighlight.style.width = `${rect.width + 20}px`;
+                    tutorialHighlight.style.height = `${rect.height + 20}px`;
+                    tutorialHighlight.style.top = `${rect.top - 10}px`;
+                    tutorialHighlight.style.left = `${rect.left - 10}px`;
+                    
                     switch (step.position) {
                         case 'top':
-                            tutorialStep.style.top = `${rect.top - tutorialStep.offsetHeight - 20}px`;
+                            tutorialStep.style.top = `${rect.top - tutorialStep.offsetHeight - 30}px`;
                             tutorialStep.style.left = `${rect.left + rect.width/2 - tutorialStep.offsetWidth/2}px`;
                             break;
                         case 'bottom':
-                            tutorialStep.style.top = `${rect.bottom + 20}px`;
+                            tutorialStep.style.top = `${rect.bottom + 30}px`;
                             tutorialStep.style.left = `${rect.left + rect.width/2 - tutorialStep.offsetWidth/2}px`;
                             break;
                         case 'left':
                             tutorialStep.style.top = `${rect.top + rect.height/2 - tutorialStep.offsetHeight/2}px`;
-                            tutorialStep.style.left = `${rect.left - tutorialStep.offsetWidth - 20}px`;
+                            tutorialStep.style.left = `${rect.left - tutorialStep.offsetWidth - 30}px`;
                             break;
                         case 'right':
                             tutorialStep.style.top = `${rect.top + rect.height/2 - tutorialStep.offsetHeight/2}px`;
-                            tutorialStep.style.left = `${rect.right + 20}px`;
+                            tutorialStep.style.left = `${rect.right + 30}px`;
                             break;
                     }
                 } else {
@@ -2610,6 +2744,7 @@
                     tutorialStep.style.top = '50%';
                     tutorialStep.style.left = '50%';
                     tutorialStep.style.transform = 'translate(-50%, -50%)';
+                    tutorialHighlight.style.display = 'none';
                 }
                 
                 // Add event listeners for tutorial navigation
@@ -2621,6 +2756,7 @@
                 document.getElementById('tutorial-skip').addEventListener('click', () => {
                     tutorialOverlay.style.display = 'none';
                     tutorialStep.remove();
+                    tutorialHighlight.style.display = 'none';
                 });
             }
             
@@ -2702,6 +2838,19 @@
             document.getElementById('notification-badge').style.display = 'none';
         });
         
+        // Mark notification as read when clicked
+        document.querySelectorAll('.notification-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.remove('unread');
+                // Update badge count
+                const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+                document.getElementById('notification-badge').textContent = unreadCount;
+                if (unreadCount === 0) {
+                    document.getElementById('notification-badge').style.display = 'none';
+                }
+            });
+        });
+        
         userAvatar.addEventListener('click', () => {
             showProfileView();
         });
@@ -2753,6 +2902,7 @@
         
         closePaymentModalBtn.addEventListener('click', () => {
             paymentModal.style.display = 'none';
+            paymentForm.reset();
         });
         
         paymentForm.addEventListener('submit', (e) => {
@@ -2767,13 +2917,40 @@
         
         // AI Assistant
         aiAssistantBtn.addEventListener('click', () => {
-            chatContainer.style.display = chatContainer.style.display === 'none' ? 'block' : 'none';
+            const isVisible = chatContainer.style.display === 'block';
+            chatContainer.style.display = isVisible ? 'none' : 'block';
+            
+            // Set timer to clear chat if closed
+            if (!isVisible) {
+                // Clear any existing timer
+                if (window.chatResetTimer) {
+                    clearTimeout(window.chatResetTimer);
+                }
+            } else {
+                // Set timer to clear chat after 2 minutes
+                window.chatResetTimer = setTimeout(() => {
+                    if (chatContainer.style.display === 'none') {
+                        chatMessages.innerHTML = `
+                            <div class="message ai-message">
+                                <strong>InsightAtlas Assistant</strong><br>
+                                Hello! I'm your AI assistant. I can answer questions about books, authors, payment, and app features. How can I help you today?
+                            </div>
+                        `;
+                    }
+                }, 120000); // 2 minutes
+            }
         });
         
         sendMessageBtn.addEventListener('click', sendMessage);
         
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
+        });
+        
+        // Language change
+        appLanguageSelect.value = appLanguage;
+        appLanguageSelect.addEventListener('change', function() {
+            applyLanguage(this.value);
         });
         
         // Profile
@@ -2905,9 +3082,9 @@
                 currentUser = newAccount;
                 localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
                 
-                // Show app
+                // Show app and redirect to profile
                 showApp();
-                showWelcome();
+                showProfileView();
                 updateUserAvatar();
             }
         });
@@ -3009,6 +3186,11 @@
                 }
             }
         });
+        
+        // Simulate new notification
+        setTimeout(() => {
+            playNotificationSound();
+        }, 5000);
     </script>
 </body>
 </html>
