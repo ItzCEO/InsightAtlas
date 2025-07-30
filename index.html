@@ -1280,6 +1280,92 @@
             font-size: 14px;
         }
         
+        /* OTP Display */
+        .otp-display {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--dark-card);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            z-index: 10000;
+            max-width: 250px;
+        }
+        
+        .otp-display-content {
+            text-align: center;
+        }
+        
+        .otp-display-code {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            letter-spacing: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .otp-display-timer {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        /* Tutorial Overlay */
+        .tutorial-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+        }
+        
+        .tutorial-step {
+            position: absolute;
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            max-width: 350px;
+            box-shadow: var(--shadow);
+            z-index: 2001;
+        }
+        
+        .tutorial-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .tutorial-content {
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .tutorial-navigation {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .tutorial-btn {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .tutorial-skip {
+            background: transparent;
+            color: var(--gray);
+        }
+        
         /* Responsive Design */
         @media (min-width: 768px) {
             .book-cover {
@@ -1377,10 +1463,10 @@
                     <label for="reset-email">Email Address</label>
                     <input type="email" id="reset-email" class="form-control" placeholder="Enter your registered email">
                     <div class="error-message" id="reset-email-error">Please enter your registered email</div>
-                    <div class="success-message" id="reset-email-success">OTP has been sent to your email!</div>
+                    <div class="success-message" id="reset-email-success">OTP has been generated!</div>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Send OTP</button>
+                <button type="submit" class="btn btn-primary">Generate OTP</button>
                 
                 <div class="auth-footer">
                     Remembered your password? <a href="#" id="back-to-login">Back to login</a>
@@ -1390,7 +1476,7 @@
             <!-- OTP Verification Form -->
             <form id="otp-form" style="display: none;">
                 <div class="form-group">
-                    <label>Enter 6-digit OTP sent to your email</label>
+                    <label>Enter 6-digit OTP shown in the app</label>
                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                         <input type="text" class="otp-input" maxlength="1" data-index="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
                         <input type="text" class="otp-input" maxlength="1" data-index="2" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
@@ -1401,7 +1487,7 @@
                     </div>
                     <div class="error-message" id="otp-error">Invalid OTP. Please try again.</div>
                     <div class="auth-footer" style="margin-top: 10px;">
-                        Didn't receive OTP? <a href="#" id="resend-otp">Resend OTP</a>
+                        Didn't receive OTP? <a href="#" id="resend-otp">Regenerate OTP</a>
                     </div>
                 </div>
                 
@@ -1459,6 +1545,19 @@
             <button class="btn-continue" id="close-welcome">Start Reading</button>
         </div>
     </div>
+    
+    <!-- OTP Display -->
+    <div class="otp-display" id="otp-display">
+        <div class="otp-display-content">
+            <h3>Your Verification Code</h3>
+            <div class="otp-display-code" id="otp-code-display">123456</div>
+            <div class="otp-display-timer">Expires in <span id="otp-timer">02:00</span></div>
+            <p style="font-size: 12px; margin-top: 10px;">For security reasons, this code will expire shortly</p>
+        </div>
+    </div>
+    
+    <!-- Tutorial Overlay -->
+    <div class="tutorial-overlay" id="tutorial-overlay"></div>
     
     <!-- Payment Modal -->
     <div class="modal" id="payment-modal">
@@ -2017,6 +2116,14 @@
         const notificationDropdown = document.getElementById('notification-dropdown');
         const markAllRead = document.getElementById('mark-all-read');
         
+        // OTP Display Elements
+        const otpDisplay = document.getElementById('otp-display');
+        const otpCodeDisplay = document.getElementById('otp-code-display');
+        const otpTimerDisplay = document.getElementById('otp-timer');
+        
+        // Tutorial Elements
+        const tutorialOverlay = document.getElementById('tutorial-overlay');
+        
         // Views
         const homeView = document.getElementById('home-view');
         const readerView = document.getElementById('reader-view');
@@ -2095,6 +2202,12 @@
         // Close welcome modal
         function closeWelcome() {
             welcomeModal.style.display = 'none';
+            // Start tutorial for new users
+            if (currentUser && currentUser.isNew) {
+                startTutorial();
+                currentUser.isNew = false;
+                updateUserAccount(currentUser);
+            }
         }
         
         // Update user avatar with first letter
@@ -2109,20 +2222,23 @@
             return Math.floor(100000 + Math.random() * 900000).toString();
         }
         
-        // Send OTP to email (simulated)
-        function sendOTP(email) {
-            const otp = generateOTP();
+        // Display OTP in the app
+        function displayOTP(otp) {
+            otpCodeDisplay.textContent = otp;
+            otpDisplay.style.display = 'block';
             
-            // In a real app, this would be sent via email service
-            // For demo purposes, we'll show it in an alert
-            alert(`OTP sent to ${email}: ${otp}\n\nIn a real app, this would be delivered to the user's email.`);
-            
-            // Save OTP to localStorage for verification
-            localStorage.setItem('insightAtlasOTP', otp);
-            localStorage.setItem('insightAtlasOTPEmail', email);
-            localStorage.setItem('insightAtlasOTPTime', Date.now());
-            
-            return otp;
+            let seconds = 120;
+            const timer = setInterval(() => {
+                seconds--;
+                const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                otpTimerDisplay.textContent = `${mins}:${secs}`;
+                
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    otpDisplay.style.display = 'none';
+                }
+            }, 1000);
         }
         
         // Verify OTP
@@ -2389,6 +2505,128 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }, 1000);
         }
+        
+        // Update user account in localStorage
+        function updateUserAccount(user) {
+            const userIndex = userAccounts.findIndex(acc => acc.email === user.email);
+            if (userIndex !== -1) {
+                userAccounts[userIndex] = user;
+                localStorage.setItem(USER_ACCOUNTS_KEY, JSON.stringify(userAccounts));
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+            }
+        }
+        
+        // Start tutorial for new users
+        function startTutorial() {
+            // Create tutorial steps
+            const steps = [
+                {
+                    title: "Welcome to InsightAtlas!",
+                    content: "Let's take a quick tour to help you get started with our app. We'll show you the main features and how to use them.",
+                    position: "center"
+                },
+                {
+                    element: document.querySelector('.hero-section'),
+                    title: "Featured Book",
+                    content: "This is where you'll find our featured book. You can read a preview or purchase the full book.",
+                    position: "bottom"
+                },
+                {
+                    element: document.querySelector('.book-card'),
+                    title: "Book Details",
+                    content: "View details about the book, read a preview, or purchase the full version.",
+                    position: "top"
+                },
+                {
+                    element: document.querySelector('.bottom-nav'),
+                    title: "Navigation",
+                    content: "Use this navigation bar to switch between Home, Library, Offline Books, and Settings.",
+                    position: "top"
+                },
+                {
+                    element: document.getElementById('user-avatar'),
+                    title: "Your Profile",
+                    content: "Click here to access your profile and account settings.",
+                    position: "left"
+                },
+                {
+                    title: "You're all set!",
+                    content: "Now you're ready to start your reading journey. Happy reading!",
+                    position: "center"
+                }
+            ];
+            
+            let currentStep = 0;
+            
+            // Show tutorial overlay
+            tutorialOverlay.style.display = 'block';
+            
+            // Create tutorial step element
+            const tutorialStep = document.createElement('div');
+            tutorialStep.className = 'tutorial-step';
+            tutorialOverlay.appendChild(tutorialStep);
+            
+            // Display tutorial step
+            function showStep(stepIndex) {
+                if (stepIndex >= steps.length) {
+                    tutorialOverlay.style.display = 'none';
+                    tutorialStep.remove();
+                    return;
+                }
+                
+                const step = steps[stepIndex];
+                tutorialStep.innerHTML = `
+                    <h3 class="tutorial-title">${step.title}</h3>
+                    <div class="tutorial-content">${step.content}</div>
+                    <div class="tutorial-navigation">
+                        <button class="tutorial-btn tutorial-skip" id="tutorial-skip">Skip</button>
+                        <button class="tutorial-btn" id="tutorial-next">${stepIndex === steps.length - 1 ? 'Finish' : 'Next'}</button>
+                    </div>
+                `;
+                
+                // Position tutorial step
+                if (step.element) {
+                    const rect = step.element.getBoundingClientRect();
+                    switch (step.position) {
+                        case 'top':
+                            tutorialStep.style.top = `${rect.top - tutorialStep.offsetHeight - 20}px`;
+                            tutorialStep.style.left = `${rect.left + rect.width/2 - tutorialStep.offsetWidth/2}px`;
+                            break;
+                        case 'bottom':
+                            tutorialStep.style.top = `${rect.bottom + 20}px`;
+                            tutorialStep.style.left = `${rect.left + rect.width/2 - tutorialStep.offsetWidth/2}px`;
+                            break;
+                        case 'left':
+                            tutorialStep.style.top = `${rect.top + rect.height/2 - tutorialStep.offsetHeight/2}px`;
+                            tutorialStep.style.left = `${rect.left - tutorialStep.offsetWidth - 20}px`;
+                            break;
+                        case 'right':
+                            tutorialStep.style.top = `${rect.top + rect.height/2 - tutorialStep.offsetHeight/2}px`;
+                            tutorialStep.style.left = `${rect.right + 20}px`;
+                            break;
+                    }
+                } else {
+                    // Center position for welcome and final steps
+                    tutorialStep.style.top = '50%';
+                    tutorialStep.style.left = '50%';
+                    tutorialStep.style.transform = 'translate(-50%, -50%)';
+                }
+                
+                // Add event listeners for tutorial navigation
+                document.getElementById('tutorial-next').addEventListener('click', () => {
+                    currentStep++;
+                    showStep(currentStep);
+                });
+                
+                document.getElementById('tutorial-skip').addEventListener('click', () => {
+                    tutorialOverlay.style.display = 'none';
+                    tutorialStep.remove();
+                });
+            }
+            
+            // Start with first step
+            showStep(currentStep);
+        }
 
         // Event Listeners
         togglePasswordIcons.forEach(icon => {
@@ -2424,7 +2662,11 @@
             e.preventDefault();
             const email = document.getElementById('reset-email').value;
             if (email) {
-                sendOTP(email);
+                const otp = generateOTP();
+                localStorage.setItem('insightAtlasOTP', otp);
+                localStorage.setItem('insightAtlasOTPEmail', email);
+                localStorage.setItem('insightAtlasOTPTime', Date.now());
+                displayOTP(otp);
                 document.getElementById('reset-email-success').style.display = 'block';
             }
         });
@@ -2536,8 +2778,17 @@
         
         // Profile
         saveProfileBtn.addEventListener('click', () => {
-            alert('Profile saved successfully!');
-            showHomeView();
+            if (currentUser.profileEdited) {
+                alert('Your profile can only be edited once. Please make sure all information is correct before saving.');
+                return;
+            }
+            
+            if (confirm('You can only edit your profile once. Are you sure all information is correct?')) {
+                currentUser.profileEdited = true;
+                updateUserAccount(currentUser);
+                alert('Profile saved successfully!');
+                showHomeView();
+            }
         });
         
         helpCenterBtn.addEventListener('click', () => {
@@ -2574,8 +2825,12 @@
                 currentUser = user;
                 localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
                 showApp();
-                showWelcome();
                 updateUserAvatar();
+                
+                // Show welcome for new users
+                if (currentUser.isNew) {
+                    showWelcome();
+                }
             } else {
                 document.getElementById('login-password-error').textContent = 'Invalid username or password';
                 document.getElementById('login-password-error').style.display = 'block';
@@ -2637,7 +2892,9 @@
                 const newAccount = {
                     email,
                     username,
-                    password
+                    password,
+                    isNew: true,
+                    profileEdited: false
                 };
                 
                 // Save account
@@ -2679,8 +2936,13 @@
                 return;
             }
             
-            // Send OTP
-            sendOTP(email);
+            // Generate and display OTP
+            const otp = generateOTP();
+            localStorage.setItem('insightAtlasOTP', otp);
+            localStorage.setItem('insightAtlasOTPEmail', email);
+            localStorage.setItem('insightAtlasOTPTime', Date.now());
+            
+            displayOTP(otp);
             document.getElementById('reset-email-success').style.display = 'block';
             showForm('otp-form');
         });
