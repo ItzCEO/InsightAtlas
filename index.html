@@ -35,27 +35,27 @@
         }
         
         body {
-            background-color: var(--dark-bg);
-            color: var(--dark-text);
+            background-color: var(--light-bg); /* Changed to light mode by default */
+            color: var(--light-text);
             transition: background-color 0.3s ease;
             padding-bottom: 80px;
             min-height: 100vh;
         }
         
-        body.light-mode {
-            background-color: var(--light-bg);
-            color: var(--light-text);
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
         }
         
-        body.light-mode .book-card,
-        body.light-mode header,
-        body.light-mode .bottom-nav,
-        body.light-mode .section-content,
-        body.light-mode .about-section,
-        body.light-mode .offline-section,
-        body.light-mode .settings-section,
-        body.light-mode .profile-section {
-            background-color: var(--light-card);
+        body.dark-mode .book-card,
+        body.dark-mode header,
+        body.dark-mode .bottom-nav,
+        body.dark-mode .section-content,
+        body.dark-mode .about-section,
+        body.dark-mode .offline-section,
+        body.dark-mode .settings-section,
+        body.dark-mode .profile-section {
+            background-color: var(--dark-card);
         }
         
         .container {
@@ -76,7 +76,7 @@
         .auth-box {
             width: 100%;
             max-width: 450px;
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             padding: 30px;
@@ -118,9 +118,9 @@
             width: 100%;
             padding: 14px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--dark-text);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.05);
+            color: var(--light-text);
             font-size: 16px;
         }
         
@@ -218,7 +218,7 @@
         }
         
         header {
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             padding: 15px 0;
             position: sticky;
             top: 0;
@@ -226,8 +226,8 @@
             box-shadow: var(--shadow);
         }
         
-        .light-mode header {
-            background-color: var(--light-card);
+        .dark-mode header {
+            background-color: var(--dark-card);
         }
         
         .header-content {
@@ -282,13 +282,13 @@
         .hero-section {
             padding: 30px 0;
             text-align: center;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #e0e7ff, #dbeafe);
             border-radius: 0 0 30px 30px;
             margin-bottom: 30px;
         }
         
-        .light-mode .hero-section {
-            background: linear-gradient(135deg, #e0e7ff, #dbeafe);
+        .dark-mode .hero-section {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
         }
         
         .hero-title {
@@ -315,7 +315,7 @@
         }
         
         .book-card {
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow);
@@ -325,8 +325,8 @@
             margin: 0 auto;
         }
         
-        .light-mode .book-card {
-            background-color: var(--light-card);
+        .dark-mode .book-card {
+            background-color: var(--dark-card);
         }
         
         .book-card:hover {
@@ -452,7 +452,6 @@
             padding: 20px;
             font-weight: bold;
             line-height: 1.4;
-            box-shadow: var(--shadow);
             flex-direction: column;
         }
         
@@ -499,12 +498,12 @@
             left: 0;
             right: 0;
             height: 100px;
-            background: linear-gradient(to bottom, rgba(30, 41, 59, 0.1), var(--dark-bg));
+            background: linear-gradient(to bottom, rgba(30, 41, 59, 0.1), var(--light-bg));
             pointer-events: none;
         }
         
-        .light-mode .free-access::after {
-            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.1), var(--light-bg));
+        .dark-mode .free-access::after {
+            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.1), var(--dark-bg));
         }
         
         .upgrade-box {
@@ -553,7 +552,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             display: flex;
             justify-content: space-around;
             padding: 12px 0;
@@ -561,8 +560,8 @@
             z-index: 100;
         }
         
-        .light-mode .bottom-nav {
-            background-color: var(--light-card);
+        .dark-mode .bottom-nav {
+            background-color: var(--dark-card);
         }
         
         .nav-item {
@@ -603,7 +602,7 @@
         }
         
         .welcome-content {
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             padding: 40px;
             width: 90%;
@@ -611,6 +610,10 @@
             box-shadow: var(--shadow);
             text-align: center;
             position: relative;
+        }
+        
+        .dark-mode .welcome-content {
+            background-color: var(--dark-card);
         }
         
         .welcome-title {
@@ -656,11 +659,15 @@
         
         /* Share Section */
         .share-section {
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             padding: 20px;
             margin-top: 30px;
             text-align: center;
+        }
+        
+        .dark-mode .share-section {
+            background-color: var(--dark-card);
         }
         
         .share-title {
@@ -679,11 +686,16 @@
             flex: 1;
             padding: 12px;
             border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(0, 0, 0, 0.05);
             border: 1px solid var(--gray);
-            color: var(--dark-text);
+            color: var(--light-text);
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        
+        .dark-mode .share-link {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
         }
         
         .btn-copy {
@@ -749,11 +761,15 @@
         }
         
         .offline-section {
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .offline-section {
+            background-color: var(--dark-card);
         }
         
         .offline-title {
@@ -783,7 +799,7 @@
         }
         
         .offline-book-item {
-            background-color: var(--dark-bg);
+            background-color: #e2e8f0;
             border-radius: var(--border-radius);
             padding: 15px;
             display: flex;
@@ -795,8 +811,8 @@
             position: relative;
         }
         
-        .light-mode .offline-book-item {
-            background-color: #e2e8f0;
+        .dark-mode .offline-book-item {
+            background-color: var(--dark-bg);
         }
         
         .offline-book-item:hover {
@@ -870,11 +886,15 @@
         }
         
         .settings-section {
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .settings-section {
+            background-color: var(--dark-card);
         }
         
         .settings-title {
@@ -889,12 +909,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
         
-        .light-mode .setting-item {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        .dark-mode .setting-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .setting-label {
@@ -958,15 +978,15 @@
         select {
             padding: 8px 12px;
             border-radius: 8px;
-            background-color: var(--dark-card);
-            color: var(--dark-text);
+            background-color: var(--light-card);
+            color: var(--light-text);
             border: 1px solid var(--gray);
             width: 100%;
         }
         
-        .light-mode select {
-            background-color: var(--light-card);
-            color: var(--light-text);
+        .dark-mode select {
+            background-color: var(--dark-card);
+            color: var(--dark-text);
         }
         
         .btn-logout {
@@ -989,15 +1009,15 @@
         
         /* Chat interface */
         .chat-container {
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             padding: 20px;
             margin-top: 20px;
             box-shadow: var(--shadow);
         }
         
-        .light-mode .chat-container {
-            background-color: var(--light-card);
+        .dark-mode .chat-container {
+            background-color: var(--dark-card);
         }
         
         .chat-messages {
@@ -1023,12 +1043,12 @@
         }
         
         .ai-message {
-            background-color: var(--dark-bg);
+            background-color: #e2e8f0;
             margin-right: auto;
         }
         
-        .light-mode .ai-message {
-            background-color: #e2e8f0;
+        .dark-mode .ai-message {
+            background-color: var(--dark-bg);
         }
         
         .chat-input {
@@ -1041,13 +1061,13 @@
             padding: 10px;
             border-radius: 8px;
             border: 1px solid var(--gray);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--dark-text);
-        }
-        
-        .light-mode .chat-input input {
             background-color: rgba(0, 0, 0, 0.05);
             color: var(--light-text);
+        }
+        
+        .dark-mode .chat-input input {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
         }
         
         .chat-input button {
@@ -1068,11 +1088,15 @@
         }
         
         .profile-section {
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .profile-section {
+            background-color: var(--dark-card);
         }
         
         .profile-title {
@@ -1131,7 +1155,7 @@
         }
         
         .modal-content {
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             padding: 30px;
             width: 90%;
@@ -1140,8 +1164,8 @@
             position: relative;
         }
         
-        .light-mode .modal-content {
-            background-color: var(--light-card);
+        .dark-mode .modal-content {
+            background-color: var(--dark-card);
         }
         
         .close-modal {
@@ -1160,15 +1184,15 @@
         }
         
         .account-details {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: rgba(0, 0, 0, 0.05);
             border-radius: var(--border-radius);
             padding: 15px;
             margin-bottom: 20px;
             font-family: monospace;
         }
         
-        .light-mode .account-details {
-            background-color: rgba(0, 0, 0, 0.05);
+        .dark-mode .account-details {
+            background-color: rgba(255, 255, 255, 0.05);
         }
         
         .account-details p {
@@ -1182,21 +1206,19 @@
             font-weight: 500;
         }
         
-        .payment-form input, 
-        .payment-form textarea {
+        .payment-form input {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             border-radius: 8px;
             border: 1px solid var(--gray);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--dark-text);
-        }
-        
-        .light-mode .payment-form input, 
-        .light-mode .payment-form textarea {
             background-color: rgba(0, 0, 0, 0.05);
             color: var(--light-text);
+        }
+        
+        .dark-mode .payment-form input {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--dark-text);
         }
         
         .payment-form button {
@@ -1221,7 +1243,7 @@
             position: absolute;
             top: 55px;
             right: 15px;
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             width: 350px;
@@ -1230,30 +1252,30 @@
             z-index: 200;
         }
         
-        .light-mode .notification-dropdown {
-            background-color: var(--light-card);
+        .dark-mode .notification-dropdown {
+            background-color: var(--dark-card);
         }
         
         .notification-header {
             padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        .light-mode .notification-header {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        .dark-mode .notification-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .notification-item {
             padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
         
-        .light-mode .notification-item {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        .dark-mode .notification-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .notification-item.unread {
@@ -1286,12 +1308,16 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             padding: 15px;
             border-radius: 8px;
             box-shadow: var(--shadow);
             z-index: 10000;
             max-width: 250px;
+        }
+        
+        .dark-mode .otp-display {
+            background-color: var(--dark-card);
         }
         
         .otp-display-content {
@@ -1327,12 +1353,16 @@
         
         .tutorial-step {
             position: absolute;
-            background-color: var(--dark-card);
+            background-color: var(--light-card);
             border-radius: var(--border-radius);
             padding: 20px;
             max-width: 350px;
             box-shadow: var(--shadow);
             z-index: 2001;
+        }
+        
+        .dark-mode .tutorial-step {
+            background-color: var(--dark-card);
         }
         
         .tutorial-title {
@@ -1488,13 +1518,13 @@
             <form id="otp-form" style="display: none;">
                 <div class="form-group">
                     <label>Enter 6-digit OTP shown in the app</label>
-                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <input type="text" class="otp-input" maxlength="1" data-index="1" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="2" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="3" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="4" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="5" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="6" style="width: 15%; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background-color: rgba(255, 255, 255, 0.05); color: var(--dark-text);">
+                    <div style="display: flex; gap: 8px; margin-bottom: 15px; justify-content: center;">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="2" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="3" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="4" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="5" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="6" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
                     </div>
                     <div class="error-message" id="otp-error">Invalid OTP. Please try again.</div>
                     <div class="auth-footer" style="margin-top: 10px;">
@@ -1601,9 +1631,6 @@
                 
                 <label for="payment-proof">Upload Payment Proof (Image or PDF):</label>
                 <input type="file" id="payment-proof" accept="image/*,.pdf" required>
-                
-                <label for="payment-note">Additional Notes:</label>
-                <textarea id="payment-note" rows="3"></textarea>
                 
                 <button type="submit">
                     <i class="fas fa-check-circle"></i> Submit Payment
@@ -2045,7 +2072,7 @@
                         </div>
                         
                         <button type="button" class="btn-save" id="save-profile-btn">
-                            <i class="fas fa-save"></i> Save Profile
+                            <i class="fas fa-save"></i> Save Changes
                         </button>
                     </form>
                 </div>
@@ -2227,8 +2254,147 @@
                 offlineTitle: "Sin conexión",
                 settingsTitle: "Ajustes",
                 // ... add more translations as needed
+            },
+            de: {
+                welcomeTitle: "Willkommen bei InsightAtlas!",
+                welcomeMessage: "Wir freuen uns sehr, Sie in unserer Lesergemeinschaft begrüßen zu dürfen. InsightAtlas wurde entwickelt, um Ihnen zu helfen, die tiefsten Wahrheiten des Lebens durch transformative Literatur zu entdecken.",
+                feature1: "Greifen Sie auf unsere exklusive Sammlung lebensverändernder Bücher zu",
+                feature2: "Lesen Sie gekaufte Bücher jederzeit, auch offline",
+                feature3: "Synchronisieren Sie Ihren Fortschritt über alle Geräte hinweg",
+                feature4: "Erhalten Sie Sonderrabatte für Neuerscheinungen",
+                continueBtn: "Lesen beginnen",
+                homeTitle: "Startseite",
+                libraryTitle: "Bibliothek",
+                offlineTitle: "Offline",
+                settingsTitle: "Einstellungen",
+                // ... add more translations as needed
+            },
+            pt: {
+                welcomeTitle: "Bem-vindo ao InsightAtlas!",
+                welcomeMessage: "Estamos muito felizes por você se juntar à nossa comunidade de leitores. O InsightAtlas foi projetado para ajudá-lo a descobrir as verdades mais profundas da vida por meio de literatura transformadora.",
+                feature1: "Acesse nossa coleção exclusiva de livros que mudam vidas",
+                feature2: "Leia livros comprados a qualquer momento, mesmo offline",
+                feature3: "Sincronize seu progresso em todos os dispositivos",
+                feature4: "Obtenha descontos especiais em novos lançamentos",
+                continueBtn: "Começar a ler",
+                homeTitle: "Início",
+                libraryTitle: "Biblioteca",
+                offlineTitle: "Offline",
+                settingsTitle: "Configurações",
+                // ... add more translations as needed
+            },
+            ru: {
+                welcomeTitle: "Добро пожаловать в InsightAtlas!",
+                welcomeMessage: "Мы рады приветствовать вас в нашем сообществе читателей. InsightAtlas создан, чтобы помочь вам открыть для себя самые глубокие истины жизни через преобразующую литературу.",
+                feature1: "Доступ к нашей эксклюзивной коллекции книг, меняющих жизнь",
+                feature2: "Читайте купленные книги в любое время, даже офлайн",
+                feature3: "Синхронизируйте ваш прогресс на всех устройствах",
+                feature4: "Получайте специальные скидки на новые релизы",
+                continueBtn: "Начать чтение",
+                homeTitle: "Главная",
+                libraryTitle: "Библиотека",
+                offlineTitle: "Офлайн",
+                settingsTitle: "Настройки",
+                // ... add more translations as needed
+            },
+            zh: {
+                welcomeTitle: "欢迎来到 InsightAtlas！",
+                welcomeMessage: "我们非常高兴您加入我们的读者社区。InsightAtlas旨在通过变革性的文学帮助您发现生命中最深刻的真理。",
+                feature1: "访问我们独家收藏的改变生活的书籍",
+                feature2: "随时随地阅读已购买的书籍，即使离线",
+                feature3: "在所有设备上同步您的进度",
+                feature4: "享受新书发布的特别折扣",
+                continueBtn: "开始阅读",
+                homeTitle: "首页",
+                libraryTitle: "图书馆",
+                offlineTitle: "离线",
+                settingsTitle: "设置",
+                // ... add more translations as needed
+            },
+            ar: {
+                welcomeTitle: "مرحبًا بك في InsightAtlas!",
+                welcomeMessage: "يسعدنا انضمامك إلى مجتمع القراء لدينا. تم تصميم InsightAtlas لمساعدتك على اكتشاف أعمق حقائق الحياة من خلال الأدب التحويلي.",
+                feature1: "الوصول إلى مجموعتنا الحصرية من الكتب التي تغير الحياة",
+                feature2: "اقرأ الكتب المشتراة في أي وقت، حتى بدون اتصال",
+                feature3: "مزامنة تقدمك عبر جميع الأجهزة",
+                feature4: "احصل على خصومات خاصة على الإصدارات الجديدة",
+                continueBtn: "بدء القراءة",
+                homeTitle: "الرئيسية",
+                libraryTitle: "المكتبة",
+                offlineTitle: "غير متصل",
+                settingsTitle: "الإعدادات",
+                // ... add more translations as needed
+            },
+            ja: {
+                welcomeTitle: "InsightAtlasへようこそ！",
+                welcomeMessage: "当社の読者コミュニティにご参加いただき、大変嬉しく思います。InsightAtlasは、変革的な文学を通じて人生の最も深い真実を発見するお手伝いをするために設計されています。",
+                feature1: "人生を変える書籍の限定コレクションにアクセス",
+                feature2: "購入した書籍をオフラインでもいつでも読む",
+                feature3: "すべてのデバイスで進捗状況を同期",
+                feature4: "新刊の特別割引をゲット",
+                continueBtn: "読み始める",
+                homeTitle: "ホーム",
+                libraryTitle: "ライブラリ",
+                offlineTitle: "オフライン",
+                settingsTitle: "設定",
+                // ... add more translations as needed
+            },
+            hi: {
+                welcomeTitle: "इनसाइटएटलस में आपका स्वागत है!",
+                welcomeMessage: "हमारे पाठक समुदाय में शामिल होने पर हमें बेहद खुशी हो रही है। इनसाइटएटलस को आपको परिवर्तनकारी साहित्य के माध्यम से जीवन के सबसे गहरे सत्यों की खोज करने में मदद करने के लिए डिज़ाइन किया गया है।",
+                feature1: "जीवन बदलने वाली पुस्तकों के हमारे विशेष संग्रह तक पहुंचें",
+                feature2: "खरीदी गई किताबें कभी भी पढ़ें, ऑफ़लाइन भी",
+                feature3: "सभी उपकरणों पर अपनी प्रगति सिंक करें",
+                feature4: "नए रिलीज़ पर विशेष छूट प्राप्त करें",
+                continueBtn: "पढ़ना शुरू करें",
+                homeTitle: "होम",
+                libraryTitle: "लाइब्रेरी",
+                offlineTitle: "ऑफ़लाइन",
+                settingsTitle: "सेटिंग्स",
+                // ... add more translations as needed
+            },
+            yo: {
+                welcomeTitle: "Kaabo si InsightAtlas!",
+                welcomeMessage: "A dun wa pupọ pe o darapọ mọ awọn alagbasọ wa. InsightAtlas ti ṣe apẹrẹ lati ran ọ lọwọ lati ṣawari otitọ jinna ti aye nipasẹ iwe iroyin ti o yipada.",
+                feature1: "Wọle si akojọ iwe wa ti o ni iyasọtọ ti o ṣe ayipada aye",
+                feature2: "Ka awọn iwe ti a ra ni eyikeyi akoko, paapaa ni aifọwọyi",
+                feature3: "Ṣe ifasẹsi ilọsiwaju rẹ lori gbogbo ẹrọ",
+                feature4: "Gba ẹdinwo pataki lori awọn itusilẹ tuntun",
+                continueBtn: "Bẹrẹ Kika",
+                homeTitle: "Ile",
+                libraryTitle: "Ilé iwé",
+                offlineTitle: "Aifọwọyi",
+                settingsTitle: "Eto",
+                // ... add more translations as needed
+            },
+            ig: {
+                welcomeTitle: "Nnọọ na InsightAtlas!",
+                welcomeMessage: "Anyị nwere obi ụtọ na ị sonyere n'obodo ndị na-agụ akwụkwọ anyị. Emebere InsightAtlas iji nyere gị aka ịchọpụta eziokwu ndị dị omimi nke ndụ site na akwụkwọ na-agbanwe agbanwe.",
+                feature1: "Nweta ohere maka nchịkọta akwụkwọ anyị pụrụ iche nke na-agbanwe ndụ",
+                feature2: "Gụọ akwụkwọ ndị a zụrụ n'oge ọ bụla, ọbụlagodi na-anọghị n'ịntanetị",
+                feature3: "Mekọrịta ọganihu gị n'ofe ngwaọrụ niile",
+                feature4: "Nweta ego enyemaka pụrụ iche na mwepụta ọhụrụ",
+                continueBtn: "Malite Ịgụ",
+                homeTitle: "Ụlọ",
+                libraryTitle: "Ọba akwụkwọ",
+                offlineTitle: "Anọghị n'ịntanetị",
+                settingsTitle: "Ntọala",
+                // ... add more translations as needed
+            },
+            ha: {
+                welcomeTitle: "Barka da zuwa InsightAtlas!",
+                welcomeMessage: "Muna farin cikin kasancewarku cikin al'ummar masu karatun mu. An kera InsightAtlas don taimaka muku gano mafi zurfin gaskiyar rayuwa ta hanyar adabi mai canzawa.",
+                feature1: "Samu damar tarin littattafanmu na musamman masu canza rayuwa",
+                feature2: "Karaɗi littattafan da aka saya a kowane lokaci, ko da ba a cikin layi ba",
+                feature3: "Daidaitu ci gabanku a duk na'urori",
+                feature4: "Samu rangwame na musamman akan sabbin fitowar",
+                continueBtn: "Fara Karatu",
+                homeTitle: "Gida",
+                libraryTitle: "Laburare",
+                offlineTitle: "Bayan layi",
+                settingsTitle: "Saituna",
+                // ... add more translations as needed
             }
-            // Add other languages as needed
         };
         
         // Check if user is logged in
@@ -2236,9 +2402,14 @@
             showApp();
             updateUserAvatar();
             applyLanguage(appLanguage);
+            
+            // Redirect to profile if new user
+            if (currentUser.isNew) {
+                showProfileView();
+            }
         }
         
-        // Apply selected language
+        // Apply selected language to the entire app
         function applyLanguage(lang) {
             const langData = translations[lang] || translations.en;
             
@@ -2260,6 +2431,25 @@
             document.getElementById('nav-library').querySelector('span').textContent = langData.libraryTitle;
             document.getElementById('nav-offline').querySelector('span').textContent = langData.offlineTitle;
             document.getElementById('nav-settings').querySelector('span').textContent = langData.settingsTitle;
+            
+            // Update section titles
+            const sectionTitles = document.querySelectorAll('.section-title');
+            if (sectionTitles.length > 0) {
+                sectionTitles[0].querySelector('span').textContent = langData.libraryTitle;
+                sectionTitles[1].querySelector('span').textContent = langData.homeTitle;
+            }
+            
+            // Update settings titles
+            const settingsTitles = document.querySelectorAll('.settings-title');
+            if (settingsTitles.length > 0) {
+                settingsTitles[0].textContent = langData.settingsTitle;
+            }
+            
+            // Update profile titles
+            const profileTitles = document.querySelectorAll('.profile-title');
+            if (profileTitles.length > 0) {
+                profileTitles[0].textContent = langData.homeTitle;
+            }
             
             // Save language preference
             appLanguage = lang;
@@ -2400,6 +2590,24 @@
         function showProfileView() {
             hideAllViews();
             profileView.style.display = 'block';
+            setActiveNav('nav-home');
+            
+            // If profile is already saved, hide the save button
+            if (currentUser && currentUser.profileSaved) {
+                saveProfileBtn.style.display = 'none';
+                document.getElementById('username').readOnly = true;
+                document.getElementById('fullname').readOnly = true;
+                document.getElementById('email').readOnly = true;
+                document.getElementById('phone').readOnly = true;
+                document.getElementById('bio').readOnly = true;
+            } else {
+                saveProfileBtn.style.display = 'block';
+                document.getElementById('username').readOnly = false;
+                document.getElementById('fullname').readOnly = false;
+                document.getElementById('email').readOnly = false;
+                document.getElementById('phone').readOnly = false;
+                document.getElementById('bio').readOnly = false;
+            }
         }
         
         // Hide all views
@@ -2490,10 +2698,10 @@
         }
         
         // Submit payment
-        function submitPayment() {
+        function submitPayment(e) {
+            e.preventDefault();
             const transactionRef = document.getElementById('transaction-ref').value;
             const paymentProof = document.getElementById('payment-proof').files[0];
-            const paymentNote = document.getElementById('payment-note').value;
             
             // Validate required fields
             if (!transactionRef || !paymentProof) {
@@ -2501,25 +2709,22 @@
                 return;
             }
             
-            // Simulate sending email
-            alert('Payment details submitted! Your access will be activated after verification. Receipt sent to admin.');
+            // Create mailto link
+            const subject = "Payment Receipt For A Book";
+            const body = `Transaction Reference: ${transactionRef}`;
+            const mailtoLink = `mailto:dolayinka884@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             
-            // Add book to purchased books
-            purchasedBooks.push({
-                id: 1,
-                title: "The Main Reality Of Life",
-                author: "Samuel A.O."
-            });
-            localStorage.setItem(PURCHASED_BOOKS_KEY, JSON.stringify(purchasedBooks));
+            // Open email client
+            window.location.href = mailtoLink;
+            
+            // Show message
+            alert("Your payment is pending verification. Please send the payment proof via email. We will activate your access once we verify your payment.");
             
             // Close payment modal
             paymentModal.style.display = 'none';
             
             // Reset form
             paymentForm.reset();
-            
-            // Update offline view
-            renderOfflineBooks();
         }
         
         // Enhanced AI Assistant Functionality
@@ -2905,14 +3110,15 @@
             paymentForm.reset();
         });
         
-        paymentForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            submitPayment();
-        });
+        paymentForm.addEventListener('submit', submitPayment);
         
         // Dark mode toggle
         darkModeToggle.addEventListener('change', function() {
-            document.body.classList.toggle('light-mode');
+            if (this.checked) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
         });
         
         // AI Assistant
@@ -2955,17 +3161,32 @@
         
         // Profile
         saveProfileBtn.addEventListener('click', () => {
-            if (currentUser.profileEdited) {
-                alert('Your profile can only be edited once. Please make sure all information is correct before saving.');
-                return;
-            }
+            const username = document.getElementById('username').value;
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const bio = document.getElementById('bio').value;
             
-            if (confirm('You can only edit your profile once. Are you sure all information is correct?')) {
-                currentUser.profileEdited = true;
-                updateUserAccount(currentUser);
-                alert('Profile saved successfully!');
-                showHomeView();
-            }
+            // Update current user
+            currentUser.username = username;
+            currentUser.fullname = fullname;
+            currentUser.email = email;
+            currentUser.phone = phone;
+            currentUser.bio = bio;
+            currentUser.profileSaved = true;
+            
+            // Save changes
+            updateUserAccount(currentUser);
+            
+            // Hide save button and make fields read-only
+            saveProfileBtn.style.display = 'none';
+            document.getElementById('username').readOnly = true;
+            document.getElementById('fullname').readOnly = true;
+            document.getElementById('email').readOnly = true;
+            document.getElementById('phone').readOnly = true;
+            document.getElementById('bio').readOnly = true;
+            
+            alert('Profile saved successfully!');
         });
         
         helpCenterBtn.addEventListener('click', () => {
@@ -3008,6 +3229,9 @@
                 if (currentUser.isNew) {
                     showWelcome();
                 }
+                
+                // Redirect to profile
+                showProfileView();
             } else {
                 document.getElementById('login-password-error').textContent = 'Invalid username or password';
                 document.getElementById('login-password-error').style.display = 'block';
@@ -3071,7 +3295,7 @@
                     username,
                     password,
                     isNew: true,
-                    profileEdited: false
+                    profileSaved: false
                 };
                 
                 // Save account
