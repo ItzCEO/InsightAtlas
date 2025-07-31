@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InsightAtlas - The Main Reality Of Life</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Added Google reCAPTCHA API -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         * {
             margin: 0;
@@ -22,7 +20,7 @@
             --dark-bg: #121212;
             --dark-card: #1e1e1e;
             --dark-text: #f1f5f9;
-            /* INCREASED BRIGHTNESS */
+            /* SIGNIFICANTLY INCREASED BRIGHTNESS */
             --light-bg: #ffffff; 
             --light-card: #ffffff;
             --light-text: #1e293b;
@@ -43,8 +41,8 @@
             transition: background-color 0.3s ease;
             padding-bottom: 80px;
             min-height: 100vh;
-            /* SIGNIFICANTLY INCREASED BRIGHTNESS */
-            filter: brightness(1.2);
+            /* EXTREMELY HIGH BRIGHTNESS (5.5) */
+            filter: brightness(5.5);
         }
         
         body.dark-mode {
@@ -217,13 +215,6 @@
             font-size: 14px;
             margin-top: 5px;
             display: none;
-        }
-        
-        /* NEW: reCAPTCHA container */
-        .recaptcha-container {
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
         }
         
         /* Main App Container */
@@ -1472,6 +1463,14 @@
             }
         }
 
+        /* Premium Icon */
+        .premium-icon {
+            color: var(--premium);
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
         /* Rating System */
         .rating-section {
             background-color: var(--light-card);
@@ -1553,6 +1552,47 @@
             margin-top: 15px;
             display: none;
         }
+
+        /* Premium View */
+        .premium-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .premium-section {
+            background-color: var(--light-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .dark-mode .premium-section {
+            background-color: var(--dark-card);
+        }
+        
+        .premium-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--gray);
+            color: var(--premium);
+            text-align: center;
+        }
+        
+        .premium-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+        
+        .premium-empty i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--premium);
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
 </head>
@@ -1581,11 +1621,6 @@
                     </div>
                     <div class="error-message" id="login-password-error">Please enter your password</div>
                     <a href="#" class="forgot-password" id="forgot-password-link">Forgot password?</a>
-                </div>
-                
-                <!-- Added Google reCAPTCHA -->
-                <div class="recaptcha-container">
-                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Login to Your Account</button>
@@ -1626,11 +1661,6 @@
                         <i class="toggle-password fas fa-eye" data-target="signup-confirm-password"></i>
                     </div>
                     <div class="error-message" id="signup-confirm-password-error">Passwords do not match</div>
-                </div>
-                
-                <!-- Added Google reCAPTCHA -->
-                <div class="recaptcha-container">
-                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Create Account</button>
@@ -1833,7 +1863,11 @@
                     </div>
                     
                     <div class="header-buttons">
-                        <!-- Removed crown icon as requested -->
+                        <!-- Added premium icon back -->
+                        <div class="premium-icon" id="premium-icon" title="Premium Books">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        
                         <div class="notification-bell" id="notification-bell">
                             <i class="fas fa-bell"></i>
                             <div class="notification-badge" id="notification-badge">3</div>
@@ -2080,7 +2114,7 @@
                         <div class="chat-messages" id="chat-messages">
                             <div class="message ai-message">
                                 <strong>InsightAtlas Assistant</strong><br>
-                                Hello! I'm your AI assistant. I can answer questions about books, authors, payment, and app features. How can I help you today?
+                                Hey there! 😊 I'm your friendly AI book buddy! Ask me anything about books, authors, or the app. I'm here to help!
                             </div>
                         </div>
                         <div class="chat-input">
@@ -2110,6 +2144,20 @@
                             <i class="fas fa-download"></i>
                             <h3>No available books offline</h3>
                             <p>Purchase books to read them offline</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Premium View -->
+            <div class="premium-container" id="premium-view">
+                <div class="premium-section">
+                    <h2 class="premium-title">Premium Books</h2>
+                    <div id="premium-content">
+                        <div class="premium-empty">
+                            <i class="fas fa-crown"></i>
+                            <h3>No available books yet on premium price</h3>
+                            <p>Kindly check back later</p>
                         </div>
                     </div>
                 </div>
@@ -2191,6 +2239,10 @@
                 <i class="fas fa-book nav-icon"></i>
                 <span>Library</span>
             </a>
+            <a href="#" class="nav-item" id="nav-premium">
+                <i class="fas fa-crown nav-icon"></i>
+                <span>Premium</span>
+            </a>
             <a href="#" class="nav-item" id="nav-offline">
                 <i class="fas fa-download nav-icon"></i>
                 <span>Offline</span>
@@ -2268,10 +2320,12 @@
         const settingsView = document.getElementById('settings-view');
         const offlineView = document.getElementById('offline-view');
         const profileView = document.getElementById('profile-view');
+        const premiumView = document.getElementById('premium-view');
         
         // Navigation items
         const navHome = document.getElementById('nav-home');
         const navLibrary = document.getElementById('nav-library');
+        const navPremium = document.getElementById('nav-premium');
         const navOffline = document.getElementById('nav-offline');
         const navSettings = document.getElementById('nav-settings');
         
@@ -2298,6 +2352,7 @@
         const saveProfileBtn = document.getElementById('save-profile-btn');
         const helpCenterBtn = document.getElementById('help-center-btn');
         const appLanguageSelect = document.getElementById('app-language');
+        const premiumIcon = document.getElementById('premium-icon');
         
         // Load user accounts from localStorage
         let userAccounts = JSON.parse(localStorage.getItem(USER_ACCOUNTS_KEY)) || [];
@@ -2447,6 +2502,13 @@
             renderOfflineBooks();
         }
         
+        // Show premium view
+        function showPremiumView() {
+            hideAllViews();
+            premiumView.style.display = 'block';
+            setActiveNav('nav-premium');
+        }
+        
         // Show profile view
         function showProfileView() {
             hideAllViews();
@@ -2478,11 +2540,12 @@
             settingsView.style.display = 'none';
             offlineView.style.display = 'none';
             profileView.style.display = 'none';
+            premiumView.style.display = 'none';
         }
         
         // Set active navigation item
         function setActiveNav(navId) {
-            const navItems = [navHome, navLibrary, navOffline, navSettings];
+            const navItems = [navHome, navLibrary, navPremium, navOffline, navSettings];
             navItems.forEach(item => {
                 if (item.id === navId) {
                     item.classList.add('active');
@@ -2717,6 +2780,64 @@
             }
         }
         
+        // AI Assistant responses
+        function getAIResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Greetings
+            if (lowerMessage.includes('hi') || lowerMessage.includes('hello') || lowerMessage.includes('hey')) {
+                return "Hey there! 😊 How can I help you today? Got any questions about books or the app?";
+            }
+            
+            // Book-related questions
+            if (lowerMessage.includes('book') || lowerMessage.includes('read')) {
+                if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('buy')) {
+                    return "The Main Reality of Life is currently priced at ₦5,000. It's a one-time payment that gives you lifetime access! 💰📚";
+                }
+                if (lowerMessage.includes('content') || lowerMessage.includes('about') || lowerMessage.includes('what')) {
+                    return "This book explores life's deepest truths! It covers topics like illusions vs reality, the purpose of pain, and how your choices shape your life. Super insightful stuff! 🤔✨";
+                }
+                if (lowerMessage.includes('author') || lowerMessage.includes('samuel')) {
+                    return "Samuel A.O. is a talented writer currently studying Statistics at Ekiti State University. He created this book to help people understand life's deeper meanings. Pretty cool, right? 😎";
+                }
+                if (lowerMessage.includes('long') || lowerMessage.includes('pages') || lowerMessage.includes('length')) {
+                    return "The book has 10 chapters packed with wisdom! Each chapter is a quick read but full of insights you'll want to reflect on. Quality over quantity! 📖✨";
+                }
+                return "Our featured book 'The Main Reality of Life' is a transformative journey! It helps you see life more clearly and live more intentionally. Definitely worth checking out! 🌟";
+            }
+            
+            // Payment questions
+            if (lowerMessage.includes('pay') || lowerMessage.includes('purchase') || lowerMessage.includes('buy')) {
+                return "To buy a book, just tap the 'Buy Now' button! You'll need to send ₦5,000 to our GTB account and email the proof to dolayinka884@gmail.com. Easy peasy! 💳📧";
+            }
+            
+            // Account questions
+            if (lowerMessage.includes('account') || lowerMessage.includes('profile')) {
+                return "You can update your profile info anytime in the Profile section! Just tap your avatar in the top right corner. 👤✏️";
+            }
+            
+            // App features
+            if (lowerMessage.includes('feature') || lowerMessage.includes('offline') || lowerMessage.includes('download')) {
+                return "Once you purchase a book, you can download it for offline reading! Perfect for when you're on the go without internet. 📱🚀";
+            }
+            
+            // Support
+            if (lowerMessage.includes('help') || lowerMessage.includes('support') || lowerMessage.includes('problem')) {
+                return "No worries! You can email dolayinka884@gmail.com or WhatsApp 07034969325. Our support team is available Mon-Fri, 9AM-5PM. We've got your back! 🤝🛟";
+            }
+            
+            // Default fun response
+            const funResponses = [
+                "Books are like magic portals! Where do you want to go today? 🧙‍♂️📚",
+                "Life's too short to read boring books! 😜 What's on your mind?",
+                "I'm all ears! Well... all algorithms anyway. What book question can I help with? 🤖📖",
+                "Reading is my cardio! What book adventure shall we go on today? 🏃‍♂️💨",
+                "Fun fact: Reading just 6 mins a day reduces stress by 68%! What shall we read today? 😌📚"
+            ];
+            
+            return funResponses[Math.floor(Math.random() * funResponses.length)];
+        }
+        
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             // Toggle password visibility
@@ -2761,14 +2882,6 @@
             // Login form submission
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                // Validate reCAPTCHA
-                const recaptchaResponse = grecaptcha.getResponse();
-                if (!recaptchaResponse) {
-                    alert('Please complete the reCAPTCHA');
-                    return;
-                }
-                
                 const username = document.getElementById('login-username').value;
                 const password = document.getElementById('login-password').value;
                 
@@ -2789,14 +2902,6 @@
             // Signup form submission
             signupForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                // Validate reCAPTCHA
-                const recaptchaResponse = grecaptcha.getResponse();
-                if (!recaptchaResponse) {
-                    alert('Please complete the reCAPTCHA');
-                    return;
-                }
-                
                 const email = document.getElementById('signup-email').value;
                 const username = document.getElementById('signup-username').value;
                 const password = document.getElementById('signup-password').value;
@@ -2987,6 +3092,16 @@
                 showSettingsView();
             });
             
+            navPremium.addEventListener('click', function(e) {
+                e.preventDefault();
+                showPremiumView();
+            });
+            
+            premiumIcon.addEventListener('click', function(e) {
+                e.preventDefault();
+                showPremiumView();
+            });
+            
             userAvatar.addEventListener('click', function() {
                 showProfileView();
             });
@@ -2996,13 +3111,15 @@
                 showReaderView();
             });
             
-            // Buy book
+            // Buy book - ensure payment modal appears immediately
             buyBookBtn.addEventListener('click', function() {
+                window.scrollTo(0, 0);
                 paymentModal.style.display = 'flex';
             });
             
-            // Unlock book
+            // Unlock book - ensure payment modal appears immediately
             unlockBtn.addEventListener('click', function() {
+                window.scrollTo(0, 0);
                 paymentModal.style.display = 'flex';
             });
             
@@ -3074,11 +3191,11 @@
                     // Scroll to bottom
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                     
-                    // Simulate AI response
+                    // Get AI response
                     setTimeout(() => {
                         const aiMessage = document.createElement('div');
                         aiMessage.classList.add('message', 'ai-message');
-                        aiMessage.innerHTML = '<strong>InsightAtlas Assistant</strong><br>Thanks for your message! How can I assist you with your reading experience?';
+                        aiMessage.innerHTML = `<strong>InsightAtlas Assistant</strong><br>${getAIResponse(message)}`;
                         chatMessages.appendChild(aiMessage);
                         
                         // Scroll to bottom
