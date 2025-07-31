@@ -20,7 +20,6 @@
             --dark-bg: #121212;
             --dark-card: #1e1e1e;
             --dark-text: #f1f5f9;
-            /* SIGNIFICANTLY INCREASED BRIGHTNESS */
             --light-bg: #ffffff; 
             --light-card: #ffffff;
             --light-text: #1e293b;
@@ -41,14 +40,12 @@
             transition: background-color 0.3s ease;
             padding-bottom: 80px;
             min-height: 100vh;
-            /* CHANGED: Reduced brightness from 5.5 to 2.5 */
             filter: brightness(2.5);
         }
         
         body.dark-mode {
             background-color: var(--dark-bg);
             color: var(--dark-text);
-            /* CHANGED: Reduced brightness from 1.1 to 2.5 */
             filter: brightness(2.5);
         }
         
@@ -1343,7 +1340,7 @@
             font-size: 14px;
         }
         
-        /* OTP Display - ENHANCED VISIBILITY */
+        /* OTP Display - Enhanced visibility */
         .otp-display {
             display: none;
             position: fixed;
@@ -1355,13 +1352,11 @@
             box-shadow: var(--shadow);
             z-index: 10000;
             max-width: 250px;
-            /* Added for better visibility */
             border: 2px solid var(--primary);
         }
         
         .dark-mode .otp-display {
             background-color: var(--dark-card);
-            /* Added for dark mode visibility */
             border: 2px solid var(--secondary);
         }
         
@@ -1370,23 +1365,22 @@
         }
         
         .otp-display-code {
-            font-size: 32px; /* Increased size */
-            font-weight: 800; /* Bolder font */
+            font-size: 32px;
+            font-weight: 800;
             margin: 10px 0;
             letter-spacing: 5px;
-            /* Changed to solid color for better contrast */
             color: var(--primary-dark);
             text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
         
         .dark-mode .otp-display-code {
-            color: var(--secondary); /* High contrast for dark mode */
+            color: var(--secondary);
         }
         
         .otp-display-timer {
             font-size: 14px;
             color: var(--gray);
-            font-weight: 600; /* Bolder font */
+            font-weight: 600;
         }
         
         /* Tutorial Overlay */
@@ -2363,6 +2357,9 @@
         const appLanguageSelect = document.getElementById('app-language');
         const premiumIcon = document.getElementById('premium-icon');
         
+        // NEW: Password reset state
+        let resetEmail = '';
+        
         // Load user accounts from localStorage
         let userAccounts = JSON.parse(localStorage.getItem(USER_ACCOUNTS_KEY)) || [];
         let currentUser = JSON.parse(localStorage.getItem(CURRENT_USER_KEY)) || null;
@@ -2894,6 +2891,7 @@
                 const username = document.getElementById('login-username').value;
                 const password = document.getElementById('login-password').value;
                 
+                // Find user by username
                 const user = userAccounts.find(acc => 
                     acc.username === username && acc.password === password
                 );
@@ -2926,6 +2924,7 @@
                     return;
                 }
                 
+                // NEW: Ensure username is unique
                 if (userAccounts.some(acc => acc.username === username)) {
                     alert('Username already taken');
                     return;
