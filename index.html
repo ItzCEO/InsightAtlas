@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InsightAtlas - The Main Reality Of Life</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Added Google reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         * {
             margin: 0;
@@ -41,15 +43,15 @@
             transition: background-color 0.3s ease;
             padding-bottom: 80px;
             min-height: 100vh;
-            /* INCREASED BRIGHTNESS */
-            filter: brightness(1.1);
+            /* SIGNIFICANTLY INCREASED BRIGHTNESS */
+            filter: brightness(1.2);
         }
         
         body.dark-mode {
             background-color: var(--dark-bg);
             color: var(--dark-text);
             /* Maintain brightness in dark mode */
-            filter: brightness(1.05);
+            filter: brightness(1.1);
         }
         
         body.dark-mode .book-card,
@@ -215,6 +217,13 @@
             font-size: 14px;
             margin-top: 5px;
             display: none;
+        }
+        
+        /* NEW: reCAPTCHA container */
+        .recaptcha-container {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
         }
         
         /* Main App Container */
@@ -1463,15 +1472,7 @@
             }
         }
 
-        /* NEW: Premium Icon */
-        .premium-icon {
-            color: var(--premium);
-            font-size: 20px;
-            margin-right: 15px;
-            cursor: pointer;
-        }
-
-        /* NEW: Rating System */
+        /* Rating System */
         .rating-section {
             background-color: var(--light-card);
             border-radius: var(--border-radius);
@@ -1552,47 +1553,6 @@
             margin-top: 15px;
             display: none;
         }
-
-        /* NEW: Premium View */
-        .premium-container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 0 20px;
-            display: none;
-        }
-        
-        .premium-section {
-            background-color: var(--light-card);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
-        }
-        
-        .dark-mode .premium-section {
-            background-color: var(--dark-card);
-        }
-        
-        .premium-title {
-            font-size: 24px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray);
-            color: var(--premium);
-            text-align: center;
-        }
-        
-        .premium-empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--gray);
-        }
-        
-        .premium-empty i {
-            font-size: 48px;
-            margin-bottom: 20px;
-            color: var(--premium);
-        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
 </head>
@@ -1621,6 +1581,11 @@
                     </div>
                     <div class="error-message" id="login-password-error">Please enter your password</div>
                     <a href="#" class="forgot-password" id="forgot-password-link">Forgot password?</a>
+                </div>
+                
+                <!-- Added Google reCAPTCHA -->
+                <div class="recaptcha-container">
+                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Login to Your Account</button>
@@ -1661,6 +1626,11 @@
                         <i class="toggle-password fas fa-eye" data-target="signup-confirm-password"></i>
                     </div>
                     <div class="error-message" id="signup-confirm-password-error">Passwords do not match</div>
+                </div>
+                
+                <!-- Added Google reCAPTCHA -->
+                <div class="recaptcha-container">
+                    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Create Account</button>
@@ -1863,11 +1833,7 @@
                     </div>
                     
                     <div class="header-buttons">
-                        <!-- NEW: Premium Icon -->
-                        <div class="premium-icon" id="premium-icon" title="Premium Books">
-                            <i class="fas fa-crown"></i>
-                        </div>
-                        
+                        <!-- Removed crown icon as requested -->
                         <div class="notification-bell" id="notification-bell">
                             <i class="fas fa-bell"></i>
                             <div class="notification-badge" id="notification-badge">3</div>
@@ -2013,7 +1979,7 @@
                     </button>
                 </div>
                 
-                <!-- NEW: Rating Section (initially hidden) -->
+                <!-- Rating Section -->
                 <div id="rating-container" style="display: none;"></div>
             </div>
             
@@ -2149,20 +2115,6 @@
                 </div>
             </div>
             
-            <!-- NEW: Premium View -->
-            <div class="premium-container" id="premium-view">
-                <div class="premium-section">
-                    <h2 class="premium-title">Premium Books</h2>
-                    <div id="premium-content">
-                        <div class="premium-empty">
-                            <i class="fas fa-crown"></i>
-                            <h3>No available books yet on premium price</h3>
-                            <p>Kindly check back later</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             <!-- Profile View -->
             <div class="profile-container" id="profile-view">
                 <div class="profile-section">
@@ -2238,11 +2190,6 @@
             <a href="#" class="nav-item" id="nav-library">
                 <i class="fas fa-book nav-icon"></i>
                 <span>Library</span>
-            </a>
-            <!-- NEW: Premium Navigation -->
-            <a href="#" class="nav-item" id="nav-premium">
-                <i class="fas fa-crown nav-icon"></i>
-                <span>Premium</span>
             </a>
             <a href="#" class="nav-item" id="nav-offline">
                 <i class="fas fa-download nav-icon"></i>
@@ -2321,14 +2268,12 @@
         const settingsView = document.getElementById('settings-view');
         const offlineView = document.getElementById('offline-view');
         const profileView = document.getElementById('profile-view');
-        const premiumView = document.getElementById('premium-view');
         
         // Navigation items
         const navHome = document.getElementById('nav-home');
         const navLibrary = document.getElementById('nav-library');
         const navOffline = document.getElementById('nav-offline');
         const navSettings = document.getElementById('nav-settings');
-        const navPremium = document.getElementById('nav-premium');
         
         // Buttons
         const readNowBtn = document.getElementById('read-now-btn');
@@ -2353,7 +2298,6 @@
         const saveProfileBtn = document.getElementById('save-profile-btn');
         const helpCenterBtn = document.getElementById('help-center-btn');
         const appLanguageSelect = document.getElementById('app-language');
-        const premiumIcon = document.getElementById('premium-icon');
         
         // Load user accounts from localStorage
         let userAccounts = JSON.parse(localStorage.getItem(USER_ACCOUNTS_KEY)) || [];
@@ -2503,13 +2447,6 @@
             renderOfflineBooks();
         }
         
-        // Show premium view
-        function showPremiumView() {
-            hideAllViews();
-            premiumView.style.display = 'block';
-            setActiveNav('nav-premium');
-        }
-        
         // Show profile view
         function showProfileView() {
             hideAllViews();
@@ -2541,12 +2478,11 @@
             settingsView.style.display = 'none';
             offlineView.style.display = 'none';
             profileView.style.display = 'none';
-            premiumView.style.display = 'none';
         }
         
         // Set active navigation item
         function setActiveNav(navId) {
-            const navItems = [navHome, navLibrary, navPremium, navOffline, navSettings];
+            const navItems = [navHome, navLibrary, navOffline, navSettings];
             navItems.forEach(item => {
                 if (item.id === navId) {
                     item.classList.add('active');
@@ -2653,7 +2589,7 @@
                 <h2>ABOUT THE AUTHOR</h2>
                 <p>Samuel A.O. is currently a student of Ekiti State University in the department of Statistics. He’s currently an upcoming writer and has decided to allow his passion flow. He authored this book with the full mindset of educating people more about life and what life entails. This book was an inspiration viewed by some of the tragic and sad things people do all in the name of life is not treating them as they anticipated. Take your time, read this book and be more enlighten on the affairs of life.</p>
                 
-                <!-- NEW: Rating Section -->
+                <!-- Rating Section -->
                 <div class="rating-section">
                     <h3 class="rating-title">Rate this Book</h3>
                     <div class="rating-stars">
@@ -2729,22 +2665,439 @@
             });
         }
         
-        // ... (rest of the JavaScript remains the same) ...
+        // Check if user has access to the book
+        function hasBookAccess(bookId) {
+            return purchasedBooks.includes(bookId);
+        }
         
-        // NEW: Add premium icon event listener
-        premiumIcon.addEventListener('click', function() {
-            showPremiumView();
-        });
+        // Save user account
+        function saveUserAccount(user) {
+            const existingUserIndex = userAccounts.findIndex(acc => acc.email === user.email);
+            if (existingUserIndex !== -1) {
+                userAccounts[existingUserIndex] = user;
+            } else {
+                userAccounts.push(user);
+            }
+            localStorage.setItem(USER_ACCOUNTS_KEY, JSON.stringify(userAccounts));
+        }
         
-        // NEW: Add premium navigation
-        navPremium.addEventListener('click', function(e) {
-            e.preventDefault();
-            showPremiumView();
-        });
+        // Update user account
+        function updateUserAccount(user) {
+            saveUserAccount(user);
+            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+        }
+        
+        // Render offline books
+        function renderOfflineBooks() {
+            const offlineContent = document.getElementById('offline-content');
+            if (purchasedBooks.length === 0) {
+                offlineContent.innerHTML = `
+                    <div class="offline-empty">
+                        <i class="fas fa-download"></i>
+                        <h3>No available books offline</h3>
+                        <p>Purchase books to read them offline</p>
+                    </div>
+                `;
+            } else {
+                // Render purchased books
+                offlineContent.innerHTML = `
+                    <div class="offline-book-list">
+                        ${purchasedBooks.map(bookId => `
+                            <div class="offline-book-item">
+                                <div class="offline-book-cover">
+                                    <div class="cover-title">${bookId === CURRENT_BOOK_ID ? 'The Main Reality Of Life' : 'Book'}</div>
+                                </div>
+                                <div class="offline-book-title">${bookId === CURRENT_BOOK_ID ? 'The Main Reality Of Life' : 'Book'}</div>
+                                <div class="offline-book-author">By Samuel A.O.</div>
+                                <button class="btn-read">Read</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
         
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            // ... (existing initialization) ...
+            // Toggle password visibility
+            togglePasswordIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    togglePasswordVisibility(targetId);
+                });
+            });
+            
+            // Switch between forms
+            signupLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showForm('signup-form');
+            });
+            
+            loginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showForm('login-form');
+            });
+            
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showForm('forgot-password-form');
+            });
+            
+            backToLoginLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showForm('login-form');
+                });
+            });
+            
+            resendOtpLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const email = localStorage.getItem('insightAtlasOTPEmail');
+                if (email) {
+                    generateAndStoreOTP(email);
+                }
+            });
+            
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate reCAPTCHA
+                const recaptchaResponse = grecaptcha.getResponse();
+                if (!recaptchaResponse) {
+                    alert('Please complete the reCAPTCHA');
+                    return;
+                }
+                
+                const username = document.getElementById('login-username').value;
+                const password = document.getElementById('login-password').value;
+                
+                const user = userAccounts.find(acc => 
+                    acc.username === username && acc.password === password
+                );
+                
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+                    showApp();
+                    showWelcome();
+                } else {
+                    alert('Invalid username or password');
+                }
+            });
+            
+            // Signup form submission
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate reCAPTCHA
+                const recaptchaResponse = grecaptcha.getResponse();
+                if (!recaptchaResponse) {
+                    alert('Please complete the reCAPTCHA');
+                    return;
+                }
+                
+                const email = document.getElementById('signup-email').value;
+                const username = document.getElementById('signup-username').value;
+                const password = document.getElementById('signup-password').value;
+                const confirmPassword = document.getElementById('signup-confirm-password').value;
+                
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match');
+                    return;
+                }
+                
+                if (userAccounts.some(acc => acc.email === email)) {
+                    alert('Email already registered');
+                    return;
+                }
+                
+                if (userAccounts.some(acc => acc.username === username)) {
+                    alert('Username already taken');
+                    return;
+                }
+                
+                const newUser = {
+                    email,
+                    username,
+                    password,
+                    isNew: true,
+                    createdAt: new Date().toISOString()
+                };
+                
+                userAccounts.push(newUser);
+                saveUserAccount(newUser);
+                currentUser = newUser;
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+                showApp();
+                showWelcome();
+            });
+            
+            // Forgot password form submission
+            forgotPasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('reset-email').value.trim();
+                
+                if (!email) {
+                    document.getElementById('reset-email-error').style.display = 'block';
+                    return;
+                }
+                
+                // Check if email is registered
+                const userExists = userAccounts.some(acc => acc.email === email);
+                if (!userExists) {
+                    document.getElementById('reset-email-error').textContent = 'Email not registered';
+                    document.getElementById('reset-email-error').style.display = 'block';
+                    return;
+                }
+                
+                generateAndStoreOTP(email);
+                showForm('otp-form');
+            });
+            
+            // Generate and store OTP
+            function generateAndStoreOTP(email) {
+                const otp = generateOTP();
+                localStorage.setItem('insightAtlasOTP', otp);
+                localStorage.setItem('insightAtlasOTPEmail', email);
+                localStorage.setItem('insightAtlasOTPTime', Date.now());
+                displayOTP(otp);
+            }
+            
+            // OTP form submission
+            otpForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const otpInputs = document.querySelectorAll('.otp-input');
+                let otpValue = '';
+                otpInputs.forEach(input => {
+                    otpValue += input.value;
+                });
+                
+                const email = localStorage.getItem('insightAtlasOTPEmail');
+                if (verifyOTP(email, otpValue)) {
+                    showForm('reset-password-form');
+                } else {
+                    document.getElementById('otp-error').style.display = 'block';
+                }
+            });
+            
+            // Reset password form submission
+            resetPasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-new-password').value;
+                
+                if (newPassword !== confirmPassword) {
+                    document.getElementById('confirm-new-password-error').style.display = 'block';
+                    return;
+                }
+                
+                const email = localStorage.getItem('insightAtlasOTPEmail');
+                const userIndex = userAccounts.findIndex(acc => acc.email === email);
+                if (userIndex !== -1) {
+                    userAccounts[userIndex].password = newPassword;
+                    saveUserAccount(userAccounts[userIndex]);
+                    alert('Password reset successfully');
+                    showForm('login-form');
+                }
+            });
+            
+            // Close welcome modal
+            closeWelcomeBtn.addEventListener('click', closeWelcome);
+            
+            // Copy share link
+            copyLinkBtn.addEventListener('click', function() {
+                copyToClipboard(shareLink.value);
+            });
+            
+            // Logout
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem(CURRENT_USER_KEY);
+                currentUser = null;
+                appView.style.display = 'none';
+                authView.style.display = 'flex';
+                showForm('login-form');
+            });
+            
+            // Delete account
+            deleteAccountBtn.addEventListener('click', function() {
+                deleteAccountModal.style.display = 'flex';
+            });
+            
+            cancelDeleteBtn.addEventListener('click', function() {
+                deleteAccountModal.style.display = 'none';
+            });
+            
+            confirmDeleteBtn.addEventListener('click', function() {
+                if (currentUser) {
+                    // Remove user from accounts
+                    userAccounts = userAccounts.filter(acc => acc.email !== currentUser.email);
+                    localStorage.setItem(USER_ACCOUNTS_KEY, JSON.stringify(userAccounts));
+                    
+                    // Remove purchased books
+                    purchasedBooks = purchasedBooks.filter(book => false);
+                    localStorage.setItem(PURCHASED_BOOKS_KEY, JSON.stringify(purchasedBooks));
+                    
+                    // Clear current user
+                    localStorage.removeItem(CURRENT_USER_KEY);
+                    currentUser = null;
+                    
+                    // Play delete sound
+                    deleteSound.play();
+                    
+                    // Hide app and show auth
+                    appView.style.display = 'none';
+                    authView.style.display = 'flex';
+                    deleteAccountModal.style.display = 'none';
+                    showForm('login-form');
+                }
+            });
+            
+            // Close modals
+            closePaymentModalBtn.addEventListener('click', function() {
+                paymentModal.style.display = 'none';
+            });
+            
+            closeAdminModalBtn.addEventListener('click', function() {
+                adminApprovalModal.style.display = 'none';
+            });
+            
+            closeDeleteModalBtn.addEventListener('click', function() {
+                deleteAccountModal.style.display = 'none';
+            });
+            
+            // Navigation
+            navHome.addEventListener('click', function(e) {
+                e.preventDefault();
+                showHomeView();
+            });
+            
+            navLibrary.addEventListener('click', function(e) {
+                e.preventDefault();
+                showReaderView();
+            });
+            
+            navOffline.addEventListener('click', function(e) {
+                e.preventDefault();
+                showOfflineView();
+            });
+            
+            navSettings.addEventListener('click', function(e) {
+                e.preventDefault();
+                showSettingsView();
+            });
+            
+            userAvatar.addEventListener('click', function() {
+                showProfileView();
+            });
+            
+            // Read book
+            readNowBtn.addEventListener('click', function() {
+                showReaderView();
+            });
+            
+            // Buy book
+            buyBookBtn.addEventListener('click', function() {
+                paymentModal.style.display = 'flex';
+            });
+            
+            // Unlock book
+            unlockBtn.addEventListener('click', function() {
+                paymentModal.style.display = 'flex';
+            });
+            
+            // Submit payment
+            paymentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                paymentModal.style.display = 'none';
+                adminApprovalModal.style.display = 'flex';
+            });
+            
+            understandBtn.addEventListener('click', function() {
+                adminApprovalModal.style.display = 'none';
+            });
+            
+            // Toggle dark mode
+            darkModeToggle.addEventListener('change', function() {
+                document.body.classList.toggle('dark-mode', this.checked);
+                localStorage.setItem('darkModeEnabled', this.checked);
+            });
+            
+            // Initialize dark mode
+            const darkModeEnabled = localStorage.getItem('darkModeEnabled') === 'true';
+            document.body.classList.toggle('dark-mode', darkModeEnabled);
+            darkModeToggle.checked = darkModeEnabled;
+            
+            // Notification bell
+            notificationBell.addEventListener('click', function() {
+                notificationDropdown.style.display = notificationDropdown.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // Mark all as read
+            markAllRead.addEventListener('click', function() {
+                document.querySelectorAll('.notification-item.unread').forEach(item => {
+                    item.classList.remove('unread');
+                });
+                document.getElementById('notification-badge').textContent = '0';
+            });
+            
+            // Save profile
+            saveProfileBtn.addEventListener('click', function() {
+                currentUser.username = document.getElementById('username').value;
+                currentUser.fullname = document.getElementById('fullname').value;
+                currentUser.email = document.getElementById('email').value;
+                currentUser.phone = document.getElementById('phone').value;
+                currentUser.bio = document.getElementById('bio').value;
+                currentUser.profileSaved = true;
+                updateUserAccount(currentUser);
+                alert('Profile saved successfully');
+            });
+            
+            // AI Assistant
+            aiAssistantBtn.addEventListener('click', function() {
+                chatContainer.style.display = chatContainer.style.display === 'block' ? 'none' : 'block';
+            });
+            
+            // Send message
+            sendMessageBtn.addEventListener('click', function() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    // Add user message
+                    const userMessage = document.createElement('div');
+                    userMessage.classList.add('message', 'user-message');
+                    userMessage.textContent = message;
+                    chatMessages.appendChild(userMessage);
+                    
+                    // Clear input
+                    chatInput.value = '';
+                    
+                    // Scroll to bottom
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // Simulate AI response
+                    setTimeout(() => {
+                        const aiMessage = document.createElement('div');
+                        aiMessage.classList.add('message', 'ai-message');
+                        aiMessage.innerHTML = '<strong>InsightAtlas Assistant</strong><br>Thanks for your message! How can I assist you with your reading experience?';
+                        chatMessages.appendChild(aiMessage);
+                        
+                        // Scroll to bottom
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }, 1000);
+                }
+            });
+            
+            // Open help center
+            helpCenterBtn.addEventListener('click', function() {
+                window.open('mailto:dolayinka884@gmail.com', '_blank');
+            });
+            
+            // Set app language
+            appLanguageSelect.value = appLanguage;
+            appLanguageSelect.addEventListener('change', function() {
+                appLanguage = this.value;
+                localStorage.setItem(APP_LANGUAGE_KEY, appLanguage);
+            });
         });
     </script>
 </body>
