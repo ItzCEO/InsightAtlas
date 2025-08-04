@@ -32,6 +32,7 @@
             --gold: #ffb700;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             --border-radius: 12px;
+            --tutorial: #8a2be2;
         }
         
         body {
@@ -40,13 +41,11 @@
             transition: background-color 0.3s ease;
             padding-bottom: 80px;
             min-height: 100vh;
-            filter: brightness(2.5);
         }
         
         body.dark-mode {
             background-color: var(--dark-bg);
             color: var(--dark-text);
-            filter: brightness(2.5);
         }
         
         body.dark-mode .book-card,
@@ -1403,6 +1402,7 @@
             max-width: 350px;
             box-shadow: var(--shadow);
             z-index: 2001;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
         
         .dark-mode .tutorial-step {
@@ -1412,7 +1412,7 @@
         .tutorial-title {
             font-size: 20px;
             margin-bottom: 10px;
-            color: var(--accent);
+            color: var(--tutorial);
         }
         
         .tutorial-content {
@@ -1426,13 +1426,19 @@
         }
         
         .tutorial-btn {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background: linear-gradient(135deg, var(--tutorial), #6a0dad);
             color: white;
             padding: 8px 16px;
             border-radius: 6px;
             border: none;
             font-weight: 500;
             cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(138, 43, 226, 0.3);
         }
         
         .tutorial-skip {
@@ -1443,9 +1449,9 @@
         /* Tutorial Highlight */
         .tutorial-highlight {
             position: absolute;
-            border: 2px solid var(--accent);
+            border: 2px solid var(--tutorial);
             border-radius: 8px;
-            box-shadow: 0 0 0 9999px rgba(0,0,0,0.7), 0 0 15px var(--accent);
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.7), 0 0 15px var(--tutorial);
             z-index: 2001;
             pointer-events: none;
             transition: all 0.3s ease;
@@ -1611,9 +1617,9 @@
             <!-- Login Form -->
             <form id="login-form">
                 <div class="form-group">
-                    <label for="login-username">Username</label>
-                    <input type="text" id="login-username" class="form-control" placeholder="Enter your username">
-                    <div class="error-message" id="login-username-error">Please enter your username</div>
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="Enter your email">
+                    <div class="error-message" id="login-email-error">Please enter your email</div>
                 </div>
                 
                 <div class="form-group">
@@ -1639,13 +1645,6 @@
                     <label for="signup-email">Email Address</label>
                     <input type="email" id="signup-email" class="form-control" placeholder="Enter your email">
                     <div class="error-message" id="signup-email-error">Please enter a valid email address</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="signup-username">Username</label>
-                    <input type="text" id="signup-username" class="form-control" placeholder="Create a unique username">
-                    <div class="error-message" id="signup-username-error">Username must be at least 4 characters</div>
-                    <div class="success-message" id="signup-username-available">Username available!</div>
                 </div>
                 
                 <div class="form-group">
@@ -1774,6 +1773,16 @@
     
     <!-- Tutorial Overlay -->
     <div class="tutorial-overlay" id="tutorial-overlay"></div>
+    
+    <!-- Tutorial Step -->
+    <div class="tutorial-step" id="tutorial-step" style="display: none;">
+        <div class="tutorial-title" id="tutorial-step-title">Welcome to InsightAtlas!</div>
+        <div class="tutorial-content" id="tutorial-step-content"></div>
+        <div class="tutorial-navigation">
+            <button class="tutorial-btn" id="tutorial-next-btn">Next</button>
+            <button class="tutorial-skip" id="tutorial-skip-btn">Skip Tutorial</button>
+        </div>
+    </div>
     
     <!-- Tutorial Highlight -->
     <div class="tutorial-highlight" id="tutorial-highlight"></div>
@@ -2173,11 +2182,6 @@
                     
                     <form class="profile-form" id="profile-form">
                         <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" value="BookLover123">
-                        </div>
-                        
-                        <div class="form-group">
                             <label for="fullname">Full Name</label>
                             <input type="text" id="fullname" value="Samuel Reader">
                         </div>
@@ -2304,14 +2308,19 @@
         const markAllRead = document.getElementById('mark-all-read');
         const bookContent = document.getElementById('book-content');
         
+        // Tutorial Elements
+        const tutorialOverlay = document.getElementById('tutorial-overlay');
+        const tutorialStep = document.getElementById('tutorial-step');
+        const tutorialHighlight = document.getElementById('tutorial-highlight');
+        const tutorialStepTitle = document.getElementById('tutorial-step-title');
+        const tutorialStepContent = document.getElementById('tutorial-step-content');
+        const tutorialNextBtn = document.getElementById('tutorial-next-btn');
+        const tutorialSkipBtn = document.getElementById('tutorial-skip-btn');
+        
         // OTP Display Elements
         const otpDisplay = document.getElementById('otp-display');
         const otpCodeDisplay = document.getElementById('otp-code-display');
         const otpTimerDisplay = document.getElementById('otp-timer');
-        
-        // Tutorial Elements
-        const tutorialOverlay = document.getElementById('tutorial-overlay');
-        const tutorialHighlight = document.getElementById('tutorial-highlight');
         
         // Notification Sound
         const notificationSound = document.getElementById('notification-sound');
@@ -2359,6 +2368,41 @@
         
         // NEW: Password reset state
         let resetEmail = '';
+        
+        // Tutorial state
+        let tutorialStepIndex = 0;
+        const tutorialSteps = [
+            {
+                title: "Welcome to InsightAtlas!",
+                content: "This quick tutorial will show you how to navigate the app and get the most from your reading experience.",
+                element: null
+            },
+            {
+                title: "Reading Books",
+                content: "To start reading, click on the 'Read Now' button on any book. You can access the first chapter for free!",
+                element: "#read-now-btn"
+            },
+            {
+                title: "Purchasing Books",
+                content: "To unlock full access to a book, click the 'Buy Now' or 'Unlock Full Access' buttons. You'll be guided through the payment process.",
+                element: "#unlock-btn"
+            },
+            {
+                title: "Navigation",
+                content: "Use the bottom navigation bar to switch between Home, Library, Premium, Offline, and Settings sections.",
+                element: ".bottom-nav"
+            },
+            {
+                title: "Profile & Settings",
+                content: "Tap your profile icon to access your account settings, profile information, and support options.",
+                element: "#user-avatar"
+            },
+            {
+                title: "Tutorial Complete!",
+                content: "You're ready to start your journey with InsightAtlas! Explore the app and discover life-changing books.",
+                element: null
+            }
+        ];
         
         // Load user accounts from localStorage
         let userAccounts = JSON.parse(localStorage.getItem(USER_ACCOUNTS_KEY)) || [];
@@ -2424,10 +2468,79 @@
             }
         }
         
+        // Start tutorial
+        function startTutorial() {
+            tutorialStepIndex = 0;
+            tutorialOverlay.style.display = 'block';
+            showTutorialStep();
+        }
+        
+        // Show tutorial step
+        function showTutorialStep() {
+            const step = tutorialSteps[tutorialStepIndex];
+            tutorialStepTitle.textContent = step.title;
+            tutorialStepContent.textContent = step.content;
+            tutorialStep.style.display = 'block';
+            
+            // Position the tutorial step
+            if (step.element) {
+                const element = document.querySelector(step.element);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    tutorialStep.style.top = `${rect.top}px`;
+                    tutorialStep.style.left = `${rect.left}px`;
+                    
+                    // Highlight the element
+                    highlightElement(element);
+                } else {
+                    tutorialHighlight.style.display = 'none';
+                }
+            } else {
+                tutorialStep.style.top = '50%';
+                tutorialStep.style.left = '50%';
+                tutorialStep.style.transform = 'translate(-50%, -50%)';
+                tutorialHighlight.style.display = 'none';
+            }
+            
+            // Update button text for last step
+            if (tutorialStepIndex === tutorialSteps.length - 1) {
+                tutorialNextBtn.textContent = 'Finish';
+            } else {
+                tutorialNextBtn.textContent = 'Next';
+            }
+        }
+        
+        // Highlight element for tutorial
+        function highlightElement(element) {
+            const rect = element.getBoundingClientRect();
+            tutorialHighlight.style.display = 'block';
+            tutorialHighlight.style.width = `${rect.width + 20}px`;
+            tutorialHighlight.style.height = `${rect.height + 20}px`;
+            tutorialHighlight.style.top = `${rect.top - 10}px`;
+            tutorialHighlight.style.left = `${rect.left - 10}px`;
+        }
+        
+        // Next tutorial step
+        function nextTutorialStep() {
+            tutorialStepIndex++;
+            if (tutorialStepIndex < tutorialSteps.length) {
+                showTutorialStep();
+            } else {
+                endTutorial();
+            }
+        }
+        
+        // End tutorial
+        function endTutorial() {
+            tutorialOverlay.style.display = 'none';
+            tutorialStep.style.display = 'none';
+            tutorialHighlight.style.display = 'none';
+        }
+        
         // Update user avatar with first letter
         function updateUserAvatar() {
-            if (currentUser && currentUser.username) {
-                userAvatar.textContent = currentUser.username.charAt(0).toUpperCase();
+            if (currentUser && currentUser.email) {
+                userAvatar.textContent = currentUser.email.charAt(0).toUpperCase();
             }
         }
         
@@ -2524,14 +2637,12 @@
             // If profile is already saved, hide the save button
             if (currentUser && currentUser.profileSaved) {
                 saveProfileBtn.style.display = 'none';
-                document.getElementById('username').readOnly = true;
                 document.getElementById('fullname').readOnly = true;
                 document.getElementById('email').readOnly = true;
                 document.getElementById('phone').readOnly = true;
                 document.getElementById('bio').readOnly = true;
             } else {
                 saveProfileBtn.style.display = 'block';
-                document.getElementById('username').readOnly = false;
                 document.getElementById('fullname').readOnly = false;
                 document.getElementById('email').readOnly = false;
                 document.getElementById('phone').readOnly = false;
@@ -2846,6 +2957,10 @@
         
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
+            // Clear any existing user accounts from storage
+            localStorage.removeItem(USER_ACCOUNTS_KEY);
+            localStorage.removeItem(CURRENT_USER_KEY);
+            
             // Toggle password visibility
             togglePasswordIcons.forEach(icon => {
                 icon.addEventListener('click', function() {
@@ -2888,12 +3003,12 @@
             // Login form submission
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                const username = document.getElementById('login-username').value;
+                const email = document.getElementById('login-email').value;
                 const password = document.getElementById('login-password').value;
                 
-                // Find user by username
+                // Find user by email
                 const user = userAccounts.find(acc => 
-                    acc.username === username && acc.password === password
+                    acc.email === email && acc.password === password
                 );
                 
                 if (user) {
@@ -2902,7 +3017,7 @@
                     showApp();
                     showWelcome();
                 } else {
-                    alert('Invalid username or password');
+                    alert('Invalid email or password');
                 }
             });
             
@@ -2910,7 +3025,6 @@
             signupForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const email = document.getElementById('signup-email').value;
-                const username = document.getElementById('signup-username').value;
                 const password = document.getElementById('signup-password').value;
                 const confirmPassword = document.getElementById('signup-confirm-password').value;
                 
@@ -2924,15 +3038,8 @@
                     return;
                 }
                 
-                // NEW: Ensure username is unique
-                if (userAccounts.some(acc => acc.username === username)) {
-                    alert('Username already taken');
-                    return;
-                }
-                
                 const newUser = {
                     email,
-                    username,
                     password,
                     isNew: true,
                     createdAt: new Date().toISOString()
@@ -3121,14 +3228,14 @@
             
             // Buy book - ensure payment modal appears immediately
             buyBookBtn.addEventListener('click', function() {
-                window.scrollTo(0, 0);
                 paymentModal.style.display = 'flex';
+                window.scrollTo(0, 0);
             });
             
             // Unlock book - ensure payment modal appears immediately
             unlockBtn.addEventListener('click', function() {
-                window.scrollTo(0, 0);
                 paymentModal.style.display = 'flex';
+                window.scrollTo(0, 0);
             });
             
             // Submit payment
@@ -3168,7 +3275,6 @@
             
             // Save profile
             saveProfileBtn.addEventListener('click', function() {
-                currentUser.username = document.getElementById('username').value;
                 currentUser.fullname = document.getElementById('fullname').value;
                 currentUser.email = document.getElementById('email').value;
                 currentUser.phone = document.getElementById('phone').value;
@@ -3223,6 +3329,10 @@
                 appLanguage = this.value;
                 localStorage.setItem(APP_LANGUAGE_KEY, appLanguage);
             });
+            
+            // Tutorial navigation
+            tutorialNextBtn.addEventListener('click', nextTutorialStep);
+            tutorialSkipBtn.addEventListener('click', endTutorial);
         });
     </script>
 </body>
