@@ -1,4 +1,3 @@
-html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,9 +17,9 @@ html
             --primary: #4361ee;
             --primary-dark: #3a56d4;
             --secondary: #ffd166;
-            --dark-bg: #121212;
-            --dark-card: #1e1e1e;
-            --dark-text: #f1f5f9;
+            --dark-bg: #ffffff;
+            --dark-card: #ffffff;
+            --dark-text: #000000;
             --light-bg: #ffffff; 
             --light-card: #ffffff;
             --light-text: #000000;
@@ -31,7 +30,7 @@ html
             --warning: #ffd166;
             --danger: #ef476f;
             --gold: #ffb700;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             --border-radius: 12px;
             --tutorial: #8a2be2;
         }
@@ -58,6 +57,7 @@ html
         body.dark-mode .settings-section,
         body.dark-mode .profile-section {
             background-color: var(--dark-card);
+            border: 1px solid #e2e8f0;
         }
         
         .container {
@@ -82,6 +82,7 @@ html
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             padding: 30px;
+            border: 1px solid #e2e8f0;
         }
         
         .auth-header {
@@ -120,8 +121,8 @@ html
             width: 100%;
             padding: 14px;
             border-radius: 8px;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-            background-color: rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            background-color: #ffffff;
             color: var(--light-text);
             font-size: 16px;
         }
@@ -226,6 +227,7 @@ html
             top: 0;
             z-index: 100;
             box-shadow: var(--shadow);
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .dark-mode header {
@@ -290,7 +292,7 @@ html
         }
         
         .dark-mode .hero-section {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
         }
         
         .hero-title {
@@ -325,6 +327,7 @@ html
             cursor: pointer;
             max-width: 400px;
             margin: 0 auto;
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .book-card {
@@ -333,7 +336,7 @@ html
         
         .book-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
         
         .book-cover {
@@ -500,12 +503,12 @@ html
             left: 0;
             right: 0;
             height: 100px;
-            background: linear-gradient(to bottom, rgba(30, 41, 59, 0.1), var(--light-bg));
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), var(--light-bg));
             pointer-events: none;
         }
         
         .dark-mode .free-access::after {
-            background: linear-gradient(to bottom, rgba(248, 250, 252, 0.1), var(--dark-bg));
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), var(--dark-bg));
         }
         
         .upgrade-box {
@@ -558,8 +561,9 @@ html
             display: flex;
             justify-content: space-around;
             padding: 12px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             z-index: 100;
+            border-top: 1px solid #e2e8f0;
         }
         
         .dark-mode .bottom-nav {
@@ -614,7 +618,7 @@ html
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -629,6 +633,7 @@ html
             box-shadow: var(--shadow);
             text-align: center;
             position: relative;
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .welcome-content {
@@ -683,6 +688,7 @@ html
             padding: 20px;
             margin-top: 30px;
             text-align: center;
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .share-section {
@@ -705,15 +711,15 @@ html
             flex: 1;
             padding: 12px;
             border-radius: 8px;
-            background-color: rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--gray);
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
             color: var(--light-text);
             overflow: hidden;
             text-overflow: ellipsis;
         }
         
         .dark-mode .share-link {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: #ffffff;
             color: var(--dark-text);
         }
         
@@ -785,6 +791,7 @@ html
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .offline-section {
@@ -795,7 +802,7 @@ html
             font-size: 22px;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray);
+            border-bottom: 1px solid #e2e8f0;
             color: var(--accent);
         }
         
@@ -818,7 +825,7 @@ html
         }
         
         .offline-book-item {
-            background-color: #e2e8f0;
+            background-color: #f1f5f9;
             border-radius: var(--border-radius);
             padding: 15px;
             display: flex;
@@ -828,10 +835,11 @@ html
             transition: transform 0.3s ease;
             cursor: pointer;
             position: relative;
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .offline-book-item {
-            background-color: var(--dark-bg);
+            background-color: #f1f5f9;
         }
         
         .offline-book-item:hover {
@@ -911,6 +919,7 @@ html
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .settings-section {
@@ -921,7 +930,7 @@ html
             font-size: 22px;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray);
+            border-bottom: 1px solid #e2e8f0;
             color: var(--accent);
         }
         
@@ -930,11 +939,11 @@ html
             justify-content: space-between;
             align-items: center;
             padding: 15px 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .dark-mode .setting-item {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .setting-label {
@@ -998,14 +1007,14 @@ html
         select {
             padding: 8px 12px;
             border-radius: 8px;
-            background-color: var(--light-card);
+            background-color: #ffffff;
             color: var(--light-text);
-            border: 1px solid var(--gray);
+            border: 1px solid #e2e8f0;
             width: 100%;
         }
         
         .dark-mode select {
-            background-color: var(--dark-card);
+            background-color: #ffffff;
             color: var(--dark-text);
         }
         
@@ -1052,6 +1061,7 @@ html
             padding: 20px;
             margin-top: 20px;
             box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .chat-container {
@@ -1063,7 +1073,7 @@ html
             overflow-y: auto;
             margin-bottom: 15px;
             padding: 10px;
-            border: 1px solid var(--gray);
+            border: 1px solid #e2e8f0;
             border-radius: var(--border-radius);
         }
         
@@ -1081,12 +1091,12 @@ html
         }
         
         .ai-message {
-            background-color: #e2e8f0;
+            background-color: #f1f5f9;
             margin-right: auto;
         }
         
         .dark-mode .ai-message {
-            background-color: var(--dark-bg);
+            background-color: #f1f5f9;
         }
         
         .chat-input {
@@ -1098,13 +1108,13 @@ html
             flex: 1;
             padding: 10px;
             border-radius: 8px;
-            border: 1px solid var(--gray);
-            background-color: rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            background-color: #ffffff;
             color: var(--light-text);
         }
         
         .dark-mode .chat-input input {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: #ffffff;
             color: var(--dark-text);
         }
         
@@ -1131,6 +1141,7 @@ html
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .profile-section {
@@ -1141,7 +1152,7 @@ html
             font-size: 22px;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray);
+            border-bottom: 1px solid #e2e8f0;
             color: var(--accent);
         }
         
@@ -1186,7 +1197,7 @@ html
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(255, 255, 255, 0.9);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -1200,6 +1211,7 @@ html
             max-width: 500px;
             box-shadow: var(--shadow);
             position: relative;
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .modal-content {
@@ -1222,15 +1234,16 @@ html
         }
         
         .account-details {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: #f1f5f9;
             border-radius: var(--border-radius);
             padding: 15px;
             margin-bottom: 20px;
             font-family: monospace;
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .account-details {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: #f1f5f9;
         }
         
         .account-details p {
@@ -1249,13 +1262,13 @@ html
             padding: 10px;
             margin-bottom: 15px;
             border-radius: 8px;
-            border: 1px solid var(--gray);
-            background-color: rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            background-color: #ffffff;
             color: var(--light-text);
         }
         
         .dark-mode .payment-form input {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: #ffffff;
             color: var(--dark-text);
         }
         
@@ -1288,6 +1301,7 @@ html
             max-height: 400px;
             overflow-y: auto;
             z-index: 200;
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .notification-dropdown {
@@ -1296,24 +1310,24 @@ html
         
         .notification-header {
             padding: 15px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e2e8f0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .dark-mode .notification-header {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .notification-item {
             padding: 15px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e2e8f0;
             cursor: pointer;
         }
         
         .dark-mode .notification-item {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid #e2e8f0;
         }
         
         .notification-item.unread {
@@ -1391,12 +1405,12 @@ html
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(255, 255, 255, 0.9);
             z-index: 2000;
         }
         
         .tutorial-step {
-            position: absolute;
+            position: fixed;
             background-color: var(--light-card);
             border-radius: var(--border-radius);
             padding: 20px;
@@ -1405,6 +1419,10 @@ html
             box-shadow: var(--shadow);
             z-index: 2001;
             transition: transform 0.3s ease, opacity 0.3s ease;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .tutorial-step {
@@ -1453,7 +1471,7 @@ html
             position: absolute;
             border: 2px solid var(--tutorial);
             border-radius: 8px;
-            box-shadow: 0 0 0 9999px rgba(0,0,0,0.7), 0 0 15px var(--tutorial);
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.1), 0 0 15px var(--tutorial);
             z-index: 2001;
             pointer-events: none;
             transition: all 0.3s ease;
@@ -1492,6 +1510,7 @@ html
             padding: 25px;
             margin-top: 40px;
             box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .rating-section {
@@ -1528,8 +1547,8 @@ html
             width: 100%;
             padding: 15px;
             border-radius: 8px;
-            border: 1px solid var(--gray);
-            background-color: rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            background-color: #ffffff;
             color: var(--light-text);
             font-size: 16px;
             min-height: 100px;
@@ -1537,7 +1556,7 @@ html
         }
         
         .dark-mode .rating-comment {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: #ffffff;
             color: var(--dark-text);
         }
         
@@ -1581,6 +1600,7 @@ html
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
         }
         
         .dark-mode .premium-section {
@@ -1591,7 +1611,7 @@ html
             font-size: 24px;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid var(--gray);
+            border-bottom: 1px solid #e2e8f0;
             color: var(--premium);
             text-align: center;
         }
@@ -1698,12 +1718,12 @@ html
                 <div class="form-group">
                     <label>Enter 6-digit OTP shown in the app</label>
                     <div style="display: flex; gap: 8px; margin-bottom: 15px; justify-content: center;">
-                        <input type="text" class="otp-input" maxlength="1" data-index="1" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="2" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="3" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="4" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="5" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
-                        <input type="text" class="otp-input" maxlength="1" data-index="6" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, 0.2); background-color: rgba(0, 0, 0, 0.05); color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="1" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="2" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="3" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="4" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="5" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: var(--light-text);">
+                        <input type="text" class="otp-input" maxlength="1" data-index="6" style="width: 40px; height: 50px; text-align: center; font-size: 20px; border-radius: 8px; border: 1px solid #e2e8f0; background-color: #ffffff; color: var(--light-text);">
                     </div>
                     <div class="error-message" id="otp-error">Invalid OTP. Please try again.</div>
                     <div class="auth-footer" style="margin-top: 10px;">
@@ -2282,6 +2302,7 @@ html
         const CURRENT_USER_KEY = 'insightAtlasCurrentUser';
         const PURCHASED_BOOKS_KEY = 'insightAtlasPurchasedBooks';
         const APP_LANGUAGE_KEY = 'insightAtlasAppLanguage';
+        const TUTORIAL_SHOWN_KEY = 'tutorialShown';
         
         // Book Management
         const BOOKS_KEY = 'insightAtlasBooks';
@@ -2475,9 +2496,13 @@ html
         
         // Start tutorial
         function startTutorial() {
-            tutorialStepIndex = 0;
-            tutorialOverlay.style.display = 'block';
-            showTutorialStep();
+            // Only show tutorial if it's a new user and hasn't been seen before
+            if (currentUser && currentUser.isNew && !localStorage.getItem(TUTORIAL_SHOWN_KEY)) {
+                tutorialStepIndex = 0;
+                tutorialOverlay.style.display = 'block';
+                showTutorialStep();
+                localStorage.setItem(TUTORIAL_SHOWN_KEY, 'true');
+            }
         }
         
         // Show tutorial step
@@ -2487,32 +2512,26 @@ html
             tutorialStepContent.textContent = step.content;
             tutorialStep.style.display = 'block';
             
-            // Position the tutorial step
+            // Always center the tutorial step
+            tutorialStep.style.position = 'fixed';
+            tutorialStep.style.top = '50%';
+            tutorialStep.style.left = '50%';
+            tutorialStep.style.transform = 'translate(-50%, -50%)';
+            
+            // Highlight element if specified
             if (step.element) {
                 const element = document.querySelector(step.element);
                 if (element) {
-                    const rect = element.getBoundingClientRect();
-                    tutorialStep.style.top = `${rect.top}px`;
-                    tutorialStep.style.left = `${rect.left}px`;
-                    
-                    // Highlight the element
                     highlightElement(element);
                 } else {
                     tutorialHighlight.style.display = 'none';
                 }
             } else {
-                tutorialStep.style.top = '50%';
-                tutorialStep.style.left = '50%';
-                tutorialStep.style.transform = 'translate(-50%, -50%)';
                 tutorialHighlight.style.display = 'none';
             }
             
-            // Update button text for last step
-            if (tutorialStepIndex === tutorialSteps.length - 1) {
-                tutorialNextBtn.textContent = 'Finish';
-            } else {
-                tutorialNextBtn.textContent = 'Next';
-            }
+            // Update button text
+            tutorialNextBtn.textContent = tutorialStepIndex === tutorialSteps.length - 1 ? 'Finish' : 'Next';
         }
         
         // Highlight element for tutorial
@@ -3053,7 +3072,7 @@ html
                 userAccounts.push(newUser);
                 saveUserAccount(newUser);
                 currentUser = newUser;
-                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(newUser));
                 showApp();
                 showWelcome();
             });
@@ -3341,4 +3360,4 @@ html
         });
     </script>
 </body>
-    </html>
+</html>
