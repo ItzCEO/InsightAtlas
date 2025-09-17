@@ -1,214 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>InsightAtlas - Your Digital Library</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #ff9966, #ff5e62);
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-      transition: background 0.5s, color 0.5s;
-    }
-    .upload-box {
-      border: 2px dashed #fff;
-      padding: 20px;
-      margin: 20px auto;
-      width: 60%;
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.2);
-    }
-    #pdf-viewer {
-      width: 90%;
-      height: 500px;
-      margin: 20px auto;
-      background: #fff;
-      color: #000;
-      padding: 15px;
-      overflow-y: scroll;
-      border-radius: 10px;
-      text-align: left;
-      white-space: pre-wrap; /* Preserve PDF formatting */
-    }
-    button {
-      margin: 10px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .read { background: #4CAF50; color: #fff; }
-    .pause { background: #FF9800; color: #fff; }
-    .resume { background: #2196F3; color: #fff; }
-    .settings-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #333;
-      color: #fff;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      font-size: 20px;
-    }
-    .settings-panel {
-      display: none;
-      position: fixed;
-      top: 70px;
-      right: 20px;
-      width: 250px;
-      background: #fff;
-      color: #000;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      z-index: 1000;
-      text-align: left;
-    }
-    .settings-panel h3 {
-      margin-top: 0;
-    }
-    select, .theme-option {
-      width: 100%;
-      margin: 10px 0;
-      padding: 5px;
-      border-radius: 5px;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Book Reader</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>InsightAtlas - Your Digital Library</h1>
-  <div class="upload-box">
-    <p>Upload your PDF books below:</p>
-    <input type="file" id="file-input" accept="application/pdf">
+<body class="bg-gray-100 text-gray-900 transition-colors duration-300">
+  <!-- Header -->
+  <header class="p-4 bg-blue-600 text-white flex justify-between items-center">
+    <h1 class="text-xl font-bold">📚 My Book Reader</h1>
+    <button id="settingsBtn" class="bg-white text-blue-600 px-3 py-1 rounded">⚙ Settings</button>
+  </header>
+
+  <!-- File Upload -->
+  <div class="p-4">
+    <input type="file" id="pdfUpload" accept="application/pdf" class="mb-3" />
+    <canvas id="pdfViewer" class="border rounded w-full"></canvas>
   </div>
-  <div id="pdf-viewer"></div>
 
-  <div>
-    <button class="read" onclick="readAloud()">🔊 Read Aloud</button>
-    <button class="pause" onclick="pauseReading()">⏸ Pause</button>
-    <button class="resume" onclick="resumeReading()">▶ Resume</button>
+  <!-- Controls -->
+  <div class="p-4 flex gap-2">
+    <button id="readBtn" class="bg-green-600 text-white px-4 py-2 rounded">▶ Read</button>
+    <button id="pauseBtn" class="bg-yellow-500 text-white px-4 py-2 rounded">⏸ Pause</button>
+    <button id="resumeBtn" class="bg-blue-500 text-white px-4 py-2 rounded">⏯ Resume</button>
   </div>
 
-  <!-- ⚙️ Settings -->
-  <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
-  <div class="settings-panel" id="settingsPanel">
-    <h3>Settings</h3>
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded shadow-md w-96">
+      <h2 class="text-lg font-bold mb-4">⚙ Settings</h2>
+      
+      <!-- Theme Switch -->
+      <div class="mb-3">
+        <label class="font-semibold">Theme:</label>
+        <select id="themeSelect" class="w-full border rounded p-2">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+        </select>
+      </div>
 
-    <label>Choose Theme:</label>
-    <select id="themeSelector" onchange="changeTheme(this.value)">
-      <option value="sunset">Sunset</option>
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-      <option value="blue">Ocean Blue</option>
-    </select>
+      <!-- Voice Selection -->
+      <div class="mb-3">
+        <label class="font-semibold">Voice:</label>
+        <select id="voiceSelect" class="w-full border rounded p-2"></select>
+      </div>
 
-    <label>Choose Voice:</label>
-    <select id="voiceSelector"></select>
+      <button id="closeSettings" class="bg-red-600 text-white px-4 py-2 rounded">Close</button>
+    </div>
   </div>
 
   <script>
-    let pdfText = "";
-    let utterance;
-    let isPaused = false;
+    let pdfDoc = null, currentPage = 1, speech = window.speechSynthesis, utterance, extractedText = "";
 
-    // =============== PDF Upload & Display ================
-    document.getElementById('file-input').addEventListener('change', async function(e) {
-      const file = e.target.files[0];
+    // Load PDF
+    document.getElementById("pdfUpload").addEventListener("change", (e) => {
+      let file = e.target.files[0];
       if (file) {
-        const fileReader = new FileReader();
-        fileReader.onload = async function() {
-          const typedarray = new Uint8Array(this.result);
-          const pdf = await pdfjsLib.getDocument(typedarray).promise;
-          pdfText = "";
-
-          for (let i = 1; i <= pdf.numPages; i++) {
-            const page = await pdf.getPage(i);
-            const content = await page.getTextContent();
-            const strings = content.items.map(item => item.str);
-            pdfText += strings.join(" ") + "\n\n";
-          }
-
-          document.getElementById('pdf-viewer').textContent = pdfText;
+        let fileReader = new FileReader();
+        fileReader.onload = function() {
+          let typedarray = new Uint8Array(this.result);
+          pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+            pdfDoc = pdf;
+            renderPage(1);
+            extractText();
+          });
         };
         fileReader.readAsArrayBuffer(file);
       }
     });
 
-    // =============== Text-to-Speech ================
-    function readAloud() {
-      if (speechSynthesis.speaking) {
-        speechSynthesis.cancel(); // Stop previous speech if active
-      }
-
-      utterance = new SpeechSynthesisUtterance(pdfText);
-      utterance.rate = 1; // Normal speed
-      utterance.pitch = 1; 
-
-      const selectedVoice = document.getElementById("voiceSelector").value;
-      const voices = speechSynthesis.getVoices();
-      const chosen = voices.find(v => v.name === selectedVoice);
-      if (chosen) utterance.voice = chosen;
-
-      speechSynthesis.speak(utterance);
-      isPaused = false;
+    // Render PDF Page
+    function renderPage(num) {
+      pdfDoc.getPage(num).then(page => {
+        let canvas = document.getElementById("pdfViewer");
+        let ctx = canvas.getContext("2d");
+        let viewport = page.getViewport({ scale: 1.5 });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        page.render({ canvasContext: ctx, viewport: viewport });
+      });
     }
 
-    function pauseReading() {
-      if (speechSynthesis.speaking && !speechSynthesis.paused) {
-        speechSynthesis.pause();
-        isPaused = true;
+    // Extract Text from PDF
+    async function extractText() {
+      extractedText = "";
+      for (let i = 1; i <= pdfDoc.numPages; i++) {
+        let page = await pdfDoc.getPage(i);
+        let textContent = await page.getTextContent();
+        textContent.items.forEach(item => {
+          extractedText += item.str + " ";
+        });
       }
     }
 
-    function resumeReading() {
-      if (speechSynthesis.paused && isPaused) {
-        speechSynthesis.resume();
-        isPaused = false;
+    // Read Aloud
+    document.getElementById("readBtn").addEventListener("click", () => {
+      if (utterance) speech.cancel(); 
+      utterance = new SpeechSynthesisUtterance(extractedText);
+      let voiceSelect = document.getElementById("voiceSelect");
+      let selectedVoice = speech.getVoices().find(v => v.name === voiceSelect.value);
+      if (selectedVoice) utterance.voice = selectedVoice;
+      speech.speak(utterance);
+    });
+
+    document.getElementById("pauseBtn").addEventListener("click", () => {
+      if (speech.speaking) speech.pause();
+    });
+
+    document.getElementById("resumeBtn").addEventListener("click", () => {
+      if (speech.paused) speech.resume();
+    });
+
+    // Settings Modal
+    document.getElementById("settingsBtn").onclick = () => document.getElementById("settingsModal").classList.remove("hidden");
+    document.getElementById("closeSettings").onclick = () => document.getElementById("settingsModal").classList.add("hidden");
+
+    // Theme Switch
+    document.getElementById("themeSelect").addEventListener("change", (e) => {
+      if (e.target.value === "dark") {
+        document.body.classList.replace("bg-gray-100", "bg-gray-900");
+        document.body.classList.replace("text-gray-900", "text-white");
+      } else {
+        document.body.classList.replace("bg-gray-900", "bg-gray-100");
+        document.body.classList.replace("text-white", "text-gray-900");
       }
-    }
+    });
 
-    // =============== Settings Panel ================
-    function toggleSettings() {
-      const panel = document.getElementById("settingsPanel");
-      panel.style.display = panel.style.display === "block" ? "none" : "block";
-    }
-
-    // Theme switcher
-    function changeTheme(theme) {
-      if (theme === "light") {
-        document.body.style.background = "#f4f4f4";
-        document.body.style.color = "#000";
-      } else if (theme === "dark") {
-        document.body.style.background = "#111";
-        document.body.style.color = "#fff";
-      } else if (theme === "blue") {
-        document.body.style.background = "linear-gradient(to right, #2193b0, #6dd5ed)";
-        document.body.style.color = "#fff";
-      } else { // default sunset
-        document.body.style.background = "linear-gradient(to right, #ff9966, #ff5e62)";
-        document.body.style.color = "#fff";
-      }
-    }
-
-    // Load voice options
-    function populateVoices() {
-      const voiceSelect = document.getElementById("voiceSelector");
-      voiceSelect.innerHTML = "";
-      const voices = speechSynthesis.getVoices();
+    // Populate Voices
+    function loadVoices() {
+      let voices = speech.getVoices();
+      let select = document.getElementById("voiceSelect");
+      select.innerHTML = "";
       voices.forEach(voice => {
         let option = document.createElement("option");
         option.value = voice.name;
         option.textContent = `${voice.name} (${voice.lang})`;
-        voiceSelect.appendChild(option);
+        select.appendChild(option);
       });
     }
-
-    speechSynthesis.onvoiceschanged = populateVoices;
+    speech.onvoiceschanged = loadVoices;
+    loadVoices();
   </script>
 </body>
 </html>
