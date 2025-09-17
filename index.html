@@ -71,68 +71,79 @@
   </div>
 
   <div>
-    <button onclick="readAloud()">🔊 Read Aloud</button>
+    <button onclick="startReading()">🔊 Read Aloud</button>
     <button onclick="pauseReading()">⏸ Pause</button>
     <button onclick="resumeReading()">▶ Resume</button>
     <button onclick="stopReading()">⏹ Stop</button>
   </div>
 
-  <!-- Load PDF.js -->
+  <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
   <script>
     const fileInput = document.getElementById('fileInput');
     const pdfViewer = document.getElementById('pdfViewer');
-    let pdfText = "";
-    let speechUtterance;
 
-    // Extract text from uploaded PDF
+    let pdfDoc = null;
+    let currentPage = 1;
+    let isReading = false;
+
+    // Load PDF into viewer and prepare for reading
     fileInput.addEventListener('change', (event) => {
       const file = event.target.files[0];
       if (file && file.type === 'application/pdf') {
         const fileURL = URL.createObjectURL(file);
         pdfViewer.src = fileURL;
 
-        // Read PDF text
         const reader = new FileReader();
         reader.onload = function() {
           const typedarray = new Uint8Array(this.result);
-          pdfjsLib.getDocument(typedarray).promise.then(async (pdf) => {
-            let textContent = "";
-            for (let i = 1; i <= pdf.numPages; i++) {
-              const page = await pdf.getPage(i);
-              const text = await page.getTextContent();
-              text.items.forEach((item) => {
-                textContent += item.str + " ";
-              });
-            }
-            pdfText = textContent;
+          pdfjsLib.getDocument(typedarray).promise.then((pdf) => {
+            pdfDoc = pdf;
+            currentPage = 1;
+            console.log("PDF loaded, total pages:", pdfDoc.numPages);
           });
         };
         reader.readAsArrayBuffer(file);
       }
     });
 
-    // Start reading aloud
-    function readAloud() {
-      if (!pdfText) {
-        alert("Please upload a PDF first!");
+    function startReading() {
+      if (!pdfDoc) {
+        alert("Upload a PDF first!");
         return;
       }
-      if (speechSynthesis.speaking) {
-        speechSynthesis.cancel();
-      }
+      isReading = true;
+      currentPage = 1;
+      speechSynthesis.cancel();
+      readPage(currentPage);
+    }
 
-      speechUtterance = new SpeechSynthesisUtterance(pdfText);
-      
-      // Pick British Male voice
-      const voices = speechSynthesis.getVoices();
-      const britishVoice = voices.find(
-        v => v.lang === "en-GB" && v.name.toLowerCase().includes("male")
-      ) || voices.find(v => v.lang === "en-GB");
-      if (britishVoice) speechUtterance.voice = britishVoice;
+    function readPage(pageNum) {
+      if (!isReading || pageNum > pdfDoc.numPages) return;
 
-      speechSynthesis.speak(speechUtterance);
+      pdfDoc.getPage(pageNum).then((page) => {
+        return page.getTextContent();
+      }).then((textContent) => {
+        let text = textContent.items.map((item) => item.str).join(" ");
+        let utterance = new SpeechSynthesisUtterance(text);
+
+        // Pick British Male voice
+        const voices = speechSynthesis.getVoices();
+        const britishVoice = voices.find(
+          v => v.lang === "en-GB" && v.name.toLowerCase().includes("male")
+        ) || voices.find(v => v.lang === "en-GB");
+        if (britishVoice) utterance.voice = britishVoice;
+
+        utterance.onend = () => {
+          if (isReading) {
+            currentPage++;
+            readPage(currentPage);
+          }
+        };
+
+        speechSynthesis.speak(utterance);
+      });
     }
 
     function pauseReading() {
@@ -148,10 +159,11 @@
     }
 
     function stopReading() {
+      isReading = false;
       speechSynthesis.cancel();
     }
 
-    // Ensure voices are loaded
+    // Ensure voices load
     window.speechSynthesis.onvoiceschanged = () => {};
   </script>
 </body>
