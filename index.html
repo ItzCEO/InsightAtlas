@@ -1,100 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My PDF Library</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InsightAtlas - Your Digital Library</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #ff9966, #ff5e62);
+      color: #fff;
       text-align: center;
-      background: #f5f5f5;
     }
-    #pdf-viewer {
-      width: 80%;
-      margin: 20px auto;
-      border: 1px solid #ccc;
+    header {
+      padding: 20px;
+      font-size: 2em;
+      font-weight: bold;
+    }
+    #uploadArea {
+      margin: 20px;
+      padding: 20px;
+      border: 2px dashed #fff;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.2);
+    }
+    input[type="file"] {
+      padding: 10px;
       background: #fff;
-      min-height: 500px;
-      overflow-y: auto;
-      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
     }
-    input, button {
+    #pdfContainer {
+      margin: 20px auto;
+      width: 90%;
+      height: 600px;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    button {
       margin: 10px;
-      padding: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: #ff5e62;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ffddcc;
     }
   </style>
 </head>
 <body>
+  <header>📚 InsightAtlas</header>
 
-  <h2>📚 My PDF Library</h2>
-  <input type="file" id="pdf-upload" accept="application/pdf">
-  <button onclick="readAloud()">🔊 Read Aloud</button>
-  <button onclick="stopReading()">⏹ Stop</button>
+  <div id="uploadArea">
+    <p>Upload your PDF books below:</p>
+    <input type="file" id="fileInput" accept="application/pdf" />
+  </div>
 
-  <div id="pdf-viewer"></div>
+  <div id="pdfContainer">
+    <iframe id="pdfViewer"></iframe>
+  </div>
+
+  <div>
+    <button onclick="readAloud()">🔊 Read Aloud</button>
+    <button onclick="pauseReading()">⏸ Pause</button>
+    <button onclick="resumeReading()">▶ Resume</button>
+    <button onclick="stopReading()">⏹ Stop</button>
+  </div>
+
+  <!-- Load PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
   <script>
-    const pdfViewer = document.getElementById("pdf-viewer");
-    let pdfDoc = null;
-    let textContent = "";
-    let speech = new SpeechSynthesisUtterance();
+    const fileInput = document.getElementById('fileInput');
+    const pdfViewer = document.getElementById('pdfViewer');
+    let pdfText = "";
+    let speechUtterance;
 
-    // Handle PDF upload
-    document.getElementById("pdf-upload").addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (file && file.type === "application/pdf") {
-        const fileReader = new FileReader();
-        fileReader.onload = function() {
+    // Extract text from uploaded PDF
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file && file.type === 'application/pdf') {
+        const fileURL = URL.createObjectURL(file);
+        pdfViewer.src = fileURL;
+
+        // Read PDF text
+        const reader = new FileReader();
+        reader.onload = function() {
           const typedarray = new Uint8Array(this.result);
-          pdfjsLib.getDocument(typedarray).promise.then((pdf) => {
-            pdfDoc = pdf;
-            renderPDF();
+          pdfjsLib.getDocument(typedarray).promise.then(async (pdf) => {
+            let textContent = "";
+            for (let i = 1; i <= pdf.numPages; i++) {
+              const page = await pdf.getPage(i);
+              const text = await page.getTextContent();
+              text.items.forEach((item) => {
+                textContent += item.str + " ";
+              });
+            }
+            pdfText = textContent;
           });
         };
-        fileReader.readAsArrayBuffer(file);
+        reader.readAsArrayBuffer(file);
       }
     });
 
-    // Render PDF pages
-    async function renderPDF() {
-      pdfViewer.innerHTML = "";
-      textContent = "";
-      for (let i = 1; i <= pdfDoc.numPages; i++) {
-        const page = await pdfDoc.getPage(i);
-        const viewport = page.getViewport({ scale: 1 });
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        await page.render({ canvasContext: ctx, viewport }).promise;
-        pdfViewer.appendChild(canvas);
-
-        // Extract text
-        const text = await page.getTextContent();
-        text.items.forEach((item) => {
-          textContent += item.str + " ";
-        });
-      }
-    }
-
-    // Read aloud function
+    // Start reading aloud
     function readAloud() {
-      if (textContent.trim() === "") {
-        alert("No text found to read aloud.");
+      if (!pdfText) {
+        alert("Please upload a PDF first!");
         return;
       }
-      speech.text = textContent;
-      speechSynthesis.speak(speech);
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+      }
+
+      speechUtterance = new SpeechSynthesisUtterance(pdfText);
+      
+      // Pick British Male voice
+      const voices = speechSynthesis.getVoices();
+      const britishVoice = voices.find(
+        v => v.lang === "en-GB" && v.name.toLowerCase().includes("male")
+      ) || voices.find(v => v.lang === "en-GB");
+      if (britishVoice) speechUtterance.voice = britishVoice;
+
+      speechSynthesis.speak(speechUtterance);
     }
 
-    // Stop reading
+    function pauseReading() {
+      if (speechSynthesis.speaking && !speechSynthesis.paused) {
+        speechSynthesis.pause();
+      }
+    }
+
+    function resumeReading() {
+      if (speechSynthesis.paused) {
+        speechSynthesis.resume();
+      }
+    }
+
     function stopReading() {
       speechSynthesis.cancel();
     }
-  </script>
 
+    // Ensure voices are loaded
+    window.speechSynthesis.onvoiceschanged = () => {};
+  </script>
 </body>
 </html>
