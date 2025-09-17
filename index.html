@@ -33,15 +33,15 @@
     #pdfContainer {
       margin: 20px auto;
       width: 90%;
-      height: 600px;
+      height: 500px;
       background: #000;
       border-radius: 10px;
-      overflow: hidden;
-    }
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
+      overflow: auto;
+      padding: 10px;
+      color: white;
+      text-align: left;
+      line-height: 1.5em;
+      font-size: 16px;
     }
     button {
       margin: 10px;
@@ -66,9 +66,7 @@
     <input type="file" id="fileInput" accept="application/pdf" />
   </div>
 
-  <div id="pdfContainer">
-    <iframe id="pdfViewer"></iframe>
-  </div>
+  <div id="pdfContainer">📖 Your book text will appear here...</div>
 
   <div>
     <button onclick="startReading()">🔊 Read Aloud</button>
@@ -82,7 +80,7 @@
 
   <script>
     const fileInput = document.getElementById('fileInput');
-    const pdfViewer = document.getElementById('pdfViewer');
+    const pdfContainer = document.getElementById('pdfContainer');
 
     let pdfDoc = null;
     let currentPage = 1;
@@ -92,16 +90,13 @@
     fileInput.addEventListener('change', (event) => {
       const file = event.target.files[0];
       if (file && file.type === 'application/pdf') {
-        const fileURL = URL.createObjectURL(file);
-        pdfViewer.src = fileURL;
-
         const reader = new FileReader();
         reader.onload = function() {
           const typedarray = new Uint8Array(this.result);
           pdfjsLib.getDocument(typedarray).promise.then((pdf) => {
             pdfDoc = pdf;
             currentPage = 1;
-            console.log("PDF loaded, total pages:", pdfDoc.numPages);
+            pdfContainer.innerHTML = "✅ PDF loaded with " + pdf.numPages + " pages.";
           });
         };
         reader.readAsArrayBuffer(file);
@@ -115,6 +110,7 @@
       }
       isReading = true;
       currentPage = 1;
+      pdfContainer.innerHTML = "";
       speechSynthesis.cancel();
       readPage(currentPage);
     }
@@ -126,6 +122,8 @@
         return page.getTextContent();
       }).then((textContent) => {
         let text = textContent.items.map((item) => item.str).join(" ");
+        pdfContainer.innerHTML += `<p><b>Page ${pageNum}:</b> ${text}</p>`;
+
         let utterance = new SpeechSynthesisUtterance(text);
 
         // Pick British Male voice
