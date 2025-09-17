@@ -1,168 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>InsightAtlas - Your Digital Library</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      background: linear-gradient(135deg, #ff9966, #ff5e62);
+      background: linear-gradient(to right, #ff9966, #ff5e62);
       color: #fff;
       text-align: center;
-    }
-    header {
       padding: 20px;
-      font-size: 2em;
-      font-weight: bold;
+      transition: background 0.5s, color 0.5s;
     }
-    #uploadArea {
-      margin: 20px;
-      padding: 20px;
+    .upload-box {
       border: 2px dashed #fff;
-      border-radius: 10px;
-      background: rgba(0,0,0,0.2);
-    }
-    input[type="file"] {
-      padding: 10px;
-      background: #fff;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    #pdfContainer {
+      padding: 20px;
       margin: 20px auto;
+      width: 60%;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    #pdf-viewer {
       width: 90%;
       height: 500px;
-      background: #000;
+      margin: 20px auto;
+      background: #fff;
+      color: #000;
+      padding: 15px;
+      overflow-y: scroll;
       border-radius: 10px;
-      overflow: auto;
-      padding: 10px;
-      color: white;
       text-align: left;
-      line-height: 1.5em;
-      font-size: 16px;
+      white-space: pre-wrap; /* Preserve PDF formatting */
     }
     button {
       margin: 10px;
       padding: 10px 20px;
       border: none;
-      border-radius: 8px;
-      background: #fff;
-      color: #ff5e62;
-      font-weight: bold;
+      border-radius: 5px;
       cursor: pointer;
+      font-size: 16px;
     }
-    button:hover {
-      background: #ffddcc;
+    .read { background: #4CAF50; color: #fff; }
+    .pause { background: #FF9800; color: #fff; }
+    .resume { background: #2196F3; color: #fff; }
+    .settings-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #333;
+      color: #fff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+    }
+    .settings-panel {
+      display: none;
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      width: 250px;
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      z-index: 1000;
+      text-align: left;
+    }
+    .settings-panel h3 {
+      margin-top: 0;
+    }
+    select, .theme-option {
+      width: 100%;
+      margin: 10px 0;
+      padding: 5px;
+      border-radius: 5px;
     }
   </style>
 </head>
 <body>
-  <header>📚 InsightAtlas</header>
-
-  <div id="uploadArea">
+  <h1>InsightAtlas - Your Digital Library</h1>
+  <div class="upload-box">
     <p>Upload your PDF books below:</p>
-    <input type="file" id="fileInput" accept="application/pdf" />
+    <input type="file" id="file-input" accept="application/pdf">
   </div>
-
-  <div id="pdfContainer">📖 Your book text will appear here...</div>
+  <div id="pdf-viewer"></div>
 
   <div>
-    <button onclick="startReading()">🔊 Read Aloud</button>
-    <button onclick="pauseReading()">⏸ Pause</button>
-    <button onclick="resumeReading()">▶ Resume</button>
-    <button onclick="stopReading()">⏹ Stop</button>
+    <button class="read" onclick="readAloud()">🔊 Read Aloud</button>
+    <button class="pause" onclick="pauseReading()">⏸ Pause</button>
+    <button class="resume" onclick="resumeReading()">▶ Resume</button>
   </div>
 
-  <!-- PDF.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <!-- ⚙️ Settings -->
+  <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
+  <div class="settings-panel" id="settingsPanel">
+    <h3>Settings</h3>
+
+    <label>Choose Theme:</label>
+    <select id="themeSelector" onchange="changeTheme(this.value)">
+      <option value="sunset">Sunset</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+      <option value="blue">Ocean Blue</option>
+    </select>
+
+    <label>Choose Voice:</label>
+    <select id="voiceSelector"></select>
+  </div>
 
   <script>
-    const fileInput = document.getElementById('fileInput');
-    const pdfContainer = document.getElementById('pdfContainer');
+    let pdfText = "";
+    let utterance;
+    let isPaused = false;
 
-    let pdfDoc = null;
-    let currentPage = 1;
-    let isReading = false;
-
-    // Load PDF into viewer and prepare for reading
-    fileInput.addEventListener('change', (event) => {
-      const file = event.target.files[0];
-      if (file && file.type === 'application/pdf') {
-        const reader = new FileReader();
-        reader.onload = function() {
+    // =============== PDF Upload & Display ================
+    document.getElementById('file-input').addEventListener('change', async function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const fileReader = new FileReader();
+        fileReader.onload = async function() {
           const typedarray = new Uint8Array(this.result);
-          pdfjsLib.getDocument(typedarray).promise.then((pdf) => {
-            pdfDoc = pdf;
-            currentPage = 1;
-            pdfContainer.innerHTML = "✅ PDF loaded with " + pdf.numPages + " pages.";
-          });
+          const pdf = await pdfjsLib.getDocument(typedarray).promise;
+          pdfText = "";
+
+          for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            const strings = content.items.map(item => item.str);
+            pdfText += strings.join(" ") + "\n\n";
+          }
+
+          document.getElementById('pdf-viewer').textContent = pdfText;
         };
-        reader.readAsArrayBuffer(file);
+        fileReader.readAsArrayBuffer(file);
       }
     });
 
-    function startReading() {
-      if (!pdfDoc) {
-        alert("Upload a PDF first!");
-        return;
+    // =============== Text-to-Speech ================
+    function readAloud() {
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel(); // Stop previous speech if active
       }
-      isReading = true;
-      currentPage = 1;
-      pdfContainer.innerHTML = "";
-      speechSynthesis.cancel();
-      readPage(currentPage);
-    }
 
-    function readPage(pageNum) {
-      if (!isReading || pageNum > pdfDoc.numPages) return;
+      utterance = new SpeechSynthesisUtterance(pdfText);
+      utterance.rate = 1; // Normal speed
+      utterance.pitch = 1; 
 
-      pdfDoc.getPage(pageNum).then((page) => {
-        return page.getTextContent();
-      }).then((textContent) => {
-        let text = textContent.items.map((item) => item.str).join(" ");
-        pdfContainer.innerHTML += `<p><b>Page ${pageNum}:</b> ${text}</p>`;
+      const selectedVoice = document.getElementById("voiceSelector").value;
+      const voices = speechSynthesis.getVoices();
+      const chosen = voices.find(v => v.name === selectedVoice);
+      if (chosen) utterance.voice = chosen;
 
-        let utterance = new SpeechSynthesisUtterance(text);
-
-        // Pick British Male voice
-        const voices = speechSynthesis.getVoices();
-        const britishVoice = voices.find(
-          v => v.lang === "en-GB" && v.name.toLowerCase().includes("male")
-        ) || voices.find(v => v.lang === "en-GB");
-        if (britishVoice) utterance.voice = britishVoice;
-
-        utterance.onend = () => {
-          if (isReading) {
-            currentPage++;
-            readPage(currentPage);
-          }
-        };
-
-        speechSynthesis.speak(utterance);
-      });
+      speechSynthesis.speak(utterance);
+      isPaused = false;
     }
 
     function pauseReading() {
       if (speechSynthesis.speaking && !speechSynthesis.paused) {
         speechSynthesis.pause();
+        isPaused = true;
       }
     }
 
     function resumeReading() {
-      if (speechSynthesis.paused) {
+      if (speechSynthesis.paused && isPaused) {
         speechSynthesis.resume();
+        isPaused = false;
       }
     }
 
-    function stopReading() {
-      isReading = false;
-      speechSynthesis.cancel();
+    // =============== Settings Panel ================
+    function toggleSettings() {
+      const panel = document.getElementById("settingsPanel");
+      panel.style.display = panel.style.display === "block" ? "none" : "block";
     }
 
-    // Ensure voices load
-    window.speechSynthesis.onvoiceschanged = () => {};
+    // Theme switcher
+    function changeTheme(theme) {
+      if (theme === "light") {
+        document.body.style.background = "#f4f4f4";
+        document.body.style.color = "#000";
+      } else if (theme === "dark") {
+        document.body.style.background = "#111";
+        document.body.style.color = "#fff";
+      } else if (theme === "blue") {
+        document.body.style.background = "linear-gradient(to right, #2193b0, #6dd5ed)";
+        document.body.style.color = "#fff";
+      } else { // default sunset
+        document.body.style.background = "linear-gradient(to right, #ff9966, #ff5e62)";
+        document.body.style.color = "#fff";
+      }
+    }
+
+    // Load voice options
+    function populateVoices() {
+      const voiceSelect = document.getElementById("voiceSelector");
+      voiceSelect.innerHTML = "";
+      const voices = speechSynthesis.getVoices();
+      voices.forEach(voice => {
+        let option = document.createElement("option");
+        option.value = voice.name;
+        option.textContent = `${voice.name} (${voice.lang})`;
+        voiceSelect.appendChild(option);
+      });
+    }
+
+    speechSynthesis.onvoiceschanged = populateVoices;
   </script>
 </body>
 </html>
