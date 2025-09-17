@@ -1,147 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Book Reader</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <title>InsightAtlas Admin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    h1 { color: #4a90e2; }
+    input, button {
+      margin: 10px 0;
+      padding: 8px;
+    }
+    button {
+      background: #4a90e2;
+      border: none;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover { background: #357ab8; }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 transition-colors duration-300">
-  <!-- Header -->
-  <header class="p-4 bg-blue-600 text-white flex justify-between items-center">
-    <h1 class="text-xl font-bold">📚 My Book Reader</h1>
-    <button id="settingsBtn" class="bg-white text-blue-600 px-3 py-1 rounded">⚙ Settings</button>
-  </header>
+<body>
+  <h1>InsightAtlas Admin Panel</h1>
+  <p>Upload book cover and PDF:</p>
 
-  <!-- File Upload -->
-  <div class="p-4">
-    <input type="file" id="pdfUpload" accept="application/pdf" class="mb-3" />
-    <canvas id="pdfViewer" class="border rounded w-full"></canvas>
-  </div>
+  <input type="file" id="coverUpload" accept="image/*"><br>
+  <input type="file" id="pdfUpload" accept="application/pdf"><br>
+  <button onclick="uploadBook()">Upload Book</button>
 
-  <!-- Controls -->
-  <div class="p-4 flex gap-2">
-    <button id="readBtn" class="bg-green-600 text-white px-4 py-2 rounded">▶ Read</button>
-    <button id="pauseBtn" class="bg-yellow-500 text-white px-4 py-2 rounded">⏸ Pause</button>
-    <button id="resumeBtn" class="bg-blue-500 text-white px-4 py-2 rounded">⏯ Resume</button>
-  </div>
-
-  <!-- Settings Modal -->
-  <div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-    <div class="bg-white p-6 rounded shadow-md w-96">
-      <h2 class="text-lg font-bold mb-4">⚙ Settings</h2>
-      
-      <!-- Theme Switch -->
-      <div class="mb-3">
-        <label class="font-semibold">Theme:</label>
-        <select id="themeSelect" class="w-full border rounded p-2">
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </select>
-      </div>
-
-      <!-- Voice Selection -->
-      <div class="mb-3">
-        <label class="font-semibold">Voice:</label>
-        <select id="voiceSelect" class="w-full border rounded p-2"></select>
-      </div>
-
-      <button id="closeSettings" class="bg-red-600 text-white px-4 py-2 rounded">Close</button>
-    </div>
-  </div>
+  <h2>Uploaded Books</h2>
+  <ul id="bookList"></ul>
 
   <script>
-    let pdfDoc = null, currentPage = 1, speech = window.speechSynthesis, utterance, extractedText = "";
+    let books = JSON.parse(localStorage.getItem("books")) || [];
 
-    // Load PDF
-    document.getElementById("pdfUpload").addEventListener("change", (e) => {
-      let file = e.target.files[0];
-      if (file) {
-        let fileReader = new FileReader();
-        fileReader.onload = function() {
-          let typedarray = new Uint8Array(this.result);
-          pdfjsLib.getDocument(typedarray).promise.then(pdf => {
-            pdfDoc = pdf;
-            renderPage(1);
-            extractText();
-          });
+    function uploadBook() {
+      const coverFile = document.getElementById("coverUpload").files[0];
+      const pdfFile = document.getElementById("pdfUpload").files[0];
+      if (!coverFile || !pdfFile) {
+        alert("Please upload both a cover and a PDF!");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const coverUrl = e.target.result;
+        const book = { 
+          title: pdfFile.name, 
+          cover: coverUrl, 
+          pdf: URL.createObjectURL(pdfFile) 
         };
-        fileReader.readAsArrayBuffer(file);
-      }
-    });
+        books.push(book);
+        localStorage.setItem("books", JSON.stringify(books));
+        displayBooks();
+      };
+      reader.readAsDataURL(coverFile);
+    }
 
-    // Render PDF Page
-    function renderPage(num) {
-      pdfDoc.getPage(num).then(page => {
-        let canvas = document.getElementById("pdfViewer");
-        let ctx = canvas.getContext("2d");
-        let viewport = page.getViewport({ scale: 1.5 });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        page.render({ canvasContext: ctx, viewport: viewport });
+    function displayBooks() {
+      const bookList = document.getElementById("bookList");
+      bookList.innerHTML = "";
+      books.forEach((book, index) => {
+        const li = document.createElement("li");
+        li.textContent = book.title;
+        bookList.appendChild(li);
       });
     }
 
-    // Extract Text from PDF
-    async function extractText() {
-      extractedText = "";
-      for (let i = 1; i <= pdfDoc.numPages; i++) {
-        let page = await pdfDoc.getPage(i);
-        let textContent = await page.getTextContent();
-        textContent.items.forEach(item => {
-          extractedText += item.str + " ";
-        });
-      }
-    }
-
-    // Read Aloud
-    document.getElementById("readBtn").addEventListener("click", () => {
-      if (utterance) speech.cancel(); 
-      utterance = new SpeechSynthesisUtterance(extractedText);
-      let voiceSelect = document.getElementById("voiceSelect");
-      let selectedVoice = speech.getVoices().find(v => v.name === voiceSelect.value);
-      if (selectedVoice) utterance.voice = selectedVoice;
-      speech.speak(utterance);
-    });
-
-    document.getElementById("pauseBtn").addEventListener("click", () => {
-      if (speech.speaking) speech.pause();
-    });
-
-    document.getElementById("resumeBtn").addEventListener("click", () => {
-      if (speech.paused) speech.resume();
-    });
-
-    // Settings Modal
-    document.getElementById("settingsBtn").onclick = () => document.getElementById("settingsModal").classList.remove("hidden");
-    document.getElementById("closeSettings").onclick = () => document.getElementById("settingsModal").classList.add("hidden");
-
-    // Theme Switch
-    document.getElementById("themeSelect").addEventListener("change", (e) => {
-      if (e.target.value === "dark") {
-        document.body.classList.replace("bg-gray-100", "bg-gray-900");
-        document.body.classList.replace("text-gray-900", "text-white");
-      } else {
-        document.body.classList.replace("bg-gray-900", "bg-gray-100");
-        document.body.classList.replace("text-white", "text-gray-900");
-      }
-    });
-
-    // Populate Voices
-    function loadVoices() {
-      let voices = speech.getVoices();
-      let select = document.getElementById("voiceSelect");
-      select.innerHTML = "";
-      voices.forEach(voice => {
-        let option = document.createElement("option");
-        option.value = voice.name;
-        option.textContent = `${voice.name} (${voice.lang})`;
-        select.appendChild(option);
-      });
-    }
-    speech.onvoiceschanged = loadVoices;
-    loadVoices();
+    displayBooks();
   </script>
 </body>
 </html>
