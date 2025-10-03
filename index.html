@@ -1,2 +1,149 @@
-server.js
-package.json
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ValueHub - Affordable Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #008080; /* Teal */
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      width: 90%;
+      margin: auto;
+      padding: 20px;
+    }
+    .product {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .product h3 {
+      margin: 0 0 10px 0;
+    }
+    .product button {
+      background: #008080;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .product button:hover {
+      background: #006666;
+    }
+    form {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .submit-btn {
+      background: #008080;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .submit-btn:hover {
+      background: #006666;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>ValueHub</h1>
+  <p>Affordable Items for Everyone (Pickup Only)</p>
+</header>
+
+<div class="container">
+  <h2>Available Products</h2>
+
+  <div class="product">
+    <h3>Shirt</h3>
+    <p>₦1,500 - Good condition</p>
+    <button onclick="addToOrder('Shirt - ₦1,500')">Add to Order</button>
+  </div>
+
+  <div class="product">
+    <h3>Kettle</h3>
+    <p>₦2,000 - Used, working well</p>
+    <button onclick="addToOrder('Kettle - ₦2,000')">Add to Order</button>
+  </div>
+
+  <div class="product">
+    <h3>School Bag</h3>
+    <p>₦1,200 - Durable</p>
+    <button onclick="addToOrder('School Bag - ₦1,200')">Add to Order</button>
+  </div>
+
+  <h2>Checkout Form</h2>
+  <form onsubmit="sendOrder(event)">
+    <label for="name">Your Name</label>
+    <input type="text" id="name" required>
+
+    <label for="phone">WhatsApp Number</label>
+    <input type="text" id="phone" placeholder="e.g. 08012345678" required>
+
+    <label for="order">Your Order</label>
+    <textarea id="order" readonly></textarea>
+
+    <button type="submit" class="submit-btn">Send Order via WhatsApp</button>
+  </form>
+</div>
+
+<script>
+  let orderList = [];
+
+  function addToOrder(item) {
+    orderList.push(item);
+    document.getElementById("order").value = orderList.join(", ");
+  }
+
+  function sendOrder(event) {
+    event.preventDefault();
+
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let order = document.getElementById("order").value;
+
+    if (!order) {
+      alert("Please add at least one item to your order.");
+      return;
+    }
+
+    // 🔑 Replace with your own WhatsApp number in international format
+    // Example: 2348012345678 for 08012345678
+    let whatsappNumber = "234 9010034530";
+
+    let message = `Hello, my name is ${name}. I want to order: ${order}. My WhatsApp number is ${phone}. I will pick up my items.`;
+
+    let whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappURL, "_blank");
+  }
+</script>
+
+</body>
+  </html>
