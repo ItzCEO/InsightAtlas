@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ValueHub — Affordable Items (Pickup Only)</title>
+
+  <!-- Optional Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --teal:#008080;
+      --teal-dark:#006666;
+      --muted:#6b7280;
+      --card-bg:#ffffff;
+      --page-bg:#f6f7f9;
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      margin:0; background:var(--page-bg); color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* NAV */
+    header.nav {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 20px; background:linear-gradient(90deg,var(--teal),var(--teal-dark));
+      color:white;
+    }
+    header.nav .brand {display:flex; align-items:center; gap:12px;}
+    .logo {
+      width:44px; height:44px; border-radius:10px; background:white; display:flex;
+      align-items:center; justify-content:center; font-weight:700; color:var(--teal);
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    }
+    nav .links {display:flex; gap:12px; align-items:center;}
+    nav .link {color:white; text-decoration:none; font-weight:600; opacity:0.95;}
+    .cart-btn {
+      background: rgba(255,255,255,0.12); border:none; color:white; padding:8px 12px;
+      border-radius:8px; cursor:pointer; display:flex; gap:8px; align-items:center;
+    }
+    .cart-count {
+      background: #ff6b6b; color:white; border-radius:999px; padding:2px 8px; font-weight:700;
+      font-size:12px;
+    }
+
+    /* MAIN LAYOUT */
+    .wrap { max-width:1100px; margin:26px auto; padding:0 20px; }
+    .hero {
+      display:flex; gap:20px; align-items:center; margin-bottom:22px;
+      background:linear-gradient(180deg, rgba(0,128,128,0.06), rgba(0,128,128,0.02));
+      padding:18px; border-radius:12px;
+    }
+    .hero .left h1 { margin:0; font-size:20px;}
+    .hero .left p { margin:6px 0 0; color:var(--muted); }
+
+    /* PRODUCTS GRID */
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:18px; margin-top:12px; }
+    .card {
+      background:var(--card-bg); border-radius:12px; padding:12px; box-shadow:0 6px 18px rgba(15,23,42,0.04);
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .card img { width:100%; height:160px; object-fit:cover; border-radius:10px; }
+    .card h3 { margin:0; font-size:16px; }
+    .price { font-weight:700; color:var(--teal); }
+    .desc { color:var(--muted); font-size:13px; min-height:36px; }
+
+    .card .actions { margin-top:auto; display:flex; gap:8px; }
+    .btn {
+      background:var(--teal); color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer;
+      font-weight:600;
+    }
+    .btn.secondary { background:transparent; color:var(--teal); border:1px solid rgba(0,128,128,0.12); }
+    .btn.small { padding:6px 8px; font-size:13px; }
+
+    /* CART PANEL (modal-like) */
+    .cart-panel {
+      position:fixed; right:18px; top:80px; width:360px; max-width:92%; background:white; border-radius:12px;
+      box-shadow:0 12px 40px rgba(2,6,23,0.12); padding:12px; z-index:60; display:none;
+    }
+    .cart-panel h4{ margin:6px 0 12px; }
+    .cart-items { max-height:340px; overflow:auto; display:flex; flex-direction:column; gap:10px; }
+    .cart-item { display:flex; gap:10px; align-items:center; }
+    .cart-item img { width:64px; height:48px; object-fit:cover; border-radius:8px; }
+    .cart-item .meta { flex:1; }
+    .cart-item .meta b{ display:block; }
+    .qty-control { display:flex; gap:6px; align-items:center; }
+    .small-btn { padding:6px 8px; border-radius:8px; border:1px solid #e6e9ee; background:white; cursor:pointer; }
+
+    .cart-footer { margin-top:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .cart-footer .total { font-weight:700; font-size:16px; color:var(--teal); }
+
+    /* CHECKOUT AREA */
+    .checkout {
+      margin-top:18px; background:white; padding:14px; border-radius:12px; box-shadow:0 6px 18px rgba(15,23,42,0.04);
+    }
+    .field { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+    label{ font-size:13px; color:var(--muted); }
+    input[type="text"], textarea { padding:10px; border-radius:8px; border:1px solid #e6e9ee; font-size:14px; }
+    textarea { min-height:90px; resize:vertical; }
+
+    /* ADMIN (hidden area) */
+    .admin-panel { margin-top:18px; background:#fffbe6; border:1px dashed #ffd966; padding:12px; border-radius:12px; display:none; }
+    .admin-panel h4 { margin:0 0 8px 0; }
+
+    footer { text-align:center; color:var(--muted); margin:30px 0 60px; }
+
+    /* responsive */
+    @media (max-width:640px){
+      .hero { flex-direction:column; align-items:flex-start; }
+      .cart-panel { left:12px; right:12px; top:auto; bottom:12px; width:auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="nav">
+    <div class="brand">
+      <div class="logo">VH</div>
+      <div>
+        <div style="font-weight:700">ValueHub</div>
+        <div style="font-size:12px; opacity:0.9">Affordable Items — Pickup Only</div>
+      </div>
+    </div>
+
+    <nav>
+      <div class="links">
+        <a class="link" href="#" onclick="scrollToTop(event)">Home</a>
+        <button class="cart-btn" id="openCartBtn" aria-label="Open cart">
+          Cart <span style="opacity:.85">•</span> <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="cart-btn" onclick="showAdminLogin()" style="margin-left:8px; background: rgba(255,255,255,0.14)">Admin</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN -->
+  <div class="wrap">
+
+    <div class="hero">
+      <div class="left">
+        <h1>ValueHub — Affordable Items for Everyone</h1>
+        <p>Pickup only at Ogba, Lagos. Pay on pickup. Start by adding items to cart and confirming via WhatsApp.</p>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <section>
+      <h2 style="margin:6px 0 0 0;">Available Products</h2>
+      <div class="grid" id="productGrid">
+        <!-- JS will render product cards here -->
+      </div>
+    </section>
+
+    <!-- CHECKOUT FORM -->
+    <div class="checkout" id="checkoutSection">
+      <h3 style="margin-top:0">Checkout</h3>
+
+      <div class="field">
+        <label for="name">Your Name</label>
+        <input id="name" type="text" placeholder="e.g. Aisha" required>
+      </div>
+
+      <div class="field">
+        <label for="phone">WhatsApp Number</label>
+        <input id="phone" type="text" placeholder="e.g. 08012345678" required>
+      </div>
+
+      <div class="field">
+        <label for="orderBox">Your Order (editable)</label>
+        <textarea id="orderBox" placeholder="Your order will appear here..."></textarea>
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="btn" onclick="prepareOrder()">Prepare Message</button>
+        <button class="btn secondary" onclick="clearCart()">Clear Cart</button>
+      </div>
+    </div>
+
+    <!-- ADMIN PANEL (hidden by default) -->
+    <div class="admin-panel" id="adminPanel">
+      <h4>Admin Dashboard</h4>
+      <p style="margin:0 0 8px 0; color:#6b4b00">Add new product (image via URL). Products saved locally in this browser.</p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:center;">
+        <input id="adminName" placeholder="Product name (e.g. Power Bank)">
+        <input id="adminPrice" placeholder="Price (numbers only, e.g. 3500)">
+        <input id="adminImage" placeholder="Image URL (https://...)">
+        <input id="adminDesc" placeholder="Short description">
+      </div>
+
+      <div style="margin-top:8px; display:flex; gap:8px;">
+        <button class="btn" onclick="adminAddProduct()">Add Product</button>
+        <button class="btn secondary" onclick="exportProducts()">Export JSON</button>
+        <button class="btn secondary" onclick="importProductsPrompt()">Import JSON</button>
+        <button class="btn small" onclick="logoutAdmin()">Logout</button>
+      </div>
+
+      <p style="font-size:13px; color:var(--muted); margin-top:10px;">Tip: Use an image URL from Imgur or Unsplash. Product data is saved in your browser's localStorage.</p>
+    </div>
+
+  </div>
+
+  <!-- CART PANEL -->
+  <div class="cart-panel" id="cartPanel" aria-hidden="true">
+    <h4>Your Cart</h4>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="total">Total: <span id="cartTotal">₦0</span></div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn secondary" onclick="closeCart()">Close</button>
+        <button class="btn" onclick="scrollToCheckout()">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © <span id="year"></span> ValueHub — built for affordable access. Admin login protected. For enquiries: +234 901 003 4530
+  </footer>
+
+<script>
+/* -----------------------------
+  Configuration & Utilities
+   ----------------------------- */
+const ADMIN_PASSWORD = "ValueHub2025";       // default admin password (change in code if needed)
+const WHATSAPP_NUMBER = "2349010034530";     // ValueHub WhatsApp number (international format without +)
+const STORAGE_PRODUCTS_KEY = "valuehub_products_v1";
+const STORAGE_CART_KEY = "valuehub_cart_v1";
+const STORAGE_ADMIN_FLAG = "valuehub_admin_authenticated_v1";
+
+const defaultProducts = [
+  {
+    id: generateId(),
+    name: "Power Bank",
+    price: 3500,
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=60",
+    desc: "Power Bank - 10000mAh, good condition"
+  },
+  {
+    id: generateId(),
+    name: "Shirt",
+    price: 1500,
+    image: "https://images.unsplash.com/photo-1520975914527-7f7cd6b96a9c?auto=format&fit=crop&w=800&q=60",
+    desc: "Men's shirt - good condition"
+  },
+  {
+    id: generateId(),
+    name: "Kettle",
+    price: 2000,
+    image: "https://images.unsplash.com/photo-1597107579402-e40b8a9ab9a7?auto=format&fit=crop&w=800&q=60",
+    desc: "Electric kettle - works well"
+  },
+  {
+    id: generateId(),
+    name: "School Bag",
+    price: 1200,
+    image: "https://images.unsplash.com/photo-1593032465171-6e1cc1b6a8c3?auto=format&fit=crop&w=800&q=60",
+    desc: "Durable school bag"
+  }
+];
+
+/* Helper: generate small id */
+function generateId(){ return 'p_' + Math.random().toString(36).slice(2,9); }
+
+/* Load/save products */
+function loadProducts(){
+  try{
+    const raw = localStorage.getItem(STORAGE_PRODUCTS_KEY);
+    if(raw){
+      return JSON.parse(raw);
+    } else {
+      // seed default products and save
+      localStorage.setItem(STORAGE_PRODUCTS_KEY, JSON.stringify(defaultProducts));
+      return defaultProducts.slice();
+    }
+  }catch(e){
+    console.error("Load products error", e);
+    localStorage.removeItem(STORAGE_PRODUCTS_KEY);
+    return defaultProducts.slice();
+  }
+}
+function saveProducts(products){
+  localStorage.setItem(STORAGE_PRODUCTS_KEY, JSON.stringify(products));
+}
+
+/* Load/save cart */
+function loadCart(){
+  const raw = localStorage.getItem(STORAGE_CART_KEY);
+  if(!raw) return [];
+  try { return JSON.parse(raw); }
+  catch(e){ localStorage.removeItem(STORAGE_CART_KEY); return []; }
+}
+function saveCart(cart){ localStorage.setItem(STORAGE_CART_KEY, JSON.stringify(cart)); }
+
+/* Format price */
+function formatPrice(n){
+  if(isNaN(n)) return "₦0";
+  return "₦" + Number(n).toLocaleString();
+}
+
+/* -----------------------------
+  Render products
+   ----------------------------- */
+let products = loadProducts();
+let cart = loadCart();
+
+function renderProducts(){
+  const container = document.getElementById("productGrid");
+  container.innerHTML = "";
+  products.forEach(prod => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <img src="${escapeHtml(prod.image || '')}" alt="${escapeHtml(prod.name)}" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=No+Image'">
+      <h3>${escapeHtml(prod.name)}</h3>
+      <div class="price">${formatPrice(prod.price)}</div>
+      <div class="desc">${escapeHtml(prod.desc || '')}</div>
+      <div class="actions">
+        <button class="btn" onclick="addToCart('${prod.id}')">Add to Cart</button>
+        <button class="btn secondary" onclick="viewProduct('${prod.id}')">View</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+/* escape html for safety */
+function escapeHtml(s){
+  if(!s) return '';
+  return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+}
+
+/* -----------------------------
+   Cart functions
+   ----------------------------- */
+function addToCart(productId){
+  const p = products.find(x=>x.id===productId);
+  if(!p) return alert("Product not found.");
+  // check if in cart already
+  const itemIndex = cart.findIndex(i=>i.id===productId);
+  if(itemIndex > -1){
+    cart[itemIndex].qty += 1;
+  } else {
+    cart.push({ id: p.id, name: p.name, price: p.price, image: p.image, qty: 1 });
+  }
+  saveCart(cart);
+  renderCart();
+  flashCartCount();
+}
+
+function removeCartItem(productId){
+  cart = cart.filter(i=>i.id!==productId);
+  saveCart(cart);
+  renderCart();
+}
+
+function changeQty(productId, delta){
+  const idx = cart.findIndex(i=>i.id===productId);
+  if(idx===-1) return;
+  cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+  saveCart(cart);
+  renderCart();
+}
+
+function computeTotal(){
+  return cart.reduce((s,i)=> s + (Number(i.price || 0) * Number(i.qty || 1)), 0);
+}
+
+function renderCart(){
+  const itemsContainer = document.getElementById("cartItems");
+  itemsContainer.innerHTML = "";
+  if(cart.length === 0){
+    itemsContainer.innerHTML = `<div style="color:var(--muted); padding:10px 0;">Your cart is empty.</div>`;
+  } else {
+    cart.forEach(it=>{
+      const el = document.createElement("div");
+      el.className = "cart-item";
+      el.innerHTML = `
+        <img src="${escapeHtml(it.image || '')}" onerror="this.onerror=null;this.src='https://via.placeholder.com/100x80?text=No+Img'">
+        <div class="meta">
+          <b>${escapeHtml(it.name)}</b>
+          <div style="font-size:13px;color:var(--muted)">${formatPrice(it.price)} • ₦${(it.price*it.qty).toLocaleString()}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+          <div class="qty-control">
+            <button class="small-btn" onclick="changeQty('${it.id}', -1)">–</button>
+            <div style="padding:6px 8px; border-radius:6px; border:1px solid #eef2f7;">${it.qty}</div>
+            <button class="small-btn" onclick="changeQty('${it.id}', 1)">+</button>
+          </div>
+          <button class="small-btn" style="background:#ffecec;border:1px solid #ffd6d6;color:#ba2d2d" onclick="removeCartItem('${it.id}')">Remove</button>
+        </div>
+      `;
+      itemsContainer.appendChild(el);
+    });
+  }
+  document.getElementById("cartTotal").innerText = formatPrice(computeTotal());
+  updateCartCount();
+  // update checkout order preview
+  const orderBox = document.getElementById("orderBox");
+  if(orderBox && cart.length>0){
+    const summary = cart.map(i=> `${i.name} x${i.qty} (${formatPrice(i.price)})`).join(", ");
+    // only set if user hasn't typed custom content:
+    if(!orderBox.dataset.userEdited) orderBox.value = summary;
+  } else if(orderBox && cart.length===0 && !orderBox.dataset.userEdited) {
+    orderBox.value = "";
+  }
+}
+
+function updateCartCount(){
+  const count = cart.reduce((s,i)=> s + Number(i.qty||0), 0);
+  document.getElementById("cartCount").innerText = count;
+}
+
+/* small UX */
+function flashCartCount(){
+  const el = document.getElementById("cartCount");
+  el.style.transform = "scale(1.12)";
+  setTimeout(()=> el.style.transform = "scale(1)", 200);
+}
+
+/* -----------------------------
+   Cart panel toggle
+   ----------------------------- */
+const cartPanel = document.getElementById("cartPanel");
+document.getElementById("openCartBtn").addEventListener("click", ()=> {
+  if(cartPanel.style.display === "block") closeCart();
+  else openCart();
+});
+function openCart(){ cartPanel.style.display = "block"; cartPanel.setAttribute("aria-hidden","false"); renderCart(); }
+function closeCart(){ cartPanel.style.display = "none"; cartPanel.setAttribute("aria-hidden","true"); }
+
+/* -----------------------------
+  Admin functions (password protected)
+   ----------------------------- */
+function showAdminLogin(){
+  const pwd = prompt("Enter admin password:");
+  if(pwd === null) return;
+  if(pwd === ADMIN_PASSWORD){
+    localStorage.setItem(STORAGE_ADMIN_FLAG, "1");
+    openAdminPanel();
+    alert("Admin access granted.");
+  } else {
+    alert("Incorrect password.");
+  }
+}
+function openAdminPanel(){
+  document.getElementById("adminPanel").style.display = "block";
+  // scroll to view
+  document.getElementById("adminPanel").scrollIntoView({behavior:"smooth"});
+}
+function logoutAdmin(){
+  localStorage.removeItem(STORAGE_ADMIN_FLAG);
+  document.getElementById("adminPanel").style.display = "none";
+  alert("Logged out from admin.");
+}
+function adminAddProduct(){
+  const name = document.getElementById("adminName").value.trim();
+  const priceRaw = document.getElementById("adminPrice").value.trim();
+  const image = document.getElementById("adminImage").value.trim();
+  const desc = document.getElementById("adminDesc").value.trim();
+  if(!name || !priceRaw){ return alert("Please provide product name and price."); }
+  const price = Number(priceRaw.replace(/[^0-9.-]+/g,""));
+  if(isNaN(price) || price <= 0) return alert("Provide valid numeric price.");
+  const newProd = { id: generateId(), name, price, image: image || "https://via.placeholder.com/400x300?text=No+Image", desc };
+  products.unshift(newProd);
+  saveProducts(products);
+  renderProducts();
+  // clear form
+  document.getElementById("adminName").value = "";
+  document.getElementById("adminPrice").value = "";
+  document.getElementById("adminImage").value = "";
+  document.getElementById("adminDesc").value = "";
+  alert("Product added. It will appear in the product list.");
+}
+
+/* export/import (for backup) */
+function exportProducts(){
+  const data = JSON.stringify(products, null, 2);
+  const blob = new Blob([data], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "valuehub_products.json"; document.body.appendChild(a); a.click();
+  a.remove(); URL.revokeObjectURL(url);
+}
+function importProductsPrompt(){
+  const json = prompt("Paste product JSON here (replace current products). This is advanced. Cancel to abort.");
+  if(!json) return;
+  try {
+    const arr = JSON.parse(json);
+    if(!Array.isArray(arr)) throw new Error("Invalid JSON (expecting array).");
+    // basic validation
+    arr.forEach(it => { if(!it.id) it.id = generateId(); if(!it.name) it.name = "Unnamed"; if(!it.price) it.price = 0; });
+    products = arr;
+    saveProducts(products);
+    renderProducts();
+    alert("Products imported.");
+  } catch(e){
+    alert("Import failed: " + e.message);
+  }
+}
+
+/* -----------------------------
+  Checkout & WhatsApp flow
+   ----------------------------- */
+function prepareOrder(){
+  // ensure orderBox has text (user can edit)
+  const orderBox = document.getElementById("orderBox");
+  if(!orderBox.value.trim()){
+    // create default summary if cart populated
+    if(cart.length === 0) return alert("Your cart is empty. Add items first.");
+    const summary = cart.map(i=> `${i.name} x${i.qty} (${formatPrice(i.price)})`).join(", ");
+    orderBox.value = summary;
+    orderBox.dataset.userEdited = ""; // not user edited
+  }
+  // open a confirm dialog to send message
+  sendOrder();
+}
+
+function sendOrder(){
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const orderText = document.getElementById("orderBox").value.trim();
+  if(!orderText) return alert("Order is empty. Add items to cart or type your order.");
+  if(!name) return alert("Please enter your name.");
+  if(!phone) return alert("Please enter your WhatsApp number.");
+
+  const total = formatPrice(computeTotal());
+  const pickupNote = "Pickup at Ogba, Lagos. Pay on pickup.";
+  // Build message
+  let message = `Hello ValueHub,\nName: ${name}\nPhone: ${phone}\nOrder: ${orderText}\nTotal: ${total}\n${pickupNote}`;
+  const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  // open new tab
+  window.open(waUrl, "_blank");
+}
+
+/* Utility: scroll to checkout */
+function scrollToCheckout(){ closeCart(); document.getElementById("checkoutSection").scrollIntoView({behavior:"smooth"}); }
+
+/* View product quick popup (basic) */
+function viewProduct(id){
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  alert(`${p.name}\n\nPrice: ${formatPrice(p.price)}\n\n${p.desc || ''}\n\n(Pickup at Ogba, Lagos)`);
+}
+
+/* scroll top */
+function scrollToTop(e){ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+/* mark user editing of orderbox */
+document.getElementById("orderBox").addEventListener("input", function(){
+  this.dataset.userEdited = "1";
+});
+
+/* clear cart */
+function clearCart(){
+  if(!confirm("Clear all items from cart?")) return;
+  cart = [];
+  saveCart(cart);
+  renderCart();
+}
+
+/* -----------------------------
+  Init on load
+   ----------------------------- */
+document.getElementById("year").innerText = new Date().getFullYear();
+
+// If admin flag stored, open panel
+if(localStorage.getItem(STORAGE_ADMIN_FLAG)) openAdminPanel();
+
+// initial render
+renderProducts();
+renderCart();
+
+</script>
+</body>
+</html>
+
